@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Mcpe"
+        xmlns:windowsPresentation="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.DataContext>
         <local:MyContext/>
     </Window.DataContext>
     <Grid>
+        <windowsPresentation:GMapControl MapProvider="{Binding Provider}" Position="{Binding Position}"/>
         
     </Grid>
 </Window>

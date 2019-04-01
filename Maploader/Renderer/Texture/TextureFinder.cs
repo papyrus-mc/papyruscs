@@ -156,7 +156,7 @@ namespace Maploader.Renderer.Texture
                 case "hopper":
                     return GetTexture("hopper_top", data);
                 case "double_plant":
-                        return GetTexture("double_plant_carried", data);
+                    return GetTexture("double_plant_carried", 0); // todo fixme
                 case "rail":
                     return GetTexture("rail_normal", data);
                 case "golden_rail":
@@ -194,14 +194,15 @@ namespace Maploader.Renderer.Texture
                 case "anvil":
                     return GetTexture("anvil_top_damaged_x", data);
                 case "cactus":
-                    return GetTexture("cactus_top", data);            
-                
+                    return GetTexture("cactus_top", data);
+
                 /*  case "fence_gate":
                         return GetTexture("grass_carried_top");
                     case "fence":
                         return GetTexture("grass_carried_top");
                         */
-
+                case "podzol":
+                    return GetTexture("dirt_podzol_top", data);
                 case "grass":
                     return GetTexture("grass_carried_top", data);
                 case "seagrass":
