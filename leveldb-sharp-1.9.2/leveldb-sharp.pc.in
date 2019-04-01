@@ -1,0 +1,8 @@
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+
+Name: @ASSEMBLY_TITLE@
+Description: @ASSEMBLY_DESCRIPTION@
+Version: @PACKAGE_VERSION@
+Libs: -r:${libdir}/@PACKAGE_NAME@/@ASSEMBLY_NAME@.dll
