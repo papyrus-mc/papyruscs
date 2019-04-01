@@ -29,11 +29,12 @@
 //  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 //  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 //  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace LevelDB
+namespace leveldb_sharp_std
 {
     /// <remarks>
     /// This type is thread safe.

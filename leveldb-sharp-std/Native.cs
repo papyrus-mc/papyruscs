@@ -31,10 +31,10 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
-namespace LevelDB
+namespace leveldb_sharp_std
 {
     /// <summary>
     /// Native method P/Invoke declarations for LevelDB

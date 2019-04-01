@@ -180,6 +180,9 @@ namespace ConsoleTester
                     case NbtTagType.Long:
                         value = (int) nbt.ReadValueAs<long>();
                         break;
+                    default:
+                        Console.WriteLine("could not comprehend val");
+                        break;
                 }
 
 

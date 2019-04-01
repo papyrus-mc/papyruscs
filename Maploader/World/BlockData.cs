@@ -1,8 +1,31 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace Maploader.Source
+namespace Maploader.World
 {
+    public class BlockCoord
+    {
+        public BlockCoord(BlockData block, int x, int y, int z)
+        {
+            Block = block;
+            X = x;
+            Y = y;
+            Z = z;
+            XZ = x * 256 + z;
+        }
+
+        public BlockData Block { get; }
+        public int X { get; }
+        public int Y { get; }
+        public int Z { get; }
+        public int XZ { get; }
+
+        public override string ToString()
+        {
+            return $"{X} {Y} {Z} {Block}";
+        }
+    }
+
     public class BlockData
     {
         protected bool Equals(BlockData other)
@@ -36,7 +59,7 @@ namespace Maploader.Source
             return !Equals(left, right);
         }
 
-        public BlockData([NotNull] string id, long data)
+        public BlockData(string id, long data)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             Data = data;
@@ -47,7 +70,6 @@ namespace Maploader.Source
         public long Data { get; }
 
         public int Version { get; set; }
-
 
         public override string ToString()
         {

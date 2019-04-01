@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Maploader.Source
+namespace Maploader.World
 {
     public class PersistancePalette
     {

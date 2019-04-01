@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Newtonsoft.Json;
 
-namespace Maploader.Source.LookupTable
+namespace Maploader.World.LookupTable
 {
-    public class LookupTable
+    public class BlockLookupTable
     {
-        public LookupTable()
+        public BlockLookupTable()
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"LookupTable\runtimeid_table.json");
             var json = File.ReadAllText(path);
@@ -18,7 +17,7 @@ namespace Maploader.Source.LookupTable
             {
                 if (t.data.HasValue)
                 {
-                    var key = new Coordinate2D(t.id, t.data.Value);
+                    var key = CreateKey(t.id, t.data.Value);
                     if (!Lookups.ContainsKey(key))
                     {
                         Lookups.Add(key, t);
@@ -27,7 +26,12 @@ namespace Maploader.Source.LookupTable
             }
         }
 
-        public Dictionary<Coordinate2D, LookUp> Lookups { get; } = new Dictionary<Coordinate2D, LookUp>();
+        public Dictionary<UInt32, LookUp> Lookups { get; } = new Dictionary<UInt32, LookUp>();
+
+        public UInt32 CreateKey(int v1, int v2)
+        {
+            return (UInt32) (((v1 & 0xFFFF) << 16) + (v2 & 0xFFFF));
+        }
     }
 
     public class LookUp

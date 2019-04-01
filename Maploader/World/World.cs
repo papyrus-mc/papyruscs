@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using fNbt;
-using LevelDB;
+using leveldb_sharp_std;
 
-namespace Maploader.Source
+namespace Maploader.World
 {
     public class World
     {
@@ -14,7 +13,7 @@ namespace Maploader.Source
 
         public void Open(string pathDb)
         {
-            var options = new LevelDB.Options();
+            var options = new Options();
             options.Compression = CompressionType.ZlibRaw;
 
             db = new DB(options, pathDb);
@@ -30,18 +29,18 @@ namespace Maploader.Source
 
             var key = CreateKey(x, z);
 
-            for (byte i = 0; i < 15; i++)
+            for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
             {
-                key[9] = i;
+                key[9] = subChunkIdx;
 
                 var data = db.Get(key);
                 if (data != null)
                 {
-                    subChunks[i] = data;
+                    subChunks[subChunkIdx] = data;
                 }
             }
-            Chunk c = new Chunk(x,z);
 
+            Chunk c = new Chunk(x,z);
             foreach (var subChunkRaw in subChunks)
             {
                 CopySubChunkToChunk(c, subChunkRaw);
@@ -51,7 +50,7 @@ namespace Maploader.Source
             return c;
         }
 
-        private LookupTable.LookupTable Table { get; } = new LookupTable.LookupTable();
+        private LookupTable.BlockLookupTable Table { get; } = new LookupTable.BlockLookupTable();
 
         private void CopySubChunkToChunk(Chunk chunk, KeyValuePair<byte, byte[]> subChunkRawData)
         {
@@ -70,13 +69,24 @@ namespace Maploader.Source
                         for (int position = 0; position < 4096; position++)
                         {
                             int blockId = bs.ReadByte();
-                            int blockData = 0; // TODO
+                            int blockData = 0;
+
+                            int dataPos = 1 + 4096 + (position / 2);
+
+                            if (position % 2 == 0)
+                                blockData = (subChunkRawData.Value[dataPos] >> 4) & 0xF;
+                            else
+                                blockData = (subChunkRawData.Value[dataPos] >> 0) & 0xF;
+
                             int x = (position >> 8) & 0xF;
                             int y = position & 0xF;
                             int z = (position >> 4) & 0xF;
 
-                            chunk.SetBlockId(x, yOffset + y, z, 
-                                new BlockData(Table.Lookups[new Coordinate2D(blockId, 0)].name, 0) {Version = 0},
+                            chunk.SetBlockId(x, yOffset + y, z,
+                                new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (blockData))
+                                {
+                                    Version = 0,
+                                },
                                 true);
                         }
 
@@ -91,8 +101,8 @@ namespace Maploader.Source
                             byte paletteAndFlag = bs.ReadByte();
                             bool isRuntime = (paletteAndFlag & 1) != 0;
                             int bitsPerBlock = paletteAndFlag >> 1;
-                            int blocksPerWord = (int) Math.Floor(32.0 / bitsPerBlock);
-                            int wordCount = (int) Math.Ceiling(4096.0 / blocksPerWord);
+                            int blocksPerWord = (int)Math.Floor(32.0 / bitsPerBlock);
+                            int wordCount = (int)Math.Ceiling(4096.0 / blocksPerWord);
                             long blockIndex = ms.Position;
 
 
@@ -179,7 +189,7 @@ namespace Maploader.Source
             {
                 name = nbt.ReadValueAs<string>();
             }
-            if (nbt.ReadToDescendant("val"))
+            if (nbt.ReadToNextSibling("val"))
             {
                 switch (nbt.TagType)
                 {
@@ -193,6 +203,9 @@ namespace Maploader.Source
                     case NbtTagType.Long:
                         value = (int)nbt.ReadValueAs<long>();
                         break;
+                    default:
+                        Console.WriteLine("could not comprehend val");
+                        break;
                 }
             }
 
@@ -200,7 +213,6 @@ namespace Maploader.Source
             {
                 nbt.ReadToFollowing();
             }
-
 
             return (name, value);
 

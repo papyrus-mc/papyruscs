@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Maploader.Source
+namespace Maploader.World
 {
     public class Chunk
     {
@@ -19,17 +19,19 @@ namespace Maploader.Source
             return $"Chunk {X},{Z}";
         }
 
-        public Dictionary<Coordinate, BlockData> Blocks { get; } = new Dictionary<Coordinate, BlockData>();
+        public Dictionary<UInt32, BlockCoord> Blocks { get; } = new Dictionary<UInt32, BlockCoord>();
 
 
         public void SetBlockId(int x, int y, int z, BlockData data, bool noException = false)
         {
+
             if (data.Id == "minecraft:air")
                 return;
-            Coordinate coord = new Coordinate(x, y, z);
+            var coord = CreateKey(x, y, z);
             if (!Blocks.ContainsKey(coord))
             {
-                Blocks[coord] = data;
+                var blockCoord = new BlockCoord(data, x, y, z);
+                Blocks[coord] = blockCoord;
             }
             else
             {
@@ -38,6 +40,11 @@ namespace Maploader.Source
                     throw new ArgumentException($"Key {x},{y},{z} already exists");
                 }
             }
+        }
+
+        public UInt32 CreateKey(int x, int y, int z)
+        {
+            return (UInt32) (((x & 0xFF) << 24) + ((z & 0xFF) << 16) + ((y & 0xFF) << 8));
         }
     }
 }

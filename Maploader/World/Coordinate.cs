@@ -1,4 +1,4 @@
-﻿namespace Maploader.Source
+﻿namespace Maploader.World
 {
     public class Coordinate2D
     {
@@ -84,11 +84,13 @@
             X = x;
             Y = y;
             Z = z;
+            XZ = x * 256 + z;
         }
 
-        public int X { get; set; }
-        public int Y { get; set; }
-        public int Z { get; set; }
+        public int X { get; }
+        public int Y { get; }
+        public int Z { get; }
+        public int XZ { get; }
 
         public override string ToString()
         {
