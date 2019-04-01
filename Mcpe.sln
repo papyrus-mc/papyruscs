@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "leveldb-sharp-std", "leveld
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maploader.Tests", "Maploader.Tests\Maploader.Tests.csproj", "{2E0657C3-51E7-434B-BF72-C506402F0FC7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapCreatorCore", "MapCreatorCore\MapCreatorCore.csproj", "{64ACD805-CE05-4A59-98FF-FBCD3E95134B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusCs", "MapCreatorCore\PapyrusCs.csproj", "{64ACD805-CE05-4A59-98FF-FBCD3E95134B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageFormats-std", "ImageFormats-std", "{6D666B11-D13A-44FB-8D2C-80A0334D5C4D}"
 	ProjectSection(SolutionItems) = preProject
