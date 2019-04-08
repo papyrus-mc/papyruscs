@@ -27,7 +27,32 @@ namespace Maploader.World
 
             if (data.Id == "minecraft:air")
                 return;
+
             var coord = CreateKey(x, y, z);
+
+            //if (data.Id == "minecraft:mob_spawner")
+            //{
+            //    var newcoord = CreateKey(x, 240, z);
+
+            //    if (!Blocks.ContainsKey(newcoord))
+            //    {
+            //        var blockCoord2 = new BlockCoord(new BlockData("minecraft:coral_block", 1), x, 240, z);
+            //        Blocks[newcoord] = blockCoord2;
+            //        Console.WriteLine("Found Spaner");
+            //    }
+            //}
+            //if (data.Id == "minecraft:chest")
+            //{
+            //    var newcoord = CreateKey(x, 240, z);
+
+            //    if (!Blocks.ContainsKey(newcoord))
+            //    {
+            //        var blockCoord2 = new BlockCoord(new BlockData("minecraft:coral_block", 3), x, 240, z);
+            //        Blocks[newcoord] = blockCoord2;
+            //        Console.WriteLine("Found Chest");
+            //    }
+            //}
+
             if (!Blocks.ContainsKey(coord))
             {
                 var blockCoord = new BlockCoord(data, x, y, z);

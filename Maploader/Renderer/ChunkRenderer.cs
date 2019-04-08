@@ -23,6 +23,7 @@ namespace Maploader.Renderer
         {
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
 
+            List<Action> DrawTodos = new List<Action>();
             foreach (var blocks in xzColumns)
             {
                 var blocksToRender = new Stack<BlockCoord>();
@@ -50,12 +51,21 @@ namespace Maploader.Renderer
                     if (tile != null)
                     {
                         g.DrawImage(tile, xOffset + block.X * 16, zOffset + block.Z * 16);
+                        //if (block.Block.Id == "minecraft:coral_block")
+                        //{
+                        //    DrawTodos.Add(() => g.DrawString($"{c.X * 16+block.X} {c.Z * 16+block.Z}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, xOffset + block.X * 16, zOffset + block.Z * 16));
+                        //}
                     }
                     else
                     {
                         Console.WriteLine($"{block.ToString().PadRight(30)} {texturePath}");
                     }
                 }
+            }
+            g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, 0, 20);
+            foreach (var toto in DrawTodos)
+            {
+                toto();
             }
         }
     }

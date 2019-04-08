@@ -1,4 +1,7 @@
-﻿namespace Maploader.World
+﻿using System.IO;
+using Maploader.Extensions;
+
+namespace Maploader.World
 {
     public class Coordinate2D
     {
@@ -41,6 +44,20 @@
 
         public int X { get; }
         public int Y { get; }
+
+        public static Coordinate2D FromKey(byte[] key)
+        {
+            if (key.Length < 9)
+                return null;
+            
+            if (key.Length == 10 && key[8] == 47 && key[9] == 0) // Todo for other dimensions
+            {
+                // Subchunks
+                return new Coordinate2D(key.GetIntLe(0), key.GetIntLe(4));
+            }
+
+            return null;
+        }
     }
 
     public class Coordinate

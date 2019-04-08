@@ -115,7 +115,7 @@ namespace Maploader.Tests.Tests
         public void TestRender2()
         {
             var dut = new World.World();
-            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\1+ahXI06AQA=\db"));
+            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db"));
 
 
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
@@ -143,7 +143,7 @@ namespace Maploader.Tests.Tests
             };
 
 
-            b.Save(AppDomain.CurrentDomain.BaseDirectory + "\\chunk.png");
+            b.Save(AppDomain.CurrentDomain.BaseDirectory + "\\chunkmini.png");
 
 
         }
@@ -171,9 +171,9 @@ namespace Maploader.Tests.Tests
                     foreach (var block in chunk.Blocks)
                     {
                         counter++;
-                        if (block.Value.Block.Data > 0 && block.Value.Block.Version > 0)
+                        if (block.Value.Block.Id == "minecraft:chest")
                         {
-                            Console.WriteLine(block.Value.Block);
+                            Console.WriteLine(block.Value);
                         }
                     }
                 }

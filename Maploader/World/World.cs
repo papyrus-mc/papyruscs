@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -22,6 +23,7 @@ namespace Maploader.World
 
         public Chunk GetChunk(int x, int z)
         {
+            bool haveData = false;
             if (db == null)
                 throw new InvalidOperationException("Open Db first");
 
@@ -37,20 +39,36 @@ namespace Maploader.World
                 if (data != null)
                 {
                     subChunks[subChunkIdx] = data;
+                    haveData = true;
                 }
             }
 
-            Chunk c = new Chunk(x,z);
+            if (!haveData) return null;
+
+            Chunk c = new Chunk(x, z);
             foreach (var subChunkRaw in subChunks)
             {
                 CopySubChunkToChunk(c, subChunkRaw);
             }
-
-          
             return c;
+
         }
 
         private LookupTable.BlockLookupTable Table { get; } = new LookupTable.BlockLookupTable();
+
+        public IEnumerable<Coordinate2D> ChunkKeys
+        {
+            get
+            {
+                foreach (var element in db)
+                {
+                    var key = Coordinate2D.FromKey(element.Key);
+                    if (key != null)
+                        yield return key;
+                }
+            }
+
+        }
 
         private void CopySubChunkToChunk(Chunk chunk, KeyValuePair<byte, byte[]> subChunkRawData)
         {
