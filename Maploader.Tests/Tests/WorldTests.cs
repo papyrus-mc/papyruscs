@@ -59,10 +59,10 @@ namespace Maploader.Tests.Tests
                 var blocks = block.ToList();
                 var hBlock = blocks.OrderByDescending(x => x.Key & 0xFF).First();
 
-                string texturePath = finder.FindTexturePath(hBlock.Value.Block.Id, hBlock.Value.Block.Data);
+                var texturePath = finder.FindTexturePath(hBlock.Value.Block.Id, hBlock.Value.Block.Data);
 
                 Console.WriteLine($"{hBlock.ToString().PadRight(30)} {texturePath}");
-                var tile = finder.GetTextureImage(texturePath);
+                var tile = finder.GetTextureImage(texturePath.Infos.FirstOrDefault());
 
                 if (tile != null)
                 {
@@ -112,10 +112,11 @@ namespace Maploader.Tests.Tests
         }
 
         [Test]
-        public void TestRender2()
+        public void BenchmarkRender()
         {
             var dut = new World.World();
-            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db"));
+            //dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\1+ahXI06AQA=\db"));
+            dut.Open(@"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\world\db");
 
 
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
@@ -123,8 +124,8 @@ namespace Maploader.Tests.Tests
             var textures = ts.Textures;
             var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
 
-            int chunkRadius = 2;
-            int centerOffsetX = 0;//65;
+            int chunkRadius = 0;
+            int centerOffsetX = 1;//65;
             int centerOffsetZ = 0;//65;
 
             var b = new Bitmap(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
@@ -133,12 +134,15 @@ namespace Maploader.Tests.Tests
             var render = new ChunkRenderer(finder);
 
             //Parallel.For(-chunkRadius, chunkRadius + 1,new ParallelOptions(){MaxDegreeOfParallelism = 8} , dx =>
-            for (int dx = -chunkRadius; dx <= chunkRadius; dx++)
+            for (int dz = -chunkRadius; dz <= chunkRadius; dz++)
             {
-                for (int dz = -chunkRadius; dz <= chunkRadius; dz++)
+                for (int dx = -chunkRadius; dx <= chunkRadius; dx++)
                 {
                     var c = dut.GetChunk(dx + centerOffsetX, dz + centerOffsetZ);
-                    render.RenderChunk(c, g, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
+                    if (c != null)
+                    {
+                        render.RenderChunk(c, g, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
+                    }
                 }
             };
 

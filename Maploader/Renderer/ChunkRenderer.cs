@@ -5,6 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Maploader.Extensions;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 
@@ -19,23 +20,21 @@ namespace Maploader.Renderer
             this.textureFinder = textureFinder;
         }
 
+        public List<string> MissingTextures { get; } = new List<string>();
+
         public void RenderChunk(Chunk c, Graphics g, int xOffset, int zOffset)
         {
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
 
-            List<Action> DrawTodos = new List<Action>();
-            foreach (var blocks in xzColumns)
+            List<Action> textsToAdd = new List<Action>();
+            foreach (var blocks in xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1)))
             {
                 var blocksToRender = new Stack<BlockCoord>();
 
-                foreach (var blockPair in blocks.OrderByDescending(x => x.Value.Y)) // Look for transparent blocks
+                foreach (var blockColumn in blocks.OrderByDescending(x => x.Value.Y)) // Look for transparent blocks
                 {
-                    var block = blockPair.Value;
-                    //var name = block.Block.Id;
-                    //if (name != "minecraft:grass" && name != "minecraft:sand" && name != "minecraft:water")
-                    //{
-                    //    Console.WriteLine(block.Block.Id);
-                    //}
+                    var block = blockColumn.Value;
+     
                     blocksToRender.Push(block);
                     if (!textureFinder.TransparentBlocks.ContainsKey(block.Block.Id)) 
                     {
@@ -45,27 +44,33 @@ namespace Maploader.Renderer
 
                 foreach (var block in blocksToRender)
                 {
-                    string texturePath = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data);
-
-                    var tile = textureFinder.GetTextureImage(texturePath);
-                    if (tile != null)
+                    var textures = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data);
+                    if (textures == null)
                     {
-                        g.DrawImage(tile, xOffset + block.X * 16, zOffset + block.Z * 16);
-                        //if (block.Block.Id == "minecraft:coral_block")
-                        //{
-                        //    DrawTodos.Add(() => g.DrawString($"{c.X * 16+block.X} {c.Z * 16+block.Z}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, xOffset + block.X * 16, zOffset + block.Z * 16));
-                        //}
+                        Console.WriteLine($"Missing2: {block.ToString().PadRight(30)}");
+                        continue;
                     }
-                    else
+
+                    foreach (var texture in textures.Infos)
                     {
-                        Console.WriteLine($"{block.ToString().PadRight(30)} {texturePath}");
+                        var bitmapTile = textureFinder.GetTextureImage(texture);
+                        if (bitmapTile != null)
+                        {
+                            g.DrawImage(bitmapTile, xOffset + block.X * 16, zOffset + block.Z * 16);
+                            //Console.WriteLine($"OK      : {block.ToString().PadRight(30)} -- {texture.Filename}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Missing1: {block.ToString().PadRight(30)} -- {texture.Filename}");
+                            MissingTextures.Add($"ID: {block.Block.Id}, {texture.Filename}");
+                        }
                     }
                 }
             }
             g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, 0, 20);
-            foreach (var toto in DrawTodos)
+            foreach (var drawText in textsToAdd)
             {
-                toto();
+                drawText();
             }
         }
     }

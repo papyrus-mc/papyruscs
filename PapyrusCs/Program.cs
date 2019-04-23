@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -14,13 +16,25 @@ using Maploader.World;
 
 namespace MapCreatorCore
 {
+    public static class BetterEnumerable
+    {
+        public static IEnumerable<int> SteppedRange(int fromInclusive, int toExclusive, int step)
+        {
+            for (var i = fromInclusive; i < toExclusive; i += step)
+            {
+                yield return i;
+            }
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
 
             var world = new World();
-            world.Open(@"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
+            //world.Open(@"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
+            world.Open(@"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
 
             var keys = world.ChunkKeys.ToList();
 
@@ -39,14 +53,22 @@ namespace MapCreatorCore
             //zmin = -2;
             //zmax = 2;
 
+            var sw = Stopwatch.StartNew();
 
-            var maxDiameter = Math.Max(Math.Abs(xmax - xmin+1), Math.Abs(zmax - zmin+1));
-            Console.WriteLine($"Max Diameter is {maxDiameter}");
 
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
             var ts = new TerrainTextureJsonParser(json, "");
             var textures = ts.Textures;
 
+            const int chunkSize = 256;
+            int chunksPerDimension = 2;
+            int tileSize = chunkSize * chunksPerDimension;
+
+            var maxDiameter = Math.Max(Math.Abs(xmax - xmin + 1), Math.Abs(zmax - zmin + 1));
+            Console.WriteLine($"Max Diameter is {maxDiameter}");
+
+            maxDiameter = (maxDiameter+(chunksPerDimension-1)) / chunksPerDimension;
+            Console.WriteLine($"For {chunksPerDimension} per Tile, new Max Diameter is {maxDiameter}");
 
             var zoom = Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2));
             int extendedDia = (int) Math.Pow(2, zoom);
@@ -57,46 +79,72 @@ namespace MapCreatorCore
             List<Exception> exes = new List<Exception>();
 
             int chunkNo = 0;
+            var missingTextures = new ConcurrentBag<string>();
 
-            //Initial Renderung
-            Parallel.For(xmin, xmax+1, new ParallelOptions() {MaxDegreeOfParallelism = 4}, x =>
+            if (true)
             {
-                try
+                //Initial Renderung
+                Parallel.ForEach(BetterEnumerable.SteppedRange(xmin, xmax + 1, chunksPerDimension), new ParallelOptions() {MaxDegreeOfParallelism = 8}, x =>
                 {
-                    var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
-                    var chunkRenderer = new ChunkRenderer(finder);
-
-                    Console.WriteLine($"Processing X-Line: {x}: {chunkNo}/{chunkCount}");
-                    for (int z = zmin; z < zmax+1; z++)
+                    try
                     {
-                        var chunk = world.GetChunk(x, z);
-                        if (chunk == null)
-                            continue;
+                        var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
+                        var chunkRenderer = new ChunkRenderer(finder);
 
-                        Interlocked.Increment(ref chunkNo);
-
-                        using (var b = new Bitmap(256, 256))
-                        using (var g = Graphics.FromImage(b))
+                        Console.WriteLine($"Processing X-Line: {x}: {chunkNo}/{chunkCount}");
+                        var s = Stopwatch.StartNew();
+                        int chunkCounter = 0;
+                        for (int z = zmin; z < zmax + 1; z += chunksPerDimension)
                         {
-                            chunkRenderer.RenderChunk(chunk, g, 0, 0);
+                            using (var b = new Bitmap(tileSize, tileSize))
+                            using (var g = Graphics.FromImage(b))
+                            {
+                                bool anydrawn = false;
+                                for (int cx = 0; cx < chunksPerDimension; cx++)
+                                for (int cz = 0; cz < chunksPerDimension; cz++)
+                                {
 
-                            var fx = x - xmin;
-                            var fz = z - zmin;
+                                    var chunk = world.GetChunk(x + cx, z + cz);
+                                    if (chunk == null)
+                                        continue;
 
-                            var path = $"map\\{zoom}\\{fx}";
-                            var filepath = Path.Combine(path, $"{fz}.png");
+                                    Interlocked.Increment(ref chunkNo);
 
-                            if (!Directory.Exists(path))
-                                Directory.CreateDirectory(path);
-                            b.Save(filepath);
+                                    chunkRenderer.RenderChunk(chunk, g, cx * chunkSize, cz * chunkSize);
+                                    anydrawn = true;
+                                }
+
+                                if (anydrawn)
+                                {
+                                    var fx = (x - xmin) / chunksPerDimension;
+                                    var fz = (z - zmin) / chunksPerDimension;
+
+                                    var path = $"map\\{zoom}\\{fx}";
+                                    var filepath = Path.Combine(path, $"{fz}.png");
+
+                                    if (!Directory.Exists(path))
+                                        Directory.CreateDirectory(path);
+                                    b.Save(filepath);
+                                    chunkCounter+=chunksPerDimension*chunksPerDimension;
+                                }
+                            }
+                        }
+                        Console.WriteLine($"Processed X-Line: {x}: {chunkNo}/{chunkCount} @ {chunkCounter/(s.ElapsedMilliseconds/1000.0)}");
+
+
+                        foreach (var str in chunkRenderer.MissingTextures)
+                        {
+                            missingTextures.Add(str);
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    exes.Add(ex);
-                }
-            });
+                    catch (Exception ex)
+                    {
+                        exes.Add(ex);
+                    }
+                });
+            }
+            File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
+
 
             // Creating Zoomlevels
             while (zoom >= 0)
@@ -117,32 +165,34 @@ namespace MapCreatorCore
                         var b4 = LoadBitmap(zoomLocal, x + 1, z + 1);
 
                         bool didDraw = false;
-                        using (var bfinal = new Bitmap(256, 256))
+                        using (var bfinal = new Bitmap(tileSize, tileSize))
                         using (var gfinal = Graphics.FromImage(bfinal))
                         {
+                            var halfTileSize = tileSize / 2;
+
                             if (b1 != null)
                             {
-                                gfinal.DrawImage(b1, 0, 0, 128, 128);
+                                gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
                                 didDraw = true;
                             }
 
                             if (b2 != null)
                             {
-                                gfinal.DrawImage(b2, 128, 0, 128, 128);
+                                gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
                                 didDraw = true;
 
                             }
 
                             if (b3 != null)
                             {
-                                gfinal.DrawImage(b3, 0, 128, 128, 128);
+                                gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
                                 didDraw = true;
 
                             }
 
                             if (b4 != null)
                             {
-                                gfinal.DrawImage(b4, 128, 128, 128, 128);
+                                gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
                                 didDraw = true;
 
                             }
@@ -164,8 +214,9 @@ namespace MapCreatorCore
             }
 
 
-
             world.Close();
+
+            Console.WriteLine("Time {0}", sw.Elapsed);
         }
 
         private static Bitmap LoadBitmap(double zoom, int x, int z)
