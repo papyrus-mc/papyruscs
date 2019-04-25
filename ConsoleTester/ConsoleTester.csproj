@@ -60,18 +60,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\leveldb-sharp-1.9.2\leveldb-sharp.csproj">
-      <Project>{8dd96596-38ac-46dd-80c1-75d9ebe585ea}</Project>
-      <Name>leveldb-sharp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="LevelDB.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="zlibwapi.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\leveldb-sharp-std\leveldb-sharp-std.csproj">
+      <Project>{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5}</Project>
+      <Name>leveldb-sharp-std</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
