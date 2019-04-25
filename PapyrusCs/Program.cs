@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Schema;
+using CommandLine;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
@@ -29,8 +30,43 @@ namespace MapCreatorCore
 
     class Program
     {
+        public enum Strategy
+        {
+            SingleFor,
+            ParallelFor,
+            TplDataFlow
+        }
+
+        public class Options
+        {
+
+            [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
+            public string MinecraftWorld { get; set; }
+
+            [Option('o', "outputpath", Required = false, HelpText = "Sets the output path for the generated map tiles", Default = ".")]
+            public string OutputPath { get; set; }
+
+            [Option('s', "strategy", Required = false, HelpText = "Sets the strategy")]
+            public Strategy Strategy { get; set; }
+
+            public bool Loaded { get; set; }
+        }
+
         static void Main(string[] args)
         {
+            var options = new Options();
+
+            Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
+            {
+                options = o;
+                options.Loaded = true;
+            });
+
+            if (!options.Loaded)
+            {
+                return;
+            }
+
 
             var world = new World();
             //world.Open(@"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
