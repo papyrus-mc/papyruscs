@@ -52,7 +52,7 @@ namespace MapCreatorCore
             public bool Loaded { get; set; }
         }
 
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             var options = new Options();
 
@@ -64,53 +64,65 @@ namespace MapCreatorCore
 
             if (!options.Loaded)
             {
-                return;
+                return -1;
             }
 
 
             var world = new World();
             //world.Open(@"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
-            world.Open(@"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
+            //world.Open(@"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
+            try
+            {
+                world.Open(options.MinecraftWorld);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not open world at '{options.MinecraftWorld}'!. Did you specify the .../db folder?");
+                Console.WriteLine("The reason was:");
+                Console.WriteLine(ex.Message);
+                return -1;
+            }
 
+            Console.WriteLine("Generating a list of all chunk keys in the database. This could take a few minutes");
             var keys = world.ChunkKeys.ToList();
 
             int chunkCount = keys.Count;
             Console.WriteLine($"Total Chunk count {keys.Count}");
+            Console.WriteLine();
 
             var xmin = keys.Min(x => x.X);
             var xmax = keys.Max(x => x.X);
             var zmin = keys.Min(x => x.Y);
             var zmax = keys.Max(x => x.Y);
 
-
-
-            //xmin = -2;
-            //xmax = 2;
-            //zmin = -2;
-            //zmax = 2;
+            Console.WriteLine($"The total dimensions of the map are");
+            Console.WriteLine($"  X: {xmin} to {xmax}");
+            Console.WriteLine($"  Z: {zmin} to {zmax}");
+            Console.WriteLine();
 
             var sw = Stopwatch.StartNew();
 
-
+            Console.WriteLine("Reading terrain_texture.json...");
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
             var ts = new TerrainTextureJsonParser(json, "");
             var textures = ts.Textures;
+            Console.WriteLine();
 
             const int chunkSize = 256;
             int chunksPerDimension = 2;
             int tileSize = chunkSize * chunksPerDimension;
 
             var maxDiameter = Math.Max(Math.Abs(xmax - xmin + 1), Math.Abs(zmax - zmin + 1));
-            Console.WriteLine($"Max Diameter is {maxDiameter}");
+            Console.WriteLine($"The maximum diameter of the map is {maxDiameter}");
 
             maxDiameter = (maxDiameter+(chunksPerDimension-1)) / chunksPerDimension;
-            Console.WriteLine($"For {chunksPerDimension} per Tile, new Max Diameter is {maxDiameter}");
+            Console.WriteLine($"For {chunksPerDimension} chunks per tile, new max diameter is {maxDiameter}");
 
             var zoom = Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2));
             int extendedDia = (int) Math.Pow(2, zoom);
 
-            Console.WriteLine($"Calculated {zoom} Zoom Levels");
-            Console.WriteLine($"Extended Diameter is {extendedDia}");
+            Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
+            Console.WriteLine($"This results in {zoom} zoom levels");
 
             List<Exception> exes = new List<Exception>();
 
@@ -253,6 +265,8 @@ namespace MapCreatorCore
             world.Close();
 
             Console.WriteLine("Time {0}", sw.Elapsed);
+
+            return 0;
         }
 
         private static Bitmap LoadBitmap(double zoom, int x, int z)
@@ -265,6 +279,21 @@ namespace MapCreatorCore
             }
 
             return null;
+        }
+    }
+
+    public class ParallelForStragety
+    {
+        public int XMin { get; set; }
+        public int XMax { get; set; }
+        public int ZMin { get; set; }
+        public int ZMax { get; set; }
+
+        public string OutputPath { get; set; }
+        public int ChunksPerDimension { get; set; }
+        void RenderInitialLevel()
+        {
+
         }
     }
 }
