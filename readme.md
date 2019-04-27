@@ -29,7 +29,7 @@ The vanilla resource pack with the default textures can be downloaded from [here
 
 ## Additional dependencies
 - [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp.
-- [imageformats](https://github.com/dbrant/imageformats): This project requires a modified version of imageformats
+- [imageformats](https://github.com/dbrant/imageformats): This project requires a recompiled version of imageformats for .NET Standard
 
 The source for the modified versions is included in this repository.
 All needed depencies are already included in this repository or automatically downloaded via NuGet.
