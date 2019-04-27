@@ -1,5 +1,6 @@
-﻿# papyrus.cs
-Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2
+## papyrus.cs
+Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2.
+It currently runs only under windows, but support for linux is planned.
 
 You can view an example [here](http://gwsa.de/minecraft/map.html).
 
@@ -9,11 +10,10 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 ## Features
 - Render a top-down map of every already explored chunk
 #### Planned
+- Linux Support
+- Nether/ The End support
 - Isometric renders
 - Auto-Updating renders
-- Live-View of currently online players on map (and their respective statistics)
-- Nether/ The End support
-
 
 ## Installation
 Just unpack the zip-file.
