@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PapyrusCs
+namespace Maploader.Core
 {
     public static class Single
     {

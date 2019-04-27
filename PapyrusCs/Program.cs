@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
+using Maploader.Core;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
