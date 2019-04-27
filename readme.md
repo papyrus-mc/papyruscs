@@ -23,9 +23,9 @@ Requires .NET Core 2.2. You may need to install [additional dependencies](https:
 Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86/papyruscs/releases).
 
 ## Usage
-```papyrus --path "My World" --textures "Vanilla_Resource_Pack.zip" --output "C:\papyrus" --mode papyrus```
+```papyrus --world "My World" --output "C:\papyrus"```
 
-You'll have to define a path to the texture pack you want to use for the final render. The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
+The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
 ## Additional dependencies
 - [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp.
