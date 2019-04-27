@@ -67,7 +67,7 @@ namespace Maploader.Renderer
                     }
                 }
             }
-            g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, 0, 0);
+            g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, xOffset, zOffset);
             foreach (var drawText in textsToAdd)
             {
                 drawText();

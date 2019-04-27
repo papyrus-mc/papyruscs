@@ -126,7 +126,7 @@ namespace Maploader.Tests.Tests
 
             int chunkRadius = 1;
             int centerOffsetX = 1;//65;
-            int centerOffsetZ = 1;//65;
+            int centerOffsetZ = 0;//65;
 
             var b = new Bitmap(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
             var g = Graphics.FromImage(b);

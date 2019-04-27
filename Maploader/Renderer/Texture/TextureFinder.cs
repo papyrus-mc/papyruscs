@@ -206,81 +206,47 @@ namespace Maploader.Renderer.Texture
                         case 0:
                             return GetTexture("rail_normal", data);
                         case 1:
-                            return GetTexture("rail_normal", data, null, RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal", data).Rotate(RotateFlipType.Rotate90FlipNone);
                         case 2:
-                            return GetTexture("rail_normal", data, null, RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal", data).Rotate(RotateFlipType.Rotate90FlipNone);
                         case 3:
-                            return GetTexture("rail_normal", data, null, RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal", data).Rotate(RotateFlipType.Rotate90FlipNone);
                         case 4:
-                            return GetTexture("rail_normal", data, null);
+                            return GetTexture("rail_normal", data);
                         case 5:
-                            return GetTexture("rail_normal", data, null);
+                            return GetTexture("rail_normal", data);
                         case 6:
-                            return GetTexture("rail_normal_turned", data, null);
+                            return GetTexture("rail_normal_turned", data);
                         case 7:
-                            return GetTexture("rail_normal_turned", data, null, RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlipType.Rotate90FlipNone);
                         case 8:
-                            return GetTexture("rail_normal_turned", data, null, RotateFlipType.Rotate180FlipNone);
+                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlipType.Rotate180FlipNone);
                         case 9:
-                            return GetTexture("rail_normal_turned", data, null, RotateFlipType.Rotate270FlipNone);
+                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlipType.Rotate270FlipNone);
                     }
 
                     return null;
 
                 case "golden_rail":
-                    switch (data)
-                    {
-                        case 0:
-                            return GetTexture("rail_golden_powered", data);
-                        case 1:
-                            return GetTexture("rail_golden_powered", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 2:
-                            return GetTexture("rail_golden_powered", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 3:
-                            return GetTexture("rail_golden_powered", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 4:
-                            return GetTexture("rail_golden_powered", data, null);
-                        case 5:
-                            return GetTexture("rail_golden_powered", data, null);
-                    }
-                    return null;
+                    if ((data & 8) == 8)
+                        return RenderRail(data & 0xF7, "rail_golden_powered");
+                    else
+                        return RenderRail(data, "rail_golden");
 
                 case "activator_rail":
-                    switch (data)
-                    {
-                        case 0:
-                            return GetTexture("rail_activator", data);
-                        case 1:
-                            return GetTexture("rail_activator", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 2:
-                            return GetTexture("rail_activator", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 3:
-                            return GetTexture("rail_activator", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 4:
-                            return GetTexture("rail_activator", data, null);
-                        case 5:
-                            return GetTexture("rail_activator", data, null);
-                    }
-                    return null;
+                    if ((data & 8) == 8)
+                        return RenderRail(data & 0xF7, "rail_activator");
+                    else
+                        return RenderRail(data, "rail_activator");
+
 
 
                 case "detector_rail":
-                    switch (data)
-                    {
-                        case 0:
-                            return GetTexture("rail_detector", data);
-                        case 1:
-                            return GetTexture("rail_detector", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 2:
-                            return GetTexture("rail_detector", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 3:
-                            return GetTexture("rail_detector", data, null, RotateFlipType.Rotate90FlipNone);
-                        case 4:
-                            return GetTexture("rail_detector", data, null);
-                        case 5:
-                            return GetTexture("rail_detector", data, null);
-                    }
-                    return null;
+                    if ((data & 8) == 8)
+                        return RenderRail(data & 0xF7, "rail_detector_powered");
+                    else
+                        return RenderRail(data, "rail_detector");
+
                 case "monster_egg":
                     return GetTexture("monster_egg", Math.Max(0,data-1));
 
@@ -611,6 +577,27 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("scaffolding_top", data);
 
                     break;
+            }
+
+            return null;
+        }
+
+        private TextureStack RenderRail(long data, string texture)
+        {
+            switch (data)
+            {
+                case 0:
+                    return GetTexture(texture, data);
+                case 1:
+                    return GetTexture(texture, data).Rotate(RotateFlipType.Rotate90FlipNone);
+                case 2:
+                    return GetTexture(texture, data).Rotate(RotateFlipType.Rotate90FlipNone);
+                case 3:
+                    return GetTexture(texture, data).Rotate(RotateFlipType.Rotate90FlipNone);
+                case 4:
+                    return GetTexture(texture, data);
+                case 5:
+                    return GetTexture(texture, data);
             }
 
             return null;

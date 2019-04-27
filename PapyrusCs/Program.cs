@@ -1,33 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 using CommandLine;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 
-namespace MapCreatorCore
+namespace PapyrusCs
 {
-    public static class BetterEnumerable
-    {
-        public static IEnumerable<int> SteppedRange(int fromInclusive, int toExclusive, int step)
-        {
-            for (var i = fromInclusive; i < toExclusive; i += step)
-            {
-                yield return i;
-            }
-        }
-    }
-
     class Program
     {
         public enum Strategy
@@ -69,8 +55,6 @@ namespace MapCreatorCore
 
 
             var world = new World();
-            //world.Open(@"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
-            //world.Open(@"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db");
             try
             {
                 world.Open(options.MinecraftWorld);
@@ -89,18 +73,19 @@ namespace MapCreatorCore
             int chunkCount = keys.Count;
             Console.WriteLine($"Total Chunk count {keys.Count}");
             Console.WriteLine();
+            _totalChunk = chunkCount;
 
             var xmin = keys.Min(x => x.X);
             var xmax = keys.Max(x => x.X);
             var zmin = keys.Min(x => x.Y);
             var zmax = keys.Max(x => x.Y);
 
+
             Console.WriteLine($"The total dimensions of the map are");
             Console.WriteLine($"  X: {xmin} to {xmax}");
             Console.WriteLine($"  Z: {zmin} to {zmax}");
             Console.WriteLine();
 
-            var sw = Stopwatch.StartNew();
 
             Console.WriteLine("Reading terrain_texture.json...");
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
@@ -122,58 +107,192 @@ namespace MapCreatorCore
             int extendedDia = (int) Math.Pow(2, zoom);
 
             Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
-            Console.WriteLine($"This results in {zoom} zoom levels");
-
+            Console.WriteLine($"This results in {zoom+1} zoom levels");
             List<Exception> exes = new List<Exception>();
 
             var missingTextures = new ConcurrentBag<string>();
 
-            if (true)
+            _time = Stopwatch.StartNew();
+
+            var strat = new ParallelForStragety()
             {
-                var strat = new ParallelForStragety()
-                {
-                    XMax = xmax,
-                    XMin = xmin,
-                    ZMax = zmax,
-                    ZMin = zmin,
-                    ChunkSize = chunkSize,
-                    ChunksPerDimension = chunksPerDimension,
-                    TileSize = tileSize,
-                    OutputPath = ".",
-                    TextureDictionary = textures,
-                    TexturePath = Path.Combine(Environment.CurrentDirectory, "Textures"),
-                    TotalChunkCount = chunkCount,
-                    World = world,
-                    
-                };
-                strat.RenderInitialLevel();
-            }
+                XMax = xmax,
+                XMin = xmin,
+                ZMax = zmax,
+                ZMin = zmin,
+                ChunkSize = chunkSize,
+                ChunksPerDimension = chunksPerDimension,
+                TileSize = tileSize,
+                OutputPath = ".",
+                TextureDictionary = textures,
+                TexturePath = Path.Combine(Environment.CurrentDirectory, "Textures"),
+                TotalChunkCount = chunkCount,
+                World = world,
+                InitialZoomLevel = (int)zoom,
+                InitialDiameter = extendedDia,
+                
+            };
+            strat.ChunksRendered += RenderDisplay; 
+            strat.RenderInitialLevel();
+
             File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
 
+            strat.RenderZoomLevels();
+          
 
-            // Creating Zoomlevels
-            while (zoom >= 0)
+            world.Close();
+
+            Console.WriteLine("Total Time {0}", _time.Elapsed);
+
+            return 0;
+        }
+
+        private static int _totalChunksRendered = 0;
+        private static int _totalChunk = 0;
+        private static Stopwatch _time;
+        private static void RenderDisplay(object sender, ChunksRenderedEventArgs e)
+        {
+            Interlocked.Add(ref _totalChunksRendered, e.RenderedChunks);
+            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} @ {(_totalChunksRendered)/_time.Elapsed.TotalSeconds:0.0}");
+        }
+
+      
+    }
+
+    public class ParallelForStragety
+    {
+        public int XMin { get; set; }
+        public int XMax { get; set; }
+        public int ZMin { get; set; }
+        public int ZMax { get; set; }
+
+        public string OutputPath { get; set; }
+
+        public Dictionary<string, Texture> TextureDictionary {get;set;}
+
+        public string TexturePath { get; set; } //Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures")
+
+
+        public int ChunkSize { get; set; } = 16;
+        public int ChunksPerDimension { get; set; } = 2;
+        public int TileSize { get; set; }
+
+        public World World { get; set; }
+
+        public int TotalChunkCount { get; set; }
+
+        public int InitialZoomLevel { get; set; }
+
+        public List<string> MissingTextures { get; } = new List<string>();
+        public List<Exception> Exceptions { get; } = new List<Exception>();
+
+        public EventHandler<ChunksRenderedEventArgs> ChunksRendered;
+
+        public void RenderInitialLevel()
+        {
+            int chunkNo = 0;
+            int chunkCount = TotalChunkCount;
+            //Initial Renderung
+            Parallel.ForEach(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension), new ParallelOptions() { MaxDegreeOfParallelism = 8 }, x =>
+            {
+
+                try
+                {
+                    var finder = new TextureFinder(TextureDictionary, TexturePath);
+                    var chunkRenderer = new ChunkRenderer(finder);
+                    //Console.WriteLine($"Processing X-Line: {x}: {chunkNo}/{chunkCount}");
+                    var s = Stopwatch.StartNew();
+
+                    int chunksRendered = 0;
+                    for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
+                    {
+                        using (var b = new Bitmap(TileSize, TileSize))
+                        using (var g = Graphics.FromImage(b))
+                        {
+                            bool anydrawn = false;
+                            for (int cx = 0; cx < ChunksPerDimension; cx++)
+                                for (int cz = 0; cz < ChunksPerDimension; cz++)
+                                {
+                                    var chunk = World.GetChunk(x + cx, z + cz);
+                                    if (chunk == null)
+                                        continue;
+
+                                    chunksRendered++;
+
+                                    chunkRenderer.RenderChunk(chunk, g, cx * ChunkSize, cz * ChunkSize);
+                                    anydrawn = true;
+                                }
+
+                            if (anydrawn)
+                            {
+                                var fx = (x - XMin) / ChunksPerDimension;
+                                var fz = (z - ZMin) / ChunksPerDimension;
+
+                                var path = $"map\\{InitialZoomLevel}\\{fx}";
+                                var filepath = Path.Combine(path, $"{fz}.png");
+
+                                if (!Directory.Exists(path))
+                                    Directory.CreateDirectory(path);
+                                b.Save(filepath);
+                            }
+                        }
+                    }
+                    ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
+
+                    foreach (var str in chunkRenderer.MissingTextures)
+                    {
+                        MissingTextures.Add(str);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Exceptions.Add(ex);
+                }
+            });
+
+        }
+
+        private static Bitmap LoadBitmap(double zoom, int x, int z)
+        {
+            var path = $"map\\{zoom}\\{x}";
+            var filepath = Path.Combine(path, $"{z}.png");
+            if (File.Exists(filepath))
+            {
+                return new Bitmap(filepath);
+            }
+
+            return null;
+        }
+
+        public void RenderZoomLevels()
+        {
+            var sourceZoomLevel = this.InitialZoomLevel;
+            var sourceDiameter = this.InitialDiameter;
+
+            while (sourceZoomLevel > 0)
             {
                 //for (int x = 0; x < 2 * radius; x += 2)
-                var radiusLocal = extendedDia / 2;
-                var zoomLocal = zoom;
-                Parallel.For(0, extendedDia, hx =>
-                {
-                    var x = 2 * hx;
-                    Console.WriteLine($"Processing {x} at {zoomLocal-1}");
-                    for (int z = 0; z < 2 * radiusLocal; z += 2)
-                    {
+                var destDiameter = sourceDiameter / 2;
 
-                        var b1 = LoadBitmap(zoomLocal, x, z);
-                        var b2 = LoadBitmap(zoomLocal, x + 1, z);
-                        var b3 = LoadBitmap(zoomLocal, x, z + 1);
-                        var b4 = LoadBitmap(zoomLocal, x + 1, z + 1);
+                var sourceZoom = sourceZoomLevel;
+                var destZoom = sourceZoomLevel-1;
+
+                Parallel.ForEach(BetterEnumerable.SteppedRange(0,sourceDiameter, 2), x =>
+                {
+                    Console.WriteLine($"Processing Line {x} at {sourceZoom}");
+
+                    for (int z = 0; z < 2 * destDiameter; z += 2)
+                    {
+                        var b1 = LoadBitmap(sourceZoom, x, z);
+                        var b2 = LoadBitmap(sourceZoom, x + 1, z);
+                        var b3 = LoadBitmap(sourceZoom, x, z + 1);
+                        var b4 = LoadBitmap(sourceZoom, x + 1, z + 1);
 
                         bool didDraw = false;
-                        using (var bfinal = new Bitmap(tileSize, tileSize))
+                        using (var bfinal = new Bitmap(TileSize, TileSize))
                         using (var gfinal = Graphics.FromImage(bfinal))
                         {
-                            var halfTileSize = tileSize / 2;
+                            var halfTileSize = TileSize / 2;
 
                             if (b1 != null)
                             {
@@ -204,7 +323,7 @@ namespace MapCreatorCore
 
                             if (didDraw)
                             {
-                                var path = $"map\\{zoomLocal - 1}\\{x / 2}";
+                                var path = $"map\\{destZoom}\\{x / 2}";
                                 if (!Directory.Exists(path))
                                     Directory.CreateDirectory(path);
                                 var filepath = Path.Combine(path, $"{z / 2}.png");
@@ -214,122 +333,23 @@ namespace MapCreatorCore
                     }
                 });
 
-                extendedDia /= 2;
-                zoom--;
+                sourceDiameter = destDiameter;
+                sourceZoomLevel = destZoom;
             }
 
-
-            world.Close();
-
-            Console.WriteLine("Time {0}", sw.Elapsed);
-
-            return 0;
         }
 
-        private static Bitmap LoadBitmap(double zoom, int x, int z)
-        {
-            var path = $"map\\{zoom}\\{x}";
-            var filepath = Path.Combine(path, $"{z}.png");
-            if (File.Exists(filepath))
-            {
-                return new Bitmap(filepath);
-            }
-
-            return null;
-        }
+        public int InitialDiameter { get; set; }
     }
 
-    public class ParallelForStragety
+    public class ChunksRenderedEventArgs : EventArgs
     {
-        public int XMin { get; set; }
-        public int XMax { get; set; }
-        public int ZMin { get; set; }
-        public int ZMax { get; set; }
-
-        public string OutputPath { get; set; }
-
-        public Dictionary<string, Texture> TextureDictionary {get;set;}
-
-        public string TexturePath { get; set; } //Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures")
-
-
-        public int ChunkSize { get; set; } = 16;
-        public int ChunksPerDimension { get; set; } = 2;
-        public int TileSize { get; set; }
-
-        public World World { get; set; }
-
-        public int TotalChunkCount { get; set; }
-
-        public int InitialZoomLevel { get; set; }
-
-        public List<string> MissingTextures { get; } = new List<string>();
-        public List<Exception> Exceptions { get; } = new List<Exception>();
-
-        public void RenderInitialLevel()
+        public ChunksRenderedEventArgs(int renderedChunks)
         {
-            int chunkNo = 0;
-            int chunkCount = TotalChunkCount;
-            //Initial Renderung
-            Parallel.ForEach(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension), new ParallelOptions() { MaxDegreeOfParallelism = 8 }, x =>
-            {
-                try
-                {
-                    var finder = new TextureFinder(TextureDictionary, TexturePath);
-                    var chunkRenderer = new ChunkRenderer(finder);
-
-                    Console.WriteLine($"Processing X-Line: {x}: {chunkNo}/{chunkCount}");
-                    var s = Stopwatch.StartNew();
-                    int chunkCounter = 0;
-                    for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
-                    {
-                        using (var b = new Bitmap(TileSize, TileSize))
-                        using (var g = Graphics.FromImage(b))
-                        {
-                            bool anydrawn = false;
-                            for (int cx = 0; cx < ChunksPerDimension; cx++)
-                                for (int cz = 0; cz < ChunksPerDimension; cz++)
-                                {
-                                    var chunk = World.GetChunk(x + cx, z + cz);
-                                    if (chunk == null)
-                                        continue;
-
-                                    Interlocked.Increment(ref chunkNo);
-
-                                    chunkRenderer.RenderChunk(chunk, g, cx * ChunkSize, cz * ChunkSize);
-                                    anydrawn = true;
-                                }
-
-                            if (anydrawn)
-                            {
-                                var fx = (x - XMin) / ChunksPerDimension;
-                                var fz = (z - ZMin) / ChunksPerDimension;
-
-                                var path = $"map\\{InitialZoomLevel}\\{fx}";
-                                var filepath = Path.Combine(path, $"{fz}.png");
-
-                                if (!Directory.Exists(path))
-                                    Directory.CreateDirectory(path);
-                                b.Save(filepath);
-                                chunkCounter += ChunksPerDimension * ChunksPerDimension;
-                            }
-                        }
-                    }
-                    Console.WriteLine($"Processed X-Line: {x}: {chunkNo}/{chunkCount} @ {chunkCounter / (s.ElapsedMilliseconds / 1000.0)}");
-
-
-                    foreach (var str in chunkRenderer.MissingTextures)
-                    {
-                        MissingTextures.Add(str);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
-            });
-
+            RenderedChunks = renderedChunks;
         }
+
+        public int RenderedChunks { get; }
     }
 }
 
