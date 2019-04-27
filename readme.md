@@ -27,8 +27,6 @@ Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86
 
 You'll have to define a path to the texture pack you want to use for the final render. The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
-[Read the full documentation.](https://github.com/clarkx86/papyrus/blob/master/docs/documentation.md)
-
 ## Additional dependencies
 - [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp.
 
@@ -37,10 +35,10 @@ All needed depencies are already included in this repository or automatically do
 ## Contribute xor support
 If you want to help improving Papyrus please consider forking the repository.
 
-Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/clarkstuehmer)
+Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyruscs)
 
 ## Special thanks to...
-... [clarkx86](https://github.comclarkx86).
+... [clarkx86](https://github.com/clarkx86).
 
 ## Disclaimer
 Papyrus is in no way affiliated with Mojang or Minecraft.
