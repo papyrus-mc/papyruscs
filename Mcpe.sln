@@ -1,12 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.438
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Viewer", "Mcpe\Viewer.csproj", "{8622EECC-D336-418B-A9CB-7235E578FA90}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "leveldb-sharp", "leveldb-sharp-1.9.2\leveldb-sharp.csproj", "{8DD96596-38AC-46DD-80C1-75D9EBE585EA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{11364FF0-984E-4FE0-BA39-C57012D83EDD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maploader", "Maploader\Maploader.csproj", "{5A307016-F416-402D-B5DF-023E8F1A3120}"
@@ -34,14 +30,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8622EECC-D336-418B-A9CB-7235E578FA90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8622EECC-D336-418B-A9CB-7235E578FA90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8622EECC-D336-418B-A9CB-7235E578FA90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8622EECC-D336-418B-A9CB-7235E578FA90}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DD96596-38AC-46DD-80C1-75D9EBE585EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DD96596-38AC-46DD-80C1-75D9EBE585EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DD96596-38AC-46DD-80C1-75D9EBE585EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DD96596-38AC-46DD-80C1-75D9EBE585EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,7 +55,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{8DD96596-38AC-46DD-80C1-75D9EBE585EA} = {F2FA56EB-053B-4EC7-895C-02A0AA7A74E2}
 		{11364FF0-984E-4FE0-BA39-C57012D83EDD} = {11421248-2E1B-4166-A405-CC9689AB28EA}
 		{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5} = {F2FA56EB-053B-4EC7-895C-02A0AA7A74E2}
 		{2E0657C3-51E7-434B-BF72-C506402F0FC7} = {11421248-2E1B-4166-A405-CC9689AB28EA}
