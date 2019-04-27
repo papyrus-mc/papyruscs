@@ -1,4 +1,4 @@
-﻿//  leveldb-sharp
+//  leveldb-sharp
 // 
 //  Copyright (c) 2012, Mirco Bauer <meebey@meebey.net>
 //  All rights reserved.
