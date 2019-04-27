@@ -28,9 +28,9 @@ Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
 ## Additional dependencies
-- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/Libraries/leveldb-sharp-std/license.md)
+- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
 - [imageformats](https://github.com/dbrant/imageformats): This project requires a recompiled version of imageformats for .NET Standard
-[license](https://github.com/mjungnickel18/papyruscs/Libraries/ImageFormats-std/license.md)
+[license](https://github.com/mjungnickel18/papyruscs/blob/master/imageformats-std/license.md)
 
 The source for the modified versions is included in this repository.
 All needed depencies are already included in this repository or automatically downloaded via NuGet.
