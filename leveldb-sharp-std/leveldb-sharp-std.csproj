@@ -8,7 +8,12 @@
 
   <ItemGroup>
     <None Remove="LevelDB.dll" />
+    <None Remove="license.md" />
     <None Remove="zlibwapi.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="license.md" />
   </ItemGroup>
 
   <ItemGroup>
