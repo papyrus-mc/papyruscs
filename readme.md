@@ -30,7 +30,7 @@ You'll have to define a path to the texture pack you want to use for the final r
 [Read the full documentation.](https://github.com/clarkx86/papyrus/blob/master/docs/documentation.md)
 
 ## Additional dependencies
-- [node-leveldb-mcpe](https://github.com/mhsjlw/node-leveldb-mcpe) _(Requires additional [configuring](https://github.com/clarkx86/papyrusjs/blob/master/docs/documentation.md#dependency-configuration))_
+- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp.
 
 All needed depencies are already included in this repository or automatically downloaded via NuGet
 
