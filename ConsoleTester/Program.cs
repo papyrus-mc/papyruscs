@@ -10,13 +10,6 @@ namespace ConsoleTester
 {
     class Program
     {
-        public class Terrain
-        {
-            public int X;
-            public int Y;
-            public char Type;
-        }
-
         public static byte[] CreateKey(int x, int z, int type, int subChunk)
         {
             var ret = new byte[]
@@ -37,7 +30,7 @@ namespace ConsoleTester
 
         static void Main(string[] args)
         {
-            string path = @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\sImeXEdXdgA=\db";
+            //string path = @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\sImeXEdXdgA=\db";
             string path2 = @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db";
             var op = new Options();
             op.Compression = CompressionType.ZlibRaw;

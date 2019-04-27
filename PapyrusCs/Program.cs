@@ -2,16 +2,13 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using CommandLine;
-using Maploader.Core;
-using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using PapyrusCs.Strategies;
 
 namespace PapyrusCs
 {
@@ -21,7 +18,6 @@ namespace PapyrusCs
         {
             SingleFor,
             ParallelFor,
-            TplDataFlow
         }
 
         public class Options
@@ -30,11 +26,17 @@ namespace PapyrusCs
             [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
             public string MinecraftWorld { get; set; }
 
-            [Option('o', "outputpath", Required = false, HelpText = "Sets the output path for the generated map tiles", Default = ".")]
+            [Option('o', "output", Required = false, HelpText = "Sets the output path for the generated map tiles", Default = ".")]
             public string OutputPath { get; set; }
 
-            [Option('s', "strategy", Required = false, HelpText = "Sets the strategy")]
+            [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)", Default = Strategy.ParallelFor)]
             public Strategy Strategy { get; set; }
+
+            [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = true)]
+            public bool RenderCoords { get; set; }
+
+            [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 16)]
+            public int MaxNumberOfThreads { get; set; }
 
             public bool Loaded { get; set; }
         }
@@ -58,6 +60,7 @@ namespace PapyrusCs
             var world = new World();
             try
             {
+                Console.WriteLine("Opening world...");
                 world.Open(options.MinecraftWorld);
             }
             catch (Exception ex)
@@ -89,7 +92,7 @@ namespace PapyrusCs
 
 
             Console.WriteLine("Reading terrain_texture.json...");
-            var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
+            var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures","terrain_texture.json"));
             var ts = new TerrainTextureJsonParser(json, "");
             var textures = ts.Textures;
             Console.WriteLine();
@@ -115,24 +118,34 @@ namespace PapyrusCs
 
             _time = Stopwatch.StartNew();
 
-            var strat = new ParallelForStragety()
+            IRenderStrategy strat = null;
+            switch (options.Strategy)
             {
-                XMax = xmax,
-                XMin = xmin,
-                ZMax = zmax,
-                ZMin = zmin,
-                ChunkSize = chunkSize,
-                ChunksPerDimension = chunksPerDimension,
-                TileSize = tileSize,
-                OutputPath = options.OutputPath,
-                TextureDictionary = textures,
-                TexturePath = Path.Combine(Environment.CurrentDirectory, "Textures"),
-                TotalChunkCount = chunkCount,
-                World = world,
-                InitialZoomLevel = (int)zoom,
-                InitialDiameter = extendedDia,
-                
-            };
+                case Strategy.ParallelFor:
+                    strat = new ParallelForRenderStrategy();
+                    break;
+                case Strategy.SingleFor:
+                    strat = new SingleForRenderStrategy();
+                    break;
+                default:
+                    strat = new SingleForRenderStrategy();
+                    break;
+            }
+            strat.RenderSettings = new RenderSettings() { RenderCoords = options.RenderCoords, MaxNumberOfThreads = options.MaxNumberOfThreads };
+            strat.InitialDiameter = extendedDia;
+            strat.InitialZoomLevel = (int)zoom;
+            strat.World = world;
+            strat.TotalChunkCount = chunkCount;
+            strat.TexturePath = Path.Combine(Environment.CurrentDirectory, "textures");
+            strat.TextureDictionary = textures;
+            strat.OutputPath = options.OutputPath;
+            strat.TileSize = tileSize;
+            strat.ChunksPerDimension = chunksPerDimension;
+            strat.ChunkSize = chunkSize;
+            strat.ZMin = zmin;
+            strat.ZMax = zmax;
+            strat.XMin = xmin;
+            strat.XMax = xmax;
             strat.ChunksRendered += RenderDisplay; 
             strat.RenderInitialLevel();
 
@@ -154,203 +167,10 @@ namespace PapyrusCs
         private static void RenderDisplay(object sender, ChunksRenderedEventArgs e)
         {
             Interlocked.Add(ref _totalChunksRendered, e.RenderedChunks);
-            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} @ {(_totalChunksRendered)/_time.Elapsed.TotalSeconds:0.0}");
+            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered)/_time.Elapsed.TotalSeconds:0.0} c/s");
         }
 
       
-    }
-
-    public class ParallelForStragety
-    {
-        public int XMin { get; set; }
-        public int XMax { get; set; }
-        public int ZMin { get; set; }
-        public int ZMax { get; set; }
-
-        public string OutputPath { get; set; }
-
-        public Dictionary<string, Texture> TextureDictionary {get;set;}
-
-        public string TexturePath { get; set; } //Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures")
-
-
-        public int ChunkSize { get; set; } = 16;
-        public int ChunksPerDimension { get; set; } = 2;
-        public int TileSize { get; set; }
-
-        public World World { get; set; }
-
-        public int TotalChunkCount { get; set; }
-
-        public int InitialZoomLevel { get; set; }
-
-        public List<string> MissingTextures { get; } = new List<string>();
-        public List<Exception> Exceptions { get; } = new List<Exception>();
-
-        public EventHandler<ChunksRenderedEventArgs> ChunksRendered;
-
-        public void RenderInitialLevel()
-        {
-            int chunkNo = 0;
-            int chunkCount = TotalChunkCount;
-            //Initial Renderung
-            Parallel.ForEach(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension), new ParallelOptions() { MaxDegreeOfParallelism = 8 }, x =>
-            {
-
-                try
-                {
-                    var finder = new TextureFinder(TextureDictionary, TexturePath);
-                    var chunkRenderer = new ChunkRenderer(finder);
-                    //Console.WriteLine($"Processing X-Line: {x}: {chunkNo}/{chunkCount}");
-                    var s = Stopwatch.StartNew();
-
-                    int chunksRendered = 0;
-                    for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
-                    {
-                        using (var b = new Bitmap(TileSize, TileSize))
-                        using (var g = Graphics.FromImage(b))
-                        {
-                            bool anydrawn = false;
-                            for (int cx = 0; cx < ChunksPerDimension; cx++)
-                                for (int cz = 0; cz < ChunksPerDimension; cz++)
-                                {
-                                    var chunk = World.GetChunk(x + cx, z + cz);
-                                    if (chunk == null)
-                                        continue;
-
-                                    chunksRendered++;
-
-                                    chunkRenderer.RenderChunk(chunk, g, cx * ChunkSize, cz * ChunkSize);
-                                    anydrawn = true;
-                                }
-
-                            if (anydrawn)
-                            {
-                                var fx = (x - XMin) / ChunksPerDimension;
-                                var fz = (z - ZMin) / ChunksPerDimension;
-
-                                var path = Path.Combine(OutputPath, $"map\\{InitialZoomLevel}\\{fx}");
-                                var filepath = Path.Combine(path, $"{fz}.png");
-
-                                if (!Directory.Exists(path))
-                                    Directory.CreateDirectory(path);
-                                b.Save(filepath);
-                            }
-                        }
-                    }
-                    ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
-
-                    foreach (var str in chunkRenderer.MissingTextures)
-                    {
-                        MissingTextures.Add(str);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Exceptions.Add(ex);
-                }
-            });
-
-        }
-
-        private Bitmap LoadBitmap(double zoom, int x, int z)
-        {
-            var path = Path.Combine(OutputPath, $"map\\{zoom}\\{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
-            if (File.Exists(filepath))
-            {
-                return new Bitmap(filepath);
-            }
-
-            return null;
-        }
-
-        public void RenderZoomLevels()
-        {
-            var sourceZoomLevel = this.InitialZoomLevel;
-            var sourceDiameter = this.InitialDiameter;
-
-            while (sourceZoomLevel > 0)
-            {
-                //for (int x = 0; x < 2 * radius; x += 2)
-                var destDiameter = sourceDiameter / 2;
-
-                var sourceZoom = sourceZoomLevel;
-                var destZoom = sourceZoomLevel-1;
-
-                Parallel.ForEach(BetterEnumerable.SteppedRange(0,sourceDiameter, 2), x =>
-                {
-                    Console.WriteLine($"Processing Line {x} at {sourceZoom}");
-
-                    for (int z = 0; z < 2 * destDiameter; z += 2)
-                    {
-                        var b1 = LoadBitmap(sourceZoom, x, z);
-                        var b2 = LoadBitmap(sourceZoom, x + 1, z);
-                        var b3 = LoadBitmap(sourceZoom, x, z + 1);
-                        var b4 = LoadBitmap(sourceZoom, x + 1, z + 1);
-
-                        bool didDraw = false;
-                        using (var bfinal = new Bitmap(TileSize, TileSize))
-                        using (var gfinal = Graphics.FromImage(bfinal))
-                        {
-                            var halfTileSize = TileSize / 2;
-
-                            if (b1 != null)
-                            {
-                                gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
-                                didDraw = true;
-                            }
-
-                            if (b2 != null)
-                            {
-                                gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
-                                didDraw = true;
-
-                            }
-
-                            if (b3 != null)
-                            {
-                                gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
-                                didDraw = true;
-
-                            }
-
-                            if (b4 != null)
-                            {
-                                gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
-                                didDraw = true;
-
-                            }
-
-                            if (didDraw)
-                            {
-                                var path = Path.Combine(OutputPath, $"map\\{destZoom}\\{x / 2}");
-                                if (!Directory.Exists(path))
-                                    Directory.CreateDirectory(path);
-                                var filepath = Path.Combine(path, $"{z / 2}.png");
-                                bfinal.Save(filepath);
-                            }
-                        }
-                    }
-                });
-
-                sourceDiameter = destDiameter;
-                sourceZoomLevel = destZoom;
-            }
-
-        }
-
-        public int InitialDiameter { get; set; }
-    }
-
-    public class ChunksRenderedEventArgs : EventArgs
-    {
-        public ChunksRenderedEventArgs(int renderedChunks)
-        {
-            RenderedChunks = renderedChunks;
-        }
-
-        public int RenderedChunks { get; }
     }
 }
 

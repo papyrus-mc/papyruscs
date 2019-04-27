@@ -9,7 +9,7 @@ namespace Maploader.World.LookupTable
     {
         public BlockLookupTable()
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"LookupTable\runtimeid_table.json");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"LookupTable", "runtimeid_table.json");
             var json = File.ReadAllText(path);
 
             var table = JsonConvert.DeserializeObject<List<LookUp>>(json);

@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using Maploader.Extensions;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using PapyrusCs;
 
 namespace Maploader.Renderer
 {
     public class ChunkRenderer
     {
         private readonly TextureFinder textureFinder;
+        private readonly RenderSettings renderSettings = new RenderSettings();
 
-        public ChunkRenderer(TextureFinder textureFinder)
+        public ChunkRenderer(TextureFinder textureFinder, RenderSettings renderSettings = null)
         {
             this.textureFinder = textureFinder;
+            if (renderSettings != null)
+            {
+                this.renderSettings = renderSettings;
+            }
         }
 
         public List<string> MissingTextures { get; } = new List<string>();
@@ -26,7 +29,6 @@ namespace Maploader.Renderer
         {
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
 
-            List<Action> textsToAdd = new List<Action>();
             foreach (var blocks in xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1)))
             {
                 var blocksToRender = new Stack<BlockCoord>();
@@ -47,7 +49,7 @@ namespace Maploader.Renderer
                     var textures = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z);
                     if (textures == null)
                     {
-                        Console.WriteLine($"Missing2: {block.ToString().PadRight(30)}");
+                        Console.WriteLine($"Missing(2): {block.ToString().PadRight(30)}");
                         continue;
                     }
 
@@ -57,20 +59,20 @@ namespace Maploader.Renderer
                         if (bitmapTile != null)
                         {
                             g.DrawImage(bitmapTile, xOffset + block.X * 16, zOffset + block.Z * 16);
-                            //Console.WriteLine($"OK      : {block.ToString().PadRight(30)} -- {texture.Filename}");
                         }
                         else
                         {
-                            Console.WriteLine($"Missing1: {block.ToString().PadRight(30)} -- {texture.Filename}");
+                            Console.WriteLine($"Missing(1): {block.ToString().PadRight(30)} -- {texture.Filename}");
                             MissingTextures.Add($"ID: {block.Block.Id}, {texture.Filename}");
                         }
                     }
                 }
             }
-            g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, xOffset, zOffset);
-            foreach (var drawText in textsToAdd)
+
+            if (renderSettings.RenderCoords)
             {
-                drawText();
+                g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black,
+                    xOffset, zOffset);
             }
         }
     }

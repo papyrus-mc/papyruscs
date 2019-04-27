@@ -23,8 +23,6 @@ namespace Maploader.Renderer.Texture
             var jobj = JObject.Parse(json);
             var texturesData = jobj.SelectToken("texture_data").ToObject<JObject>();
 
-            //Console.WriteLine(tobj);
-            int i = 0;
             foreach (var textureData in texturesData.Properties())
             {
                 var texture = new Texture(textureData.Name);

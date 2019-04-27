@@ -575,8 +575,6 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("coral_fan_hang_a", data);
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
-
-                    break;
             }
 
             return null;
@@ -678,7 +676,7 @@ namespace Maploader.Renderer.Texture
             var localPath = info.Filename;
 
             localPath = localPath.Replace("textures/", "");
-            localPath = localPath.Replace("/", "\\");
+            localPath = localPath.Replace('/', Path.DirectorySeparatorChar);
 
             if (Cache.ContainsKey(info))
             {
@@ -699,6 +697,11 @@ namespace Maploader.Renderer.Texture
                 {
                     extension = ".tga";
                     b = TgaReader.Load(filepath + extension);
+                }
+
+                if (b == null)
+                {
+                    Console.WriteLine("Could not find {0}", filepath);
                 }
 
                 if (info.Translation != null)
