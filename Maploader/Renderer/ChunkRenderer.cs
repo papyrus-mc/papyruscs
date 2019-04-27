@@ -46,7 +46,7 @@ namespace Maploader.Renderer
 
                 foreach (var block in blocksToRender)
                 {
-                    var textures = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z);
+                    var textures = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z, block.Y);
                     if (textures == null)
                     {
                         Console.WriteLine($"Missing(2): {block.ToString().PadRight(30)}");

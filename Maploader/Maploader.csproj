@@ -29,12 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="ImageFormats-std">
-      <HintPath>..\Imports\ImageFormats-std\ImageFormats-std.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Update="libleveldb.so">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="libleveldb.so.1.20">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="LookupTable\runtimeid_table.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
