@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ImageFormats-std", "ImageFo
 		Imports\ImageFormats-std\ImageFormats-std.deps.json = Imports\ImageFormats-std\ImageFormats-std.deps.json
 		Imports\ImageFormats-std\ImageFormats-std.dll = Imports\ImageFormats-std\ImageFormats-std.dll
 		Imports\ImageFormats-std\ImageFormats-std.pdb = Imports\ImageFormats-std\ImageFormats-std.pdb
-		..\imageformats\license.md = ..\imageformats\license.md
+		license.md = license.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{11421248-2E1B-4166-A405-CC9689AB28EA}"
