@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -39,6 +40,35 @@ namespace Maploader.Renderer.Texture
         public static implicit operator string(TextureStack info)
         {
             return info?.Infos.FirstOrDefault()?.Filename;
+        }
+
+        public TextureStack Rotate(RotateFlipType rotation)
+        {
+            if (!Infos.Any())
+                return this;
+
+            Infos.Last().Rotation = rotation;
+            return this;
+        }
+        public TextureStack Translate(int x, int z, int w, int h)
+        {
+            return Translate(new Rectangle(x, z, w, h));
+        }
+        public TextureStack Translate(Rectangle source)
+        {
+            if (!Infos.Any())
+                return this;
+
+            Infos.Last().Translation = new TextureTranslation(source, source);
+            return this;
+        }
+        public TextureStack Translate(Rectangle source, Rectangle dest)
+        {
+            if (!Infos.Any())
+                return this;
+
+            Infos.Last().Translation = new TextureTranslation(dest, source);
+            return this;
         }
     }
 }

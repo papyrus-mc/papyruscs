@@ -59,7 +59,7 @@ namespace Maploader.Tests.Tests
                 var blocks = block.ToList();
                 var hBlock = blocks.OrderByDescending(x => x.Key & 0xFF).First();
 
-                var texturePath = finder.FindTexturePath(hBlock.Value.Block.Id, hBlock.Value.Block.Data);
+                var texturePath = finder.FindTexturePath(hBlock.Value.Block.Id, hBlock.Value.Block.Data, hBlock.Value.X, hBlock.Value.Y);
 
                 Console.WriteLine($"{hBlock.ToString().PadRight(30)} {texturePath}");
                 var tile = finder.GetTextureImage(texturePath.Infos.FirstOrDefault());
@@ -124,9 +124,9 @@ namespace Maploader.Tests.Tests
             var textures = ts.Textures;
             var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
 
-            int chunkRadius = 0;
+            int chunkRadius = 1;
             int centerOffsetX = 1;//65;
-            int centerOffsetZ = 0;//65;
+            int centerOffsetZ = 1;//65;
 
             var b = new Bitmap(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
             var g = Graphics.FromImage(b);

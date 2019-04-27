@@ -44,7 +44,7 @@ namespace Maploader.Renderer
 
                 foreach (var block in blocksToRender)
                 {
-                    var textures = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data);
+                    var textures = textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z);
                     if (textures == null)
                     {
                         Console.WriteLine($"Missing2: {block.ToString().PadRight(30)}");
@@ -67,7 +67,7 @@ namespace Maploader.Renderer
                     }
                 }
             }
-            g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, 0, 20);
+            g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, 0, 0);
             foreach (var drawText in textsToAdd)
             {
                 drawText();

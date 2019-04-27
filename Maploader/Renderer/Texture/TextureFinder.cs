@@ -9,6 +9,9 @@ namespace Maploader.Renderer.Texture
 {
     public class TextureFinder
     {
+        /// <summary>
+        /// Returns if a texture is transparent
+        /// </summary>
         public Dictionary<string, bool> TransparentBlocks { get; } = new Dictionary<string, bool>()
         {
             {"minecraft:tallgrass", true},
@@ -17,6 +20,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:lever", true},
             {"minecraft:redstone_torch", true},
             {"minecraft:sapling", true},
+            {"minecraft:bamboo_sapling", true},
             {"minecraft:double_plant", true },
             {"minecraft:double_plant_grass", true },
             {"minecraft:double_plant_bottom", true },
@@ -27,6 +31,13 @@ namespace Maploader.Renderer.Texture
             {"minecraft:red_flower", true },
             {"minecraft:fence", true },
             {"minecraft:fence_gate", true },
+            {"minecraft:spruce_fence_gate", true },
+            {"minecraft:birch_fence_gate", true },
+            {"minecraft:acacia_fence_gate", true },
+            {"minecraft:jungle_fence_gate", true },
+            {"minecraft:dark_oak_fence_gate", true },
+            {"minecraft:cobblestone_wall", true },
+
             {"minecraft:stone_button", true },
             {"minecraft:redstone_wire", true },
             {"minecraft:kelp", true },
@@ -39,10 +50,11 @@ namespace Maploader.Renderer.Texture
             {"minecraft:stained_glass_pane", true },
             {"minecraft:rail", true },
             {"minecraft:golden_rail", true },
+            {"minecraft:detector_rail", true },
+            {"minecraft:activator_rail", true },
             {"minecraft:iron_bars", true },
             {"minecraft:end_rod", true },
             {"minecraft:wall_sign", true },
-            {"minecraft:spruce_fence_gate", true },
             {"minecraft:standing_sign", true },
             {"minecraft:mushroom_red", true },
             {"minecraft:mushroom_brown", true },
@@ -60,6 +72,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:web", true },
             {"minecraft:conduit", true },
             {"minecraft:flower_pot", true },
+            {"minecraft:bamboo", true },
             {"minecraft:wooden_door", true },
 
 
@@ -75,13 +88,11 @@ namespace Maploader.Renderer.Texture
             this.path = path;
         }
 
-        public TextureStack FindTexturePath(string name, long data)
+        public TextureStack FindTexturePath(string name, long data, int x, int z)
         {
             name = name.Replace("minecraft:", "");
 
-         
-
-            var newTexture = GetSubstitution(name, data);
+            var newTexture = GetSubstitution(name, data, x, z);
 
             if (newTexture != null)
             {
@@ -95,25 +106,21 @@ namespace Maploader.Renderer.Texture
 
         }
 
-        public enum BlockFace
-        {
-            Down = 0,
-            Up = 1,
-            North = 2,
-            South = 3,
-            West = 4,
-            East = 5,
-        }
+       
 
-        private TextureStack GetSubstitution(string name, long data)
+        private TextureStack GetSubstitution(string name, long data, int x, int z)
         {
-            if (name != "water" && name != "grass" && name != "sand" && name != "tallgrass" && name != "double_plant" && name != "red_flower")
+            // For debugging purposes
+            if (name.Contains("bed"))
             {
-                //Console.WriteLine($"{name},{data}");
+                Console.WriteLine($"{x} {z}: {name},{data}");
             }
 
             switch (name)
             {
+                case "cobblestone_wall":
+                    return GetTexture("cobblestone_wall", data).Translate(5,5,6,6);
+
                 case "bubble_column":
                     return "textures/blocks/water_placeholder";
                 case "water":
@@ -127,7 +134,32 @@ namespace Maploader.Renderer.Texture
                 case "lectern":
                     return "textures/blocks/lectern_top";
                 case "bed":
-                    return (data & 8) == 8 ? "textures/blocks/bed_head_top" : "textures/blocks/bed_feet_top";
+                    switch (data & 0xF7)
+                    {
+                        case 0:
+                            return CreateTexture((data & 8) == 8
+                                    ? "textures/blocks/bed_head_top"
+                                    : "textures/blocks/bed_feet_top")
+                                .Rotate(RotateFlipType.Rotate90FlipNone);
+                        case 1:
+                            return CreateTexture((data & 8) == 8
+                                    ? "textures/blocks/bed_head_top"
+                                    : "textures/blocks/bed_feet_top")
+                                .Rotate(RotateFlipType.Rotate180FlipNone);
+                        case 2:
+                            return CreateTexture((data & 8) == 8
+                                    ? "textures/blocks/bed_head_top"
+                                    : "textures/blocks/bed_feet_top")
+                                .Rotate(RotateFlipType.Rotate270FlipNone);
+                        case 3:
+                            return CreateTexture((data & 8) == 8
+                                    ? "textures/blocks/bed_head_top"
+                                    : "textures/blocks/bed_feet_top")
+                                .Rotate(RotateFlipType.RotateNoneFlipNone);
+                    }
+
+                    return null;
+                    
 
                 case "wooden_slab":
                     return GetTexture("planks", data);
@@ -142,7 +174,7 @@ namespace Maploader.Renderer.Texture
                 case "oak_stairs":
                     return GetTexture("planks", 0); // data = direction
                 case "brick_stairs":
-                    return GetTexture("brick", data);
+                    return GetTexture("brick", 0);
                 case "prismarine_stairs":
                     return GetTexture("prismarine", 0); // data = direction
                 case "spruce_stairs":
@@ -175,6 +207,14 @@ namespace Maploader.Renderer.Texture
                             return GetTexture("rail_normal", data);
                         case 1:
                             return GetTexture("rail_normal", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 2:
+                            return GetTexture("rail_normal", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 3:
+                            return GetTexture("rail_normal", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 4:
+                            return GetTexture("rail_normal", data, null);
+                        case 5:
+                            return GetTexture("rail_normal", data, null);
                         case 6:
                             return GetTexture("rail_normal_turned", data, null);
                         case 7:
@@ -186,8 +226,64 @@ namespace Maploader.Renderer.Texture
                     }
 
                     return null;
+
                 case "golden_rail":
-                    return GetTexture("rail_golden", data);
+                    switch (data)
+                    {
+                        case 0:
+                            return GetTexture("rail_golden_powered", data);
+                        case 1:
+                            return GetTexture("rail_golden_powered", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 2:
+                            return GetTexture("rail_golden_powered", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 3:
+                            return GetTexture("rail_golden_powered", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 4:
+                            return GetTexture("rail_golden_powered", data, null);
+                        case 5:
+                            return GetTexture("rail_golden_powered", data, null);
+                    }
+                    return null;
+
+                case "activator_rail":
+                    switch (data)
+                    {
+                        case 0:
+                            return GetTexture("rail_activator", data);
+                        case 1:
+                            return GetTexture("rail_activator", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 2:
+                            return GetTexture("rail_activator", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 3:
+                            return GetTexture("rail_activator", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 4:
+                            return GetTexture("rail_activator", data, null);
+                        case 5:
+                            return GetTexture("rail_activator", data, null);
+                    }
+                    return null;
+
+
+                case "detector_rail":
+                    switch (data)
+                    {
+                        case 0:
+                            return GetTexture("rail_detector", data);
+                        case 1:
+                            return GetTexture("rail_detector", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 2:
+                            return GetTexture("rail_detector", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 3:
+                            return GetTexture("rail_detector", data, null, RotateFlipType.Rotate90FlipNone);
+                        case 4:
+                            return GetTexture("rail_detector", data, null);
+                        case 5:
+                            return GetTexture("rail_detector", data, null);
+                    }
+                    return null;
+                case "monster_egg":
+                    return GetTexture("monster_egg", Math.Max(0,data-1));
+
                 case "red_mushroom_block":
                     return GetTexture("mushroom_red_top", data);
                 case "brown_mushroom_block":
@@ -213,7 +309,13 @@ namespace Maploader.Renderer.Texture
                 case "daylight_detector_inverted":
                     return GetTexture("daylight_detector_top", data);
                 case "dispenser":
-                    return GetTexture("dispenser_top", data);
+                    switch ((BlockFace) data)
+                    {
+                        case BlockFace.Up:
+                            return GetTexture("dispenser_front_vertical", 0);
+                        default:
+                            return GetTexture("dispenser_top", data);
+                    }
 
                 case "observer":
                     switch ((BlockFace)data)
@@ -235,7 +337,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("observer_top", data);
 
                 case "dropper":
-                    return GetTexture("dropper_top", data);
+                    switch ((BlockFace)data)
+                    {
+                        case BlockFace.Up:
+                            return GetTexture("dropper_front_vertical", 0);
+                        default:
+                            return GetTexture("dropper_top", data);
+                    }
 
                 case "ender_chest":
                     return GetTexture("ender_chest_inventory_top", data);
@@ -244,11 +352,23 @@ namespace Maploader.Renderer.Texture
                 case "cactus":
                     return GetTexture("cactus_top", data);
 
-                /*  case "fence_gate":
-                        return GetTexture("grass_carried_top");
-                    case "fence":
-                        return GetTexture("grass_carried_top");
-                        */
+                case "fence_gate":
+                    return RenderFenceGate(data, "planks");
+                case "spruce_fence_gate":
+                    return RenderFenceGate(data, "spruce_planks");
+                case "birch_fence_gate":
+                    return RenderFenceGate(data, "birch_planks");
+                case "acacia_fence_gate":
+                    return RenderFenceGate(data, "acacia_planks");
+                case "jungle_fence_gate":
+                    return RenderFenceGate(data, "jungle_planks");
+                case "dark_oak_fence_gate":
+                    return RenderFenceGate(data, "dark_oak_planks");
+
+                case "fence":
+                    return GetTexture("planks", data, new TextureTranslation(
+                        new Rectangle(5,5,6,6), 
+                        new Rectangle(0,0,16,16)));
                 case "podzol":
                     return GetTexture("dirt_podzol_top", data);
                 case "grass":
@@ -279,13 +399,11 @@ namespace Maploader.Renderer.Texture
                 case "brick_block":
                     return GetTexture("brick", data);
 
-
+                    
                 case "chest":
                     return GetTexture("chest_inventory_top", data);
                 case "snow_layer":
                     return GetTexture("snow", data);
-
-                // round 2
 
                 case "flower_pot":
                     return GetTexture("flower_pot", data, new TextureTranslation(
@@ -311,11 +429,7 @@ namespace Maploader.Renderer.Texture
                 case "darkoak_wall_sign":
                 case "spruce_wall_sign":
                 case "birch_wall_sign":
-                case "fence":
-                case "spruce_fence_gate":
-                case "acacia_fence_gate":
-                case "dark_oak_fence_gate":
-                case "fence_gate":
+   
                 case "frame":
                 case "standing_sign":
                 case "wooden_button":
@@ -342,12 +456,10 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("door_upper", 6);
 
                 case "standing_banner":
-                case "birch_fence_gate":
                 case "tripWire":
                 case "spruce_button":
                 case "dark_oak_button":
                 case "jungle_standing_sign":
-                case "jungle_fence_gate":
                 case "tripwire_hook":
                 case "dark_oak_pressure_plate":
 
@@ -408,12 +520,20 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stone_slab_top_3", data);
                 case "stone_slab4":
                     return GetTexture("stone_slab_top_4", data);
+
                 case "stone_brick_stairs":
-                    return GetTexture("stonebrick", data);
+                    return GetTexture("stonebrick", 0);
+                case "mossy_stone_brick_stairs":
+                    return GetTexture("mossy_stone_brick", 0);
+
                 case "double_stone_slab":
                     return GetTexture("stone_slab_top", data);
+
                 case "stone_stairs":
-                    return GetTexture("stone", data);
+                    return GetTexture("cobblestone", 0);
+
+                case "mossy_cobblestone_stairs":
+                    return GetTexture("cobblestone_mossy", 0);
                 case "quartz_stairs":
                     return GetTexture("quartz_block_top", data);
 
@@ -431,7 +551,10 @@ namespace Maploader.Renderer.Texture
                 case "slime":
                     return GetTexture("slime_block", data);
                 case "bamboo":
-                    return GetTexture("bamboo_carried", data);
+                    return GetTexture("bamboo_stem", data, new TextureTranslation(
+                        new Rectangle(6,0,4,16), 
+                        new Rectangle(0,0,4,16)
+                        ));
 
                 case "powered_repeater":
                     return GetTexture("repeater_up", data);
@@ -455,9 +578,9 @@ namespace Maploader.Renderer.Texture
 
                 /* LEAVES */
                 case "leaves":
-                    return GetTexture("leaves_carried", data-8);
+                    return GetTexture("leaves_carried", data & 0xF7);
                 case "leaves2":
-                    return GetTexture("leaves_carried2", data-8);
+                    return GetTexture("leaves_carried2", data & 0xF7);
 
 
                 /* WOOD */
@@ -488,6 +611,67 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("scaffolding_top", data);
 
                     break;
+            }
+
+            return null;
+        }
+
+        private TextureStack RenderFenceGate(long data, string texture)
+        {
+            switch (data)
+            {
+                case 0:
+                case 2:
+                    return GetTexture(texture, 0).Translate(new Rectangle(0, 6, 16, 4));
+                case 1:
+                case 3:
+                    return GetTexture(texture, 0).Translate(new Rectangle(0, 6, 16, 4)).Rotate(RotateFlipType.Rotate90FlipNone);
+
+                case 4:
+                    return GetTexture(texture, 0)
+                               .Translate(
+                                   new Rectangle(0, 6, 10, 4),
+                                   new Rectangle(6, 0, 10, 4))
+                               .Rotate(RotateFlipType.Rotate90FlipNone)
+
+                           + GetTexture(texture, 0)
+                               .Translate(
+                                   new Rectangle(0, 6, 10, 4),
+                                   new Rectangle(6, 12, 10, 4))
+                               .Rotate(RotateFlipType.Rotate90FlipNone);
+                case 6:
+                    return GetTexture(texture, 0)
+                               .Translate(
+                                   new Rectangle(0, 6, 10, 4),
+                                   new Rectangle(6, 0, 10, 4))
+                               .Rotate(RotateFlipType.Rotate270FlipNone)
+
+                           + GetTexture(texture, 0)
+                               .Translate(
+                                   new Rectangle(0, 6, 10, 4),
+                                   new Rectangle(6, 12, 10, 4))
+                               .Rotate(RotateFlipType.Rotate270FlipNone);
+                case 5:
+                    return GetTexture(texture, 0)
+                               .Translate(
+                                new Rectangle(0, 6, 10, 4),
+                                new Rectangle(6, 0, 10, 4))
+                               .Rotate(RotateFlipType.Rotate180FlipNone)
+
+                            + GetTexture(texture, 0)
+                                .Translate(
+                                new Rectangle(0, 6, 10, 4),
+                                new Rectangle(6, 12, 10, 4))
+                                .Rotate(RotateFlipType.Rotate180FlipNone);
+                        
+                case 7:
+                    return GetTexture(texture, 0).Translate(
+                               new Rectangle(0, 6, 10, 4),
+                               new Rectangle(6, 0, 10, 4))
+                           + GetTexture(texture, 0).Translate(
+                               new Rectangle(0, 6, 10, 4),
+                               new Rectangle(6, 12, 10, 4));
+
             }
 
             return null;
@@ -560,6 +744,11 @@ namespace Maploader.Renderer.Texture
             }
 
             return null;
+        }
+
+        private TextureStack CreateTexture(string texturePath)
+        {
+            return new TextureStack(texturePath, null, RotateFlipType.RotateNoneFlipNone);
         }
 
         private TextureStack GetTexture(string name, long data, TextureTranslation translation = null, RotateFlipType rot = RotateFlipType.RotateNoneFlipNone)

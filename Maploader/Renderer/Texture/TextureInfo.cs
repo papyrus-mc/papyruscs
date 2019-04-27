@@ -51,10 +51,10 @@ namespace Maploader.Renderer.Texture
             Rotation = rotation;
         }
 
-        public string Filename { get; }
-        public TextureTranslation Translation { get; }
-        public RotateFlipType Rotation { get; }
+        public string Filename { get;}
+        public TextureTranslation Translation { get; set; }
+        public RotateFlipType Rotation { get; set; }
 
-      
+
     }
 }
