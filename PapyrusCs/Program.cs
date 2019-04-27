@@ -124,7 +124,7 @@ namespace PapyrusCs
                 ChunkSize = chunkSize,
                 ChunksPerDimension = chunksPerDimension,
                 TileSize = tileSize,
-                OutputPath = ".",
+                OutputPath = options.OutputPath,
                 TextureDictionary = textures,
                 TexturePath = Path.Combine(Environment.CurrentDirectory, "Textures"),
                 TotalChunkCount = chunkCount,
@@ -229,7 +229,7 @@ namespace PapyrusCs
                                 var fx = (x - XMin) / ChunksPerDimension;
                                 var fz = (z - ZMin) / ChunksPerDimension;
 
-                                var path = $"map\\{InitialZoomLevel}\\{fx}";
+                                var path = Path.Combine(OutputPath, $"map\\{InitialZoomLevel}\\{fx}");
                                 var filepath = Path.Combine(path, $"{fz}.png");
 
                                 if (!Directory.Exists(path))
@@ -253,9 +253,9 @@ namespace PapyrusCs
 
         }
 
-        private static Bitmap LoadBitmap(double zoom, int x, int z)
+        private Bitmap LoadBitmap(double zoom, int x, int z)
         {
-            var path = $"map\\{zoom}\\{x}";
+            var path = Path.Combine(OutputPath, $"map\\{zoom}\\{x}");
             var filepath = Path.Combine(path, $"{z}.png");
             if (File.Exists(filepath))
             {
@@ -324,7 +324,7 @@ namespace PapyrusCs
 
                             if (didDraw)
                             {
-                                var path = $"map\\{destZoom}\\{x / 2}";
+                                var path = Path.Combine(OutputPath, $"map\\{destZoom}\\{x / 2}");
                                 if (!Directory.Exists(path))
                                     Directory.CreateDirectory(path);
                                 var filepath = Path.Combine(path, $"{z / 2}.png");
