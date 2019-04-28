@@ -22,7 +22,7 @@ Just unpack the zip-file.
 
 Requires .NET Core 2.2. You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
 
-Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86/papyruscs/releases).
+Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
 
 ## Usage
 ```papyrus --world "My World/db" --output "C:\papyrus"```
