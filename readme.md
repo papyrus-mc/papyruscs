@@ -38,7 +38,7 @@ All needed depencies are already included in this repository or automatically do
 ## Contribute xor support
 If you want to help improving Papyrus please consider forking the repository.
 
-Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyruscs)
+Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
 ## Special thanks to...
 ... [clarkx86](https://github.com/clarkx86).
