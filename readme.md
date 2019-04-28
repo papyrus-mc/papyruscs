@@ -46,4 +46,4 @@ Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.
 ## Disclaimer
 Papyrus is in no way affiliated with Mojang or Minecraft.
 
-Contact: [r@gwsa.de](mailto:papyrus@gwsa.de?subject=GitHub%20Papyrus)
+Contact: [papyrus@gwsa.de](mailto:papyrus@gwsa.de?subject=GitHub%20Papyrus)
