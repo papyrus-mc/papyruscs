@@ -18,11 +18,12 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 - Auto-Updating renders
 
 ## Installation
+Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
 Just unpack the zip-file.
 
-Requires .NET Core 2.2. You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
+For own compilation:
+Requires [.NET Core 2.2](https://dotnet.microsoft.com/download/dotnet-core/2.2). You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
 
-Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
 
 ## Usage
 ```papyrus --world "My World/db" --output "C:\papyrus"```
