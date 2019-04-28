@@ -23,9 +23,16 @@ Requires .NET Core 2.2. You may need to install [additional dependencies](https:
 Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86/papyruscs/releases).
 
 ## Usage
-```papyrus --world "My World" --output "C:\papyrus"```
+```papyrus --world "My World/db" --output "C:\papyrus"```
 
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
+
+## Compilation
+To compile for windows use either Visual Studio or run:
+dotnet publish PapyrusCs -c Release --self-contained -runtime win-x64
+
+To compile for Linux run:
+dotnet publish PapyrusCs -c Debug --self-contained -runtime linux-x64
 
 ## Additional dependencies
 - [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
