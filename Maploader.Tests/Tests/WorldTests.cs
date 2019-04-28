@@ -141,9 +141,9 @@ namespace Maploader.Tests.Tests
             var textures = ts.Textures;
             var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
 
-            int chunkRadius = 0;
-            int centerOffsetX = 0;//65;
-            int centerOffsetZ = 2;//65;
+            int chunkRadius = 1;
+            int centerOffsetX = 1;//65;
+            int centerOffsetZ = 1;//65;
 
             var b = new Bitmap(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
             var g = Graphics.FromImage(b);

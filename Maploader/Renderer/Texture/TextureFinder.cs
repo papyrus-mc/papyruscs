@@ -71,6 +71,8 @@ namespace Maploader.Renderer.Texture
             {"minecraft:conduit", true },
             {"minecraft:flower_pot", true },
             {"minecraft:bamboo", true },
+            {"minecraft:leaves", true },
+            {"minecraft:leaves2", true },
 
             {"minecraft:wooden_door", true },
             {"minecraft:spruce_door", true },
