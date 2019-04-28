@@ -40,6 +40,7 @@ To compile for Linux run:
 - [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project used a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
 - [imageformats](https://github.com/dbrant/imageformats): This project uses a modified version of image formats TgaReader
 [license](https://github.com/mjungnickel18/papyruscs/blob/master/Imports/ImageFormats-std/license.md)
+- [leveldb-mcpe](https://github.com/Mojang/leveldb-mcpe): This project uses the leveldb native library for windows64 and linux64. [license](https://github.com/Mojang/leveldb-mcpe/blob/master/LICENSE)
 
 The source for the modified versions is included in this repository.
 All needed depencies are already included in this repository or automatically downloaded via NuGet.
