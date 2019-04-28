@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -31,7 +32,7 @@ namespace PapyrusCs.Strategies
         public World World { get; set; }
         public int TotalChunkCount { get; set; }
         public int InitialZoomLevel { get; set; }
-        public List<string> MissingTextures { get; } = new List<string>();
+        public ConcurrentBag<string> MissingTextures { get; } = new ConcurrentBag<string>();
         public List<Exception> Exceptions { get; } = new List<Exception>();
 
 
@@ -61,6 +62,18 @@ namespace PapyrusCs.Strategies
                                 for (int cx = 0; cx < ChunksPerDimension; cx++)
                                 for (int cz = 0; cz < ChunksPerDimension; cz++)
                                 {
+                                    UInt64 key = 0;
+                                    unchecked
+                                    {
+                                        key = (UInt64) (
+                                            ((UInt64) (x + cx) << 32) |
+                                            ((UInt64) (z + cz) & 0xFFFFFFFF)
+                                        );
+                                    }
+
+                                    if (!RenderSettings.Keys.Contains(key))
+                                        continue;
+
                                     var chunk = World.GetChunk(x + cx, z + cz);
                                     if (chunk == null)
                                         continue;

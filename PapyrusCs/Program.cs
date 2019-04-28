@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using CommandLine;
+using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using PapyrusCs.Strategies;
@@ -72,8 +74,16 @@ namespace PapyrusCs
             }
 
             Console.WriteLine("Generating a list of all chunk keys in the database. This could take a few minutes");
-            var keys = world.ChunkKeys.ToList();
-
+            var keys = world.ChunkKeys.ToHashSet();
+            
+            HashSet<UInt64> keys64 = null; 
+            unchecked
+            {
+                keys64 = keys.Select(x => (UInt64)(
+                                    ((UInt64)(x.X) << 32) |
+                                    ((UInt64)(x.Y) & 0xFFFFFFFF)
+                                 )).ToHashSet();
+            }
             int chunkCount = keys.Count;
             Console.WriteLine($"Total Chunk count {keys.Count}");
             Console.WriteLine();
@@ -114,7 +124,6 @@ namespace PapyrusCs
             Console.WriteLine($"This results in {zoom+1} zoom levels");
             List<Exception> exes = new List<Exception>();
 
-            var missingTextures = new ConcurrentBag<string>();
 
             _time = Stopwatch.StartNew();
 
@@ -131,7 +140,7 @@ namespace PapyrusCs
                     strat = new SingleForRenderStrategy();
                     break;
             }
-            strat.RenderSettings = new RenderSettings() { RenderCoords = options.RenderCoords, MaxNumberOfThreads = options.MaxNumberOfThreads };
+            strat.RenderSettings = new RenderSettings() { RenderCoords = options.RenderCoords, MaxNumberOfThreads = options.MaxNumberOfThreads, Keys = keys64 };
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;
@@ -148,10 +157,11 @@ namespace PapyrusCs
             strat.XMax = xmax;
             strat.ChunksRendered += RenderDisplay; 
             strat.RenderInitialLevel();
+            var missingTextures = strat.MissingTextures;
 
             File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
 
-            strat.RenderZoomLevels();
+            //strat.RenderZoomLevels();
           
 
             world.Close();

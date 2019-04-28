@@ -5,7 +5,6 @@ using System.Linq;
 using Maploader.Extensions;
 using Maploader.Renderer.Texture;
 using Maploader.World;
-using PapyrusCs;
 
 namespace Maploader.Renderer
 {
@@ -50,6 +49,7 @@ namespace Maploader.Renderer
                     if (textures == null)
                     {
                         Console.WriteLine($"Missing(2): {block.ToString().PadRight(30)}");
+                        MissingTextures.Add($"ID: {block.Block.Id}");
                         continue;
                     }
 

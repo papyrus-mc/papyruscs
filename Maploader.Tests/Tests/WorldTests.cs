@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using NUnit.Framework;
@@ -109,6 +110,22 @@ namespace Maploader.Tests.Tests
             b.Save(AppDomain.CurrentDomain.BaseDirectory + "\\chunk.png");
 
 
+        }
+
+        [Test]
+        public void Uint64Test()
+        {
+            int x = 1;
+            int z = 1;
+            unchecked
+            {
+                var k = (UInt64)(
+                    ((UInt64)(x) << 32) |
+                    ((UInt64)(z) & 0xFFFFFFFF)
+                );
+
+                Console.WriteLine("{0:x8}",k);
+            }
         }
 
         [Test]

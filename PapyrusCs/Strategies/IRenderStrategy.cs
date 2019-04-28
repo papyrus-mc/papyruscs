@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 
@@ -20,7 +22,7 @@ namespace PapyrusCs.Strategies
         World World { get; set; }
         int TotalChunkCount { get; set; }
         int InitialZoomLevel { get; set; }
-        List<string> MissingTextures { get; }
+        ConcurrentBag<string> MissingTextures { get; }
         List<Exception> Exceptions { get; }
         RenderSettings RenderSettings { get; set; }
         int InitialDiameter { get; set; }
