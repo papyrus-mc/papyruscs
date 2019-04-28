@@ -2,7 +2,7 @@
 Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2.
 It currently runs only under windows, but support for linux is planned.
 
-You can view an example [here](http://gwsa.de/minecraft/map.html).
+You can view an example [here](http://papyrus.gwsa.de/).
 
 ## Introduction
 Since MCBE worlds don't use the Anvil format like in the Java Edition, but rather a by Mojang [modified version](https://github.com/Mojang/leveldb-mcpe) of Google's [LevelDB](http://leveldb.org/) to save, the goal of Papyrus is to read these worlds and assemble a render of every pre-generated chunk.
