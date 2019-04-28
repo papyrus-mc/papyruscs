@@ -117,7 +117,7 @@ namespace PapyrusCs
             maxDiameter = (maxDiameter+(chunksPerDimension-1)) / chunksPerDimension;
             Console.WriteLine($"For {chunksPerDimension} chunks per tile, new max diameter is {maxDiameter}");
 
-            var zoom = Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2));
+            var zoom = (int) (Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2)));
             int extendedDia = (int) Math.Pow(2, zoom);
 
             Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
@@ -161,14 +161,35 @@ namespace PapyrusCs
 
             File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
 
-            //strat.RenderZoomLevels();
-          
+            strat.ZoomLevelRenderd += RenderZoom;
+            strat.RenderZoomLevels();
+
+
+            try
+            {
+                var mapHtml = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
+                mapHtml = mapHtml.Replace("%maxnativezoom%", zoom.ToString());
+                mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 1).ToString());
+                mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
+
+                File.WriteAllText(Path.Combine(options.OutputPath, "map.html"), mapHtml);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Could not write map.html");
+                Console.WriteLine(ex.Message);
+            }
 
             world.Close();
 
             Console.WriteLine("Total Time {0}", _time.Elapsed);
 
             return 0;
+        }
+
+        private static void RenderZoom(object sender, ZoomRenderedEventArgs e)
+        {
+            Console.Write($"\r{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
         }
 
         private static int _totalChunksRendered = 0;

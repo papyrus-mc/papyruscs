@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Maploader.Core;
 using Maploader.Renderer;
@@ -134,19 +135,16 @@ namespace PapyrusCs.Strategies
         {
             var sourceZoomLevel = this.InitialZoomLevel;
             var sourceDiameter = this.InitialDiameter;
-
             while (sourceZoomLevel > 0)
             {
-                //for (int x = 0; x < 2 * radius; x += 2)
                 var destDiameter = sourceDiameter / 2;
 
                 var sourceZoom = sourceZoomLevel;
                 var destZoom = sourceZoomLevel-1;
+                var linesRendered = 0;
 
                 OuterLoopStrategy(BetterEnumerable.SteppedRange(0,sourceDiameter, 2), new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads }, x =>
                 {
-                    Console.WriteLine($"Processing Line {x} at {sourceZoom}");
-
                     for (int z = 0; z < 2 * destDiameter; z += 2)
                     {
                         var b1 = LoadBitmap(sourceZoom, x, z);
@@ -189,14 +187,15 @@ namespace PapyrusCs.Strategies
 
                             if (didDraw)
                             {
-                                var path = Path.Combine(OutputPath, "map",$"{destZoom}",$"{x/2}");
-                                if (!Directory.Exists(path))
-                                    Directory.CreateDirectory(path);
-                                var filepath = Path.Combine(path, $"{z / 2}.png");
-                                bfinal.Save(filepath);
+                                SaveBitmap(destZoom, x/2, z/2, bfinal);
                             }
                         }
                     }
+
+                    Interlocked.Add(ref linesRendered, 2);
+
+                    ZoomLevelRenderd?.Invoke(this, new ZoomRenderedEventArgs(linesRendered, sourceDiameter, destZoom));
+
                 });
 
                 sourceDiameter = destDiameter;
@@ -206,6 +205,7 @@ namespace PapyrusCs.Strategies
         }
 
         public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
+        public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
 
         public int InitialDiameter { get; set; }
     }

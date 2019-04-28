@@ -224,7 +224,7 @@ namespace DmitryBrant.ImageFormats
                                     bmpData[4 * (y * imgWidth + x)] = scanline[x * 4];
                                     bmpData[4 * (y * imgWidth + x) + 1] = scanline[x * 4 + 1];
                                     bmpData[4 * (y * imgWidth + x) + 2] = scanline[x * 4 + 2];
-                                    bmpData[4 * (y * imgWidth + x) + 3] = 0xFF; // scanline[x * 4 + 3];
+                                    bmpData[4 * (y * imgWidth + x) + 3] = scanline[x * 4 + 3];
                                 }
                                 break;
                         }

@@ -142,11 +142,15 @@ namespace Maploader.Renderer.Texture
         private TextureStack GetSubstitution(string name, long data, int x, int z, int y)
         {
             // For debugging purposes
-            //if (name.Contains(""))
-            //{
-            //    Console.WriteLine($"{x} {z} {y}: {name},{data}");
-            //}
 
+#if consoledebug 
+            if (name.Contains(""))
+            {
+                Console.WriteLine($"{x} {z} {y}: {name},{data}");
+            }
+#endif
+
+            // oh look at all this mess...
             switch (name)
             {
                 case "cobblestone_wall":
@@ -252,9 +256,9 @@ namespace Maploader.Renderer.Texture
                     switch (data & 0x8)
                     {
                         case 8:
-                            return GetTexture("double_plant_carried", data & 0xF7); // todo fixme
+                            return GetTexture("double_plant_carried", data & 0xF7);
                         case 0:
-                            return GetTexture("double_plant_bottom", data & 0xF7); // todo fixme
+                            return GetTexture("double_plant_bottom", data & 0xF7); 
                     }
 
                     return null;

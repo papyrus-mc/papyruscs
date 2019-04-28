@@ -79,7 +79,7 @@ namespace Maploader.Tests.Tests
         public void TestRender()
         {
             var dut = new World.World();
-            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\deepblue1\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db"));
+            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\RhIAAFEzQQA=\db"));
 
 
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
@@ -87,9 +87,9 @@ namespace Maploader.Tests.Tests
             var textures = ts.Textures;
             var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
 
-            int chunkRadius = 37;
-            int centerOffsetX = 65;//65;
-            int centerOffsetZ = 65;//65;
+            int chunkRadius = 0;
+            int centerOffsetX = 26;//65;
+            int centerOffsetZ = 13;//65;
 
             var b = new Bitmap(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
             var g = Graphics.FromImage(b);

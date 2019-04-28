@@ -30,5 +30,6 @@ namespace PapyrusCs.Strategies
         void RenderZoomLevels();
 
         event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
+        event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
     }
 }
