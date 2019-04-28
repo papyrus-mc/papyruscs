@@ -27,6 +27,22 @@ Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86
 ## Usage
 ```papyrus --world "My World/db" --output "C:\papyrus"```
 
+```
+  -w, --world       Required. Sets the path the Minecraft Bedrock Edition Map
+
+  -o, --output      (Default: .) Sets the output path for the generated map tiles
+
+  -s, --strategy    (Default: ParallelFor) Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)
+
+  --coords          (Default: true) Render text coordinates in each chunk
+
+  --threads         (Default: 16) Set maximum of used threads
+
+  --help            Display this help screen.
+
+  --version         Display version information.
+```
+
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
 ## Compilation
