@@ -26,6 +26,8 @@ Requires [.NET Core 2.2](https://dotnet.microsoft.com/download/dotnet-core/2.2).
 
 
 ## Usage
+For Linux: give the extracted PapyrusCs file execution rights! 
+
 ```papyrus --world "My World/db" --output "C:\papyrus"```
 
 ```
