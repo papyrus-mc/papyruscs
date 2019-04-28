@@ -9,8 +9,10 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 
 ## Features
 - Render a top-down map of every already explored chunk
-#### Planned
 - Linux Support
+
+#### Planned
+
 - Nether/ The End support
 - Isometric renders
 - Auto-Updating renders
