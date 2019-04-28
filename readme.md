@@ -9,8 +9,10 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 
 ## Features
 - Render a top-down map of every already explored chunk
+- Windows and Linux Support
+
 #### Planned
-- Linux Support
+
 - Nether/ The End support
 - Isometric renders
 - Auto-Updating renders
@@ -23,13 +25,20 @@ Requires .NET Core 2.2. You may need to install [additional dependencies](https:
 Otherwise, just grab one of the [pre-built binaries](https://github.com/clarkx86/papyruscs/releases).
 
 ## Usage
-```papyrus --world "My World" --output "C:\papyrus"```
+```papyrus --world "My World/db" --output "C:\papyrus"```
 
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
+## Compilation
+To compile for windows use either Visual Studio or run:
+```dotnet publish PapyrusCs -c Release --self-contained --runtime win-x64```
+
+To compile for Linux run:
+```dotnet publish PapyrusCs -c Debug --self-contained --runtime linux-x64```
+
 ## Additional dependencies
-- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
-- [imageformats](https://github.com/dbrant/imageformats): This project requires a recompiled version of imageformats for .NET Standard
+- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project used a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
+- [imageformats](https://github.com/dbrant/imageformats): This project uses a modified version of image formats TgaReader
 [license](https://github.com/mjungnickel18/papyruscs/blob/master/Imports/ImageFormats-std/license.md)
 
 The source for the modified versions is included in this repository.
@@ -38,7 +47,7 @@ All needed depencies are already included in this repository or automatically do
 ## Contribute xor support
 If you want to help improving Papyrus please consider forking the repository.
 
-Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyruscs)
+Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
 ## Special thanks to...
 ... [clarkx86](https://github.com/clarkx86).
@@ -46,4 +55,4 @@ Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.
 ## Disclaimer
 Papyrus is in no way affiliated with Mojang or Minecraft.
 
-Contact: [r@gwsa.de](mailto:r@gwsa.de?subject=GitHub%20Papyrus)
+Contact: [papyrus@gwsa.de](mailto:papyrus@gwsa.de?subject=GitHub%20Papyrus)
