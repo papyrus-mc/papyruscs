@@ -67,7 +67,7 @@ If you want to help improving Papyrus please consider forking the repository.
 Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
 ## Special thanks to...
-... [clarkx86](https://github.com/clarkx86).
+... [clarkx86](https://github.com/clarkx86) for his team work and idea giving and his port in node.js.
 
 ## Disclaimer
 Papyrus is in no way affiliated with Mojang or Minecraft.
