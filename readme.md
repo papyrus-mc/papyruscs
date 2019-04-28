@@ -35,8 +35,8 @@ To compile for Linux run:
 ```dotnet publish PapyrusCs -c Debug --self-contained --runtime linux-x64```
 
 ## Additional dependencies
-- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project requires a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
-- [imageformats](https://github.com/dbrant/imageformats): This project requires a recompiled version of imageformats for .NET Standard
+- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project used a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
+- [imageformats](https://github.com/dbrant/imageformats): This project uses a modified version of image formats TgaReader
 [license](https://github.com/mjungnickel18/papyruscs/blob/master/Imports/ImageFormats-std/license.md)
 
 The source for the modified versions is included in this repository.
