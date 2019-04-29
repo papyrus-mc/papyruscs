@@ -23,9 +23,12 @@ Just unpack the zip-file.
 
 ### Linux
 Make sure that your graphics libs are up-to-date: (Syntax may vary in other distros) 
-```sudo apt-get update
+```
+sudo apt-get update
 sudo apt-get install libgdiplus
-sudo apt-get install llibc6-dev```
+sudo apt-get install llibc6-dev
+```
+
 And give PapyrusCs execution rights:
 ```chmod +x PapyrusCs```
 
