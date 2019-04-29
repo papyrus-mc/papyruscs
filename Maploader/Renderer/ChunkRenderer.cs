@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using Maploader.Extensions;
 using Maploader.Renderer.Texture;
@@ -74,6 +75,27 @@ namespace Maploader.Renderer
                 g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black,
                     xOffset, zOffset);
             }
+        }
+        public static bool IsOpaque(Image image)
+        {
+            var bitmap = new Bitmap(image);
+            var bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
+            unsafe
+            {
+                var p = (byte*)bitmapData.Scan0;
+                for (var x = 0; x < bitmap.Width; x++)
+                {
+                    for (var y = 0; y < bitmap.Height; y++)
+                    {
+                        if (p[x * 4 + y * bitmapData.Stride + 3] == 255) continue;
+                        bitmap.UnlockBits(bitmapData);
+                        return false;
+                    }
+                }
+            }
+            bitmap.UnlockBits(bitmapData);
+            return true;
         }
     }
 }
