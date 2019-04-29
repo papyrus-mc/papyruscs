@@ -1,12 +1,12 @@
 ﻿using Maploader.World.LookupTable;
-using NUnit.Framework;
+//using NUnit.Framework;
 
 namespace Maploader.Tests.Tests
 {
-    [TestFixture]
+    //[TestFixture]
     class LookupTableTests
     {
-        [Test]
+        //[Test]
         public void Test()
         {
             var dut = new BlockLookupTable();
