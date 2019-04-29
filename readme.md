@@ -21,12 +21,20 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
 Just unpack the zip-file.
 
+### Linux
+Make sure that your graphics libs are up-to-date: (Syntax may vary in other distros) 
+```sudo apt-get update
+sudo apt-get install libgdiplus
+sudo apt-get install llibc6-dev```
+And give PapyrusCs execution rights:
+```chmod +x PapyrusCs```
+
 For own compilation:
 Requires [.NET Core 2.2](https://dotnet.microsoft.com/download/dotnet-core/2.2). You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
 
 
 ## Usage
-For Linux: give the extracted PapyrusCs file execution rights! 
+For Linux: give the extracted PapyrusCs file execution rights! See installation notes above. 
 
 ```papyruscs --world "My World/db" --output "C:\papyrus"```
 
