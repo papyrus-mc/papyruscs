@@ -58,10 +58,8 @@ namespace Maploader.Tests.Tests
                 }
             };
 
-
             b.Save(AppDomain.CurrentDomain.BaseDirectory + "\\benchmark.png");
-
-
+            dut.Close();
         }
 
         [Test]
