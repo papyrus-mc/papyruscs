@@ -58,7 +58,6 @@ namespace PapyrusCs
                 return -1;
             }
 
-
             var world = new World();
             try
             {
