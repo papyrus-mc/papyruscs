@@ -57,8 +57,9 @@ namespace Maploader.Tests.Tests
                     }
                 }
             };
-
-            b.Save(AppDomain.CurrentDomain.BaseDirectory + "\\benchmark.png");
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark.png");
+            b.Save(path);
+            Console.WriteLine(path);
             dut.Close();
         }
 
