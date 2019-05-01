@@ -641,6 +641,8 @@ namespace Maploader.Renderer.Texture
 
                 case "trapped_chest":
                     return GetTexture("chest_inventory_top", data);
+                case "polished_diorite_stairs":
+                    return GetTexture("polished_diorite", data);
 
                 case "polished_andesite_stairs":
                     return GetTexture("polished_andesite", data);
