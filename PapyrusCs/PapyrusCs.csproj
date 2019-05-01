@@ -19,2095 +19,2095 @@
     <None Update="map.thtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\acacia_trapdoor.png">
+    <None Update="textures\blocks\acacia_trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\anvil_base.png">
+    <None Update="textures\blocks\anvil_base.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\anvil_top_damaged_0.png">
+    <None Update="textures\blocks\anvil_top_damaged_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\anvil_top_damaged_1.png">
+    <None Update="textures\blocks\anvil_top_damaged_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\anvil_top_damaged_2.png">
+    <None Update="textures\blocks\anvil_top_damaged_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bamboo_leaf.png">
+    <None Update="textures\blocks\bamboo_leaf.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bamboo_sapling.png">
+    <None Update="textures\blocks\bamboo_sapling.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bamboo_singleleaf.png">
+    <None Update="textures\blocks\bamboo_singleleaf.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bamboo_small_leaf.png">
+    <None Update="textures\blocks\bamboo_small_leaf.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bamboo_stem.png">
+    <None Update="textures\blocks\bamboo_stem.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\barrel_bottom.png">
+    <None Update="textures\blocks\barrel_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\barrel_side.png">
+    <None Update="textures\blocks\barrel_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\barrel_top.png">
+    <None Update="textures\blocks\barrel_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\barrier.png">
+    <None Update="textures\blocks\barrier.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\beacon.png">
+    <None Update="textures\blocks\beacon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bedrock.png">
+    <None Update="textures\blocks\bedrock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bed_feet_end.png">
+    <None Update="textures\blocks\bed_feet_end.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bed_feet_side.png">
+    <None Update="textures\blocks\bed_feet_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bed_feet_top.png">
+    <None Update="textures\blocks\bed_feet_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bed_head_end.png">
+    <None Update="textures\blocks\bed_head_end.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bed_head_side.png">
+    <None Update="textures\blocks\bed_head_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bed_head_top.png">
+    <None Update="textures\blocks\bed_head_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\beetroots_stage_0.png">
+    <None Update="textures\blocks\beetroots_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\beetroots_stage_1.png">
+    <None Update="textures\blocks\beetroots_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\beetroots_stage_2.png">
+    <None Update="textures\blocks\beetroots_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\beetroots_stage_3.png">
+    <None Update="textures\blocks\beetroots_stage_3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bell_bottom.png">
+    <None Update="textures\blocks\bell_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bell_side.png">
+    <None Update="textures\blocks\bell_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bell_top.png">
+    <None Update="textures\blocks\bell_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\birch_trapdoor.png">
+    <None Update="textures\blocks\birch_trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\blast_furnace_front_off.png">
+    <None Update="textures\blocks\blast_furnace_front_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\blast_furnace_front_on.png">
+    <None Update="textures\blocks\blast_furnace_front_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\blast_furnace_side.png">
+    <None Update="textures\blocks\blast_furnace_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\blast_furnace_top.png">
+    <None Update="textures\blocks\blast_furnace_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\blue_ice.png">
+    <None Update="textures\blocks\blue_ice.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bone_block_side.png">
+    <None Update="textures\blocks\bone_block_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bone_block_top.png">
+    <None Update="textures\blocks\bone_block_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bookshelf.png">
+    <None Update="textures\blocks\bookshelf.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\border.png">
+    <None Update="textures\blocks\border.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\brewing_stand.png">
+    <None Update="textures\blocks\brewing_stand.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\brewing_stand_base.png">
+    <None Update="textures\blocks\brewing_stand_base.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\brick.png">
+    <None Update="textures\blocks\brick.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_down_top_a.png">
+    <None Update="textures\blocks\bubble_column_down_top_a.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_down_top_b.png">
+    <None Update="textures\blocks\bubble_column_down_top_b.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_down_top_c.png">
+    <None Update="textures\blocks\bubble_column_down_top_c.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_down_top_d.png">
+    <None Update="textures\blocks\bubble_column_down_top_d.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_inner_a.png">
+    <None Update="textures\blocks\bubble_column_inner_a.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_inner_b.png">
+    <None Update="textures\blocks\bubble_column_inner_b.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_a.png">
+    <None Update="textures\blocks\bubble_column_outer_a.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_b.png">
+    <None Update="textures\blocks\bubble_column_outer_b.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_c.png">
+    <None Update="textures\blocks\bubble_column_outer_c.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_d.png">
+    <None Update="textures\blocks\bubble_column_outer_d.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_e.png">
+    <None Update="textures\blocks\bubble_column_outer_e.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_f.png">
+    <None Update="textures\blocks\bubble_column_outer_f.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_g.png">
+    <None Update="textures\blocks\bubble_column_outer_g.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_outer_h.png">
+    <None Update="textures\blocks\bubble_column_outer_h.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_up_top_a.png">
+    <None Update="textures\blocks\bubble_column_up_top_a.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_up_top_b.png">
+    <None Update="textures\blocks\bubble_column_up_top_b.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_up_top_c.png">
+    <None Update="textures\blocks\bubble_column_up_top_c.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\bubble_column_up_top_d.png">
+    <None Update="textures\blocks\bubble_column_up_top_d.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\build_allow.png">
+    <None Update="textures\blocks\build_allow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\build_deny.png">
+    <None Update="textures\blocks\build_deny.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cactus_bottom.tga">
+    <None Update="textures\blocks\cactus_bottom.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cactus_side.tga">
+    <None Update="textures\blocks\cactus_side.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cactus_top.tga">
+    <None Update="textures\blocks\cactus_top.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cake_bottom.png">
+    <None Update="textures\blocks\cake_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cake_inner.png">
+    <None Update="textures\blocks\cake_inner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cake_side.png">
+    <None Update="textures\blocks\cake_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cake_top.png">
+    <None Update="textures\blocks\cake_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\camera_back.png">
+    <None Update="textures\blocks\camera_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\camera_front.png">
+    <None Update="textures\blocks\camera_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\camera_side.png">
+    <None Update="textures\blocks\camera_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\camera_top.png">
+    <None Update="textures\blocks\camera_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\campfire.tga">
+    <None Update="textures\blocks\campfire.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\campfire_side.png">
+    <None Update="textures\blocks\campfire_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\campfire_top.png">
+    <None Update="textures\blocks\campfire_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\campfire_top_on.png">
+    <None Update="textures\blocks\campfire_top_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\carried_waterlily.png">
+    <None Update="textures\blocks\carried_waterlily.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\carrots_stage_0.png">
+    <None Update="textures\blocks\carrots_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\carrots_stage_1.png">
+    <None Update="textures\blocks\carrots_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\carrots_stage_2.png">
+    <None Update="textures\blocks\carrots_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\carrots_stage_3.png">
+    <None Update="textures\blocks\carrots_stage_3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cartography_table_side1.png">
+    <None Update="textures\blocks\cartography_table_side1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cartography_table_side2.png">
+    <None Update="textures\blocks\cartography_table_side2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cartography_table_side3.png">
+    <None Update="textures\blocks\cartography_table_side3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cartography_table_top.png">
+    <None Update="textures\blocks\cartography_table_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cauldron_bottom.png">
+    <None Update="textures\blocks\cauldron_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cauldron_inner.png">
+    <None Update="textures\blocks\cauldron_inner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cauldron_side.png">
+    <None Update="textures\blocks\cauldron_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cauldron_top.png">
+    <None Update="textures\blocks\cauldron_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cauldron_water.png">
+    <None Update="textures\blocks\cauldron_water.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cauldron_water_placeholder.png">
+    <None Update="textures\blocks\cauldron_water_placeholder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_back.png">
+    <None Update="textures\blocks\chain_command_block_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_back_mipmap.png">
+    <None Update="textures\blocks\chain_command_block_back_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_conditional.png">
+    <None Update="textures\blocks\chain_command_block_conditional.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_conditional_mipmap.png">
+    <None Update="textures\blocks\chain_command_block_conditional_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_front.png">
+    <None Update="textures\blocks\chain_command_block_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_front_mipmap.png">
+    <None Update="textures\blocks\chain_command_block_front_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_side.png">
+    <None Update="textures\blocks\chain_command_block_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chain_command_block_side_mipmap.png">
+    <None Update="textures\blocks\chain_command_block_side_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chest_front.png">
+    <None Update="textures\blocks\chest_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chest_side.png">
+    <None Update="textures\blocks\chest_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chest_top.png">
+    <None Update="textures\blocks\chest_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chorus_flower.png">
+    <None Update="textures\blocks\chorus_flower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chorus_flower_dead.png">
+    <None Update="textures\blocks\chorus_flower_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\chorus_plant.png">
+    <None Update="textures\blocks\chorus_plant.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\clay.png">
+    <None Update="textures\blocks\clay.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coal_block.png">
+    <None Update="textures\blocks\coal_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coal_ore.png">
+    <None Update="textures\blocks\coal_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coarse_dirt.png">
+    <None Update="textures\blocks\coarse_dirt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cobblestone.png">
+    <None Update="textures\blocks\cobblestone.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cobblestone_mossy.png">
+    <None Update="textures\blocks\cobblestone_mossy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cocoa_stage_0.png">
+    <None Update="textures\blocks\cocoa_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cocoa_stage_1.png">
+    <None Update="textures\blocks\cocoa_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\cocoa_stage_2.png">
+    <None Update="textures\blocks\cocoa_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block.png">
+    <None Update="textures\blocks\command_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_back.png">
+    <None Update="textures\blocks\command_block_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_back_mipmap.png">
+    <None Update="textures\blocks\command_block_back_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_conditional.png">
+    <None Update="textures\blocks\command_block_conditional.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_conditional_mipmap.png">
+    <None Update="textures\blocks\command_block_conditional_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_front.png">
+    <None Update="textures\blocks\command_block_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_front_mipmap.png">
+    <None Update="textures\blocks\command_block_front_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_side.png">
+    <None Update="textures\blocks\command_block_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\command_block_side_mipmap.png">
+    <None Update="textures\blocks\command_block_side_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\comparator_off.png">
+    <None Update="textures\blocks\comparator_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\comparator_on.png">
+    <None Update="textures\blocks\comparator_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\compost.png">
+    <None Update="textures\blocks\compost.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\composter_bottom.png">
+    <None Update="textures\blocks\composter_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\composter_side.png">
+    <None Update="textures\blocks\composter_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\composter_top.png">
+    <None Update="textures\blocks\composter_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\compost_ready.png">
+    <None Update="textures\blocks\compost_ready.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_black.png">
+    <None Update="textures\blocks\concrete_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_blue.png">
+    <None Update="textures\blocks\concrete_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_brown.png">
+    <None Update="textures\blocks\concrete_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_cyan.png">
+    <None Update="textures\blocks\concrete_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_gray.png">
+    <None Update="textures\blocks\concrete_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_green.png">
+    <None Update="textures\blocks\concrete_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_light_blue.png">
+    <None Update="textures\blocks\concrete_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_lime.png">
+    <None Update="textures\blocks\concrete_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_magenta.png">
+    <None Update="textures\blocks\concrete_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_orange.png">
+    <None Update="textures\blocks\concrete_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_pink.png">
+    <None Update="textures\blocks\concrete_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_black.png">
+    <None Update="textures\blocks\concrete_powder_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_blue.png">
+    <None Update="textures\blocks\concrete_powder_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_brown.png">
+    <None Update="textures\blocks\concrete_powder_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_cyan.png">
+    <None Update="textures\blocks\concrete_powder_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_gray.png">
+    <None Update="textures\blocks\concrete_powder_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_green.png">
+    <None Update="textures\blocks\concrete_powder_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_light_blue.png">
+    <None Update="textures\blocks\concrete_powder_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_lime.png">
+    <None Update="textures\blocks\concrete_powder_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_magenta.png">
+    <None Update="textures\blocks\concrete_powder_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_orange.png">
+    <None Update="textures\blocks\concrete_powder_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_pink.png">
+    <None Update="textures\blocks\concrete_powder_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_purple.png">
+    <None Update="textures\blocks\concrete_powder_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_red.png">
+    <None Update="textures\blocks\concrete_powder_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_silver.png">
+    <None Update="textures\blocks\concrete_powder_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_white.png">
+    <None Update="textures\blocks\concrete_powder_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_powder_yellow.png">
+    <None Update="textures\blocks\concrete_powder_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_purple.png">
+    <None Update="textures\blocks\concrete_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_red.png">
+    <None Update="textures\blocks\concrete_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_silver.png">
+    <None Update="textures\blocks\concrete_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_white.png">
+    <None Update="textures\blocks\concrete_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\concrete_yellow.png">
+    <None Update="textures\blocks\concrete_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\conduit_base.png">
+    <None Update="textures\blocks\conduit_base.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\conduit_cage.png">
+    <None Update="textures\blocks\conduit_cage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\conduit_closed.png">
+    <None Update="textures\blocks\conduit_closed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\conduit_open.png">
+    <None Update="textures\blocks\conduit_open.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\conduit_wind_horizontal.png">
+    <None Update="textures\blocks\conduit_wind_horizontal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\conduit_wind_vertical.png">
+    <None Update="textures\blocks\conduit_wind_vertical.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_blue.png">
+    <None Update="textures\blocks\coral_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_blue_dead.png">
+    <None Update="textures\blocks\coral_blue_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_blue.png">
+    <None Update="textures\blocks\coral_fan_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_blue_dead.png">
+    <None Update="textures\blocks\coral_fan_blue_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_pink.png">
+    <None Update="textures\blocks\coral_fan_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_pink_dead.png">
+    <None Update="textures\blocks\coral_fan_pink_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_purple.png">
+    <None Update="textures\blocks\coral_fan_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_purple_dead.png">
+    <None Update="textures\blocks\coral_fan_purple_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_red.png">
+    <None Update="textures\blocks\coral_fan_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_red_dead.png">
+    <None Update="textures\blocks\coral_fan_red_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_yellow.png">
+    <None Update="textures\blocks\coral_fan_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_fan_yellow_dead.png">
+    <None Update="textures\blocks\coral_fan_yellow_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_pink.png">
+    <None Update="textures\blocks\coral_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_pink_dead.png">
+    <None Update="textures\blocks\coral_pink_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_plant_blue.png">
+    <None Update="textures\blocks\coral_plant_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_plant_pink.png">
+    <None Update="textures\blocks\coral_plant_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_plant_purple.png">
+    <None Update="textures\blocks\coral_plant_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_plant_red.png">
+    <None Update="textures\blocks\coral_plant_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_plant_yellow.png">
+    <None Update="textures\blocks\coral_plant_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_purple.png">
+    <None Update="textures\blocks\coral_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_purple_dead.png">
+    <None Update="textures\blocks\coral_purple_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_red.png">
+    <None Update="textures\blocks\coral_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_red_dead.png">
+    <None Update="textures\blocks\coral_red_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_yellow.png">
+    <None Update="textures\blocks\coral_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\coral_yellow_dead.png">
+    <None Update="textures\blocks\coral_yellow_dead.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\crafting_table_front.png">
+    <None Update="textures\blocks\crafting_table_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\crafting_table_side.png">
+    <None Update="textures\blocks\crafting_table_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\crafting_table_top.png">
+    <None Update="textures\blocks\crafting_table_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dark_oak_trapdoor.png">
+    <None Update="textures\blocks\dark_oak_trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\daylight_detector_inverted_top.png">
+    <None Update="textures\blocks\daylight_detector_inverted_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\daylight_detector_side.png">
+    <None Update="textures\blocks\daylight_detector_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\daylight_detector_top.png">
+    <None Update="textures\blocks\daylight_detector_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\deadbush.png">
+    <None Update="textures\blocks\deadbush.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\diamond_block.png">
+    <None Update="textures\blocks\diamond_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\diamond_ore.png">
+    <None Update="textures\blocks\diamond_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dirt.png">
+    <None Update="textures\blocks\dirt.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dirt_podzol_side.png">
+    <None Update="textures\blocks\dirt_podzol_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dirt_podzol_top.png">
+    <None Update="textures\blocks\dirt_podzol_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dispenser_front_horizontal.png">
+    <None Update="textures\blocks\dispenser_front_horizontal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dispenser_front_vertical.png">
+    <None Update="textures\blocks\dispenser_front_vertical.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_acacia_lower.png">
+    <None Update="textures\blocks\door_acacia_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_acacia_upper.png">
+    <None Update="textures\blocks\door_acacia_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_birch_lower.png">
+    <None Update="textures\blocks\door_birch_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_birch_upper.png">
+    <None Update="textures\blocks\door_birch_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_dark_oak_lower.png">
+    <None Update="textures\blocks\door_dark_oak_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_dark_oak_upper.png">
+    <None Update="textures\blocks\door_dark_oak_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_iron_lower.png">
+    <None Update="textures\blocks\door_iron_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_iron_upper.png">
+    <None Update="textures\blocks\door_iron_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_jungle_lower.png">
+    <None Update="textures\blocks\door_jungle_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_jungle_upper.png">
+    <None Update="textures\blocks\door_jungle_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_spruce_lower.png">
+    <None Update="textures\blocks\door_spruce_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_spruce_upper.png">
+    <None Update="textures\blocks\door_spruce_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_wood_lower.png">
+    <None Update="textures\blocks\door_wood_lower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\door_wood_upper.png">
+    <None Update="textures\blocks\door_wood_upper.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_fern_bottom.tga">
+    <None Update="textures\blocks\double_plant_fern_bottom.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_fern_carried.png">
+    <None Update="textures\blocks\double_plant_fern_carried.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_fern_top.tga">
+    <None Update="textures\blocks\double_plant_fern_top.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_grass_bottom.tga">
+    <None Update="textures\blocks\double_plant_grass_bottom.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_grass_carried.png">
+    <None Update="textures\blocks\double_plant_grass_carried.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_grass_top.tga">
+    <None Update="textures\blocks\double_plant_grass_top.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_paeonia_bottom.png">
+    <None Update="textures\blocks\double_plant_paeonia_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_paeonia_top.png">
+    <None Update="textures\blocks\double_plant_paeonia_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_rose_bottom.png">
+    <None Update="textures\blocks\double_plant_rose_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_rose_top.png">
+    <None Update="textures\blocks\double_plant_rose_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_sunflower_back.png">
+    <None Update="textures\blocks\double_plant_sunflower_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_sunflower_bottom.png">
+    <None Update="textures\blocks\double_plant_sunflower_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_sunflower_front.png">
+    <None Update="textures\blocks\double_plant_sunflower_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_sunflower_top.png">
+    <None Update="textures\blocks\double_plant_sunflower_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_syringa_bottom.tga">
+    <None Update="textures\blocks\double_plant_syringa_bottom.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\double_plant_syringa_top.tga">
+    <None Update="textures\blocks\double_plant_syringa_top.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dragon_egg.png">
+    <None Update="textures\blocks\dragon_egg.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dried_kelp_side_a.png">
+    <None Update="textures\blocks\dried_kelp_side_a.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dried_kelp_side_b.png">
+    <None Update="textures\blocks\dried_kelp_side_b.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dried_kelp_top.png">
+    <None Update="textures\blocks\dried_kelp_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dropper_front_horizontal.png">
+    <None Update="textures\blocks\dropper_front_horizontal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\dropper_front_vertical.png">
+    <None Update="textures\blocks\dropper_front_vertical.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\emerald_block.png">
+    <None Update="textures\blocks\emerald_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\emerald_ore.png">
+    <None Update="textures\blocks\emerald_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\enchanting_table_bottom.png">
+    <None Update="textures\blocks\enchanting_table_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\enchanting_table_side.png">
+    <None Update="textures\blocks\enchanting_table_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\enchanting_table_top.png">
+    <None Update="textures\blocks\enchanting_table_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\ender_chest_front.png">
+    <None Update="textures\blocks\ender_chest_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\ender_chest_side.png">
+    <None Update="textures\blocks\ender_chest_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\ender_chest_top.png">
+    <None Update="textures\blocks\ender_chest_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\endframe_eye.png">
+    <None Update="textures\blocks\endframe_eye.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\endframe_side.png">
+    <None Update="textures\blocks\endframe_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\endframe_top.png">
+    <None Update="textures\blocks\endframe_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\end_bricks.png">
+    <None Update="textures\blocks\end_bricks.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\end_gateway.png">
+    <None Update="textures\blocks\end_gateway.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\end_portal.png">
+    <None Update="textures\blocks\end_portal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\end_rod.png">
+    <None Update="textures\blocks\end_rod.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\end_stone.png">
+    <None Update="textures\blocks\end_stone.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\farmland_dry.png">
+    <None Update="textures\blocks\farmland_dry.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\farmland_wet.png">
+    <None Update="textures\blocks\farmland_wet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fern.tga">
+    <None Update="textures\blocks\fern.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fern_carried.tga">
+    <None Update="textures\blocks\fern_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fire_0.png">
+    <None Update="textures\blocks\fire_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fire_0_placeholder.png">
+    <None Update="textures\blocks\fire_0_placeholder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fire_1.png">
+    <None Update="textures\blocks\fire_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fire_1_placeholder.png">
+    <None Update="textures\blocks\fire_1_placeholder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fletcher_table_side1.png">
+    <None Update="textures\blocks\fletcher_table_side1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fletcher_table_side2.png">
+    <None Update="textures\blocks\fletcher_table_side2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\fletcher_table_top.png">
+    <None Update="textures\blocks\fletcher_table_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_allium.png">
+    <None Update="textures\blocks\flower_allium.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_blue_orchid.png">
+    <None Update="textures\blocks\flower_blue_orchid.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_cornflower.png">
+    <None Update="textures\blocks\flower_cornflower.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_dandelion.png">
+    <None Update="textures\blocks\flower_dandelion.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_houstonia.png">
+    <None Update="textures\blocks\flower_houstonia.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_lily_of_the_valley.png">
+    <None Update="textures\blocks\flower_lily_of_the_valley.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_oxeye_daisy.png">
+    <None Update="textures\blocks\flower_oxeye_daisy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_paeonia.png">
+    <None Update="textures\blocks\flower_paeonia.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_pot.png">
+    <None Update="textures\blocks\flower_pot.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_rose.png">
+    <None Update="textures\blocks\flower_rose.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_rose_blue.png">
+    <None Update="textures\blocks\flower_rose_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_tulip_orange.png">
+    <None Update="textures\blocks\flower_tulip_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_tulip_pink.png">
+    <None Update="textures\blocks\flower_tulip_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_tulip_red.png">
+    <None Update="textures\blocks\flower_tulip_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\flower_tulip_white.png">
+    <None Update="textures\blocks\flower_tulip_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\frosted_ice_0.png">
+    <None Update="textures\blocks\frosted_ice_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\frosted_ice_1.png">
+    <None Update="textures\blocks\frosted_ice_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\frosted_ice_2.png">
+    <None Update="textures\blocks\frosted_ice_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\frosted_ice_3.png">
+    <None Update="textures\blocks\frosted_ice_3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\furnace_front_off.png">
+    <None Update="textures\blocks\furnace_front_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\furnace_front_on.png">
+    <None Update="textures\blocks\furnace_front_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\furnace_side.png">
+    <None Update="textures\blocks\furnace_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\furnace_top.png">
+    <None Update="textures\blocks\furnace_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass.png">
+    <None Update="textures\blocks\glass.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_black.png">
+    <None Update="textures\blocks\glass_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_blue.png">
+    <None Update="textures\blocks\glass_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_brown.png">
+    <None Update="textures\blocks\glass_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_cyan.png">
+    <None Update="textures\blocks\glass_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_gray.png">
+    <None Update="textures\blocks\glass_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_green.png">
+    <None Update="textures\blocks\glass_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_light_blue.png">
+    <None Update="textures\blocks\glass_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_lime.png">
+    <None Update="textures\blocks\glass_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_magenta.png">
+    <None Update="textures\blocks\glass_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_orange.png">
+    <None Update="textures\blocks\glass_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top.png">
+    <None Update="textures\blocks\glass_pane_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_black.png">
+    <None Update="textures\blocks\glass_pane_top_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_blue.png">
+    <None Update="textures\blocks\glass_pane_top_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_brown.png">
+    <None Update="textures\blocks\glass_pane_top_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_cyan.png">
+    <None Update="textures\blocks\glass_pane_top_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_gray.png">
+    <None Update="textures\blocks\glass_pane_top_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_green.png">
+    <None Update="textures\blocks\glass_pane_top_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_light_blue.png">
+    <None Update="textures\blocks\glass_pane_top_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_lime.png">
+    <None Update="textures\blocks\glass_pane_top_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_magenta.png">
+    <None Update="textures\blocks\glass_pane_top_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_orange.png">
+    <None Update="textures\blocks\glass_pane_top_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_pink.png">
+    <None Update="textures\blocks\glass_pane_top_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_purple.png">
+    <None Update="textures\blocks\glass_pane_top_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_red.png">
+    <None Update="textures\blocks\glass_pane_top_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_silver.png">
+    <None Update="textures\blocks\glass_pane_top_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_white.png">
+    <None Update="textures\blocks\glass_pane_top_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pane_top_yellow.png">
+    <None Update="textures\blocks\glass_pane_top_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_pink.png">
+    <None Update="textures\blocks\glass_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_purple.png">
+    <None Update="textures\blocks\glass_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_red.png">
+    <None Update="textures\blocks\glass_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_silver.png">
+    <None Update="textures\blocks\glass_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_white.png">
+    <None Update="textures\blocks\glass_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glass_yellow.png">
+    <None Update="textures\blocks\glass_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_black.png">
+    <None Update="textures\blocks\glazed_terracotta_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_blue.png">
+    <None Update="textures\blocks\glazed_terracotta_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_brown.png">
+    <None Update="textures\blocks\glazed_terracotta_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_cyan.png">
+    <None Update="textures\blocks\glazed_terracotta_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_gray.png">
+    <None Update="textures\blocks\glazed_terracotta_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_green.png">
+    <None Update="textures\blocks\glazed_terracotta_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_light_blue.png">
+    <None Update="textures\blocks\glazed_terracotta_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_lime.png">
+    <None Update="textures\blocks\glazed_terracotta_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_magenta.png">
+    <None Update="textures\blocks\glazed_terracotta_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_orange.png">
+    <None Update="textures\blocks\glazed_terracotta_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_pink.png">
+    <None Update="textures\blocks\glazed_terracotta_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_purple.png">
+    <None Update="textures\blocks\glazed_terracotta_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_red.png">
+    <None Update="textures\blocks\glazed_terracotta_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_silver.png">
+    <None Update="textures\blocks\glazed_terracotta_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_white.png">
+    <None Update="textures\blocks\glazed_terracotta_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glazed_terracotta_yellow.png">
+    <None Update="textures\blocks\glazed_terracotta_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glowing_obsidian.png">
+    <None Update="textures\blocks\glowing_obsidian.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\glowstone.png">
+    <None Update="textures\blocks\glowstone.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\gold_block.png">
+    <None Update="textures\blocks\gold_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\gold_ore.png">
+    <None Update="textures\blocks\gold_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_carried.png">
+    <None Update="textures\blocks\grass_carried.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_path_side.png">
+    <None Update="textures\blocks\grass_path_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_path_top.png">
+    <None Update="textures\blocks\grass_path_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_side.tga">
+    <None Update="textures\blocks\grass_side.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_side_carried.png">
+    <None Update="textures\blocks\grass_side_carried.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_side_snowed.png">
+    <None Update="textures\blocks\grass_side_snowed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_side_snowed.tga">
+    <None Update="textures\blocks\grass_side_snowed.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grass_top.png">
+    <None Update="textures\blocks\grass_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\gravel.png">
+    <None Update="textures\blocks\gravel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grindstone_pivot.tga">
+    <None Update="textures\blocks\grindstone_pivot.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grindstone_round.tga">
+    <None Update="textures\blocks\grindstone_round.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\grindstone_side.tga">
+    <None Update="textures\blocks\grindstone_side.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay.png">
+    <None Update="textures\blocks\hardened_clay.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_black.png">
+    <None Update="textures\blocks\hardened_clay_stained_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_blue.png">
+    <None Update="textures\blocks\hardened_clay_stained_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_brown.png">
+    <None Update="textures\blocks\hardened_clay_stained_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_cyan.png">
+    <None Update="textures\blocks\hardened_clay_stained_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_gray.png">
+    <None Update="textures\blocks\hardened_clay_stained_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_green.png">
+    <None Update="textures\blocks\hardened_clay_stained_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_light_blue.png">
+    <None Update="textures\blocks\hardened_clay_stained_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_lime.png">
+    <None Update="textures\blocks\hardened_clay_stained_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_magenta.png">
+    <None Update="textures\blocks\hardened_clay_stained_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_orange.png">
+    <None Update="textures\blocks\hardened_clay_stained_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_pink.png">
+    <None Update="textures\blocks\hardened_clay_stained_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_purple.png">
+    <None Update="textures\blocks\hardened_clay_stained_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_red.png">
+    <None Update="textures\blocks\hardened_clay_stained_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_silver.png">
+    <None Update="textures\blocks\hardened_clay_stained_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_white.png">
+    <None Update="textures\blocks\hardened_clay_stained_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hardened_clay_stained_yellow.png">
+    <None Update="textures\blocks\hardened_clay_stained_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hay_block_side.png">
+    <None Update="textures\blocks\hay_block_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hay_block_top.png">
+    <None Update="textures\blocks\hay_block_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hopper_inside.png">
+    <None Update="textures\blocks\hopper_inside.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hopper_outside.png">
+    <None Update="textures\blocks\hopper_outside.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\hopper_top.png">
+    <None Update="textures\blocks\hopper_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\ice.png">
+    <None Update="textures\blocks\ice.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\ice_packed.png">
+    <None Update="textures\blocks\ice_packed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\iron_bars.png">
+    <None Update="textures\blocks\iron_bars.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\iron_block.png">
+    <None Update="textures\blocks\iron_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\iron_ore.png">
+    <None Update="textures\blocks\iron_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\iron_trapdoor.png">
+    <None Update="textures\blocks\iron_trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\itemframe_background.png">
+    <None Update="textures\blocks\itemframe_background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\jigsaw_back.png">
+    <None Update="textures\blocks\jigsaw_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\jigsaw_front.png">
+    <None Update="textures\blocks\jigsaw_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\jigsaw_side.png">
+    <None Update="textures\blocks\jigsaw_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\jukebox_side.png">
+    <None Update="textures\blocks\jukebox_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\jukebox_top.png">
+    <None Update="textures\blocks\jukebox_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\jungle_trapdoor.png">
+    <None Update="textures\blocks\jungle_trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\kelp_a.tga">
+    <None Update="textures\blocks\kelp_a.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\kelp_b.tga">
+    <None Update="textures\blocks\kelp_b.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\kelp_c.tga">
+    <None Update="textures\blocks\kelp_c.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\kelp_d.tga">
+    <None Update="textures\blocks\kelp_d.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\kelp_top.tga">
+    <None Update="textures\blocks\kelp_top.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\kelp_top_bulb.tga">
+    <None Update="textures\blocks\kelp_top_bulb.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\ladder.png">
+    <None Update="textures\blocks\ladder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lantern.png">
+    <None Update="textures\blocks\lantern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lapis_block.png">
+    <None Update="textures\blocks\lapis_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lapis_ore.png">
+    <None Update="textures\blocks\lapis_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lava_flow.png">
+    <None Update="textures\blocks\lava_flow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lava_placeholder.png">
+    <None Update="textures\blocks\lava_placeholder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lava_still.png">
+    <None Update="textures\blocks\lava_still.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_acacia.tga">
+    <None Update="textures\blocks\leaves_acacia.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_acacia_carried.tga">
+    <None Update="textures\blocks\leaves_acacia_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_acacia_opaque.png">
+    <None Update="textures\blocks\leaves_acacia_opaque.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_big_oak.tga">
+    <None Update="textures\blocks\leaves_big_oak.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_big_oak_carried.tga">
+    <None Update="textures\blocks\leaves_big_oak_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_big_oak_opaque.png">
+    <None Update="textures\blocks\leaves_big_oak_opaque.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_birch.tga">
+    <None Update="textures\blocks\leaves_birch.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_birch_carried.tga">
+    <None Update="textures\blocks\leaves_birch_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_birch_opaque.png">
+    <None Update="textures\blocks\leaves_birch_opaque.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_jungle.tga">
+    <None Update="textures\blocks\leaves_jungle.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_jungle_carried.tga">
+    <None Update="textures\blocks\leaves_jungle_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_jungle_opaque.png">
+    <None Update="textures\blocks\leaves_jungle_opaque.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_oak.tga">
+    <None Update="textures\blocks\leaves_oak.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_oak_carried.tga">
+    <None Update="textures\blocks\leaves_oak_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_oak_opaque.png">
+    <None Update="textures\blocks\leaves_oak_opaque.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_spruce.tga">
+    <None Update="textures\blocks\leaves_spruce.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_spruce_carried.tga">
+    <None Update="textures\blocks\leaves_spruce_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\leaves_spruce_opaque.png">
+    <None Update="textures\blocks\leaves_spruce_opaque.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lectern_base.png">
+    <None Update="textures\blocks\lectern_base.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lectern_front.png">
+    <None Update="textures\blocks\lectern_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lectern_sides.png">
+    <None Update="textures\blocks\lectern_sides.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lectern_top.png">
+    <None Update="textures\blocks\lectern_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\lever.png">
+    <None Update="textures\blocks\lever.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_acacia.png">
+    <None Update="textures\blocks\log_acacia.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_acacia_top.png">
+    <None Update="textures\blocks\log_acacia_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_big_oak.png">
+    <None Update="textures\blocks\log_big_oak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_big_oak_top.png">
+    <None Update="textures\blocks\log_big_oak_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_birch.png">
+    <None Update="textures\blocks\log_birch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_birch_top.png">
+    <None Update="textures\blocks\log_birch_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_jungle.png">
+    <None Update="textures\blocks\log_jungle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_jungle_top.png">
+    <None Update="textures\blocks\log_jungle_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_oak.png">
+    <None Update="textures\blocks\log_oak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_oak_top.png">
+    <None Update="textures\blocks\log_oak_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_spruce.png">
+    <None Update="textures\blocks\log_spruce.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\log_spruce_top.png">
+    <None Update="textures\blocks\log_spruce_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\loom_bottom.png">
+    <None Update="textures\blocks\loom_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\loom_front.png">
+    <None Update="textures\blocks\loom_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\loom_side.png">
+    <None Update="textures\blocks\loom_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\loom_top.png">
+    <None Update="textures\blocks\loom_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\magma.png">
+    <None Update="textures\blocks\magma.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\melon_side.png">
+    <None Update="textures\blocks\melon_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\melon_stem_connected.png">
+    <None Update="textures\blocks\melon_stem_connected.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\melon_stem_disconnected.png">
+    <None Update="textures\blocks\melon_stem_disconnected.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\melon_top.png">
+    <None Update="textures\blocks\melon_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\missing_tile.png">
+    <None Update="textures\blocks\missing_tile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mob_spawner.png">
+    <None Update="textures\blocks\mob_spawner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mushroom_block_inside.png">
+    <None Update="textures\blocks\mushroom_block_inside.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mushroom_block_skin_brown.png">
+    <None Update="textures\blocks\mushroom_block_skin_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mushroom_block_skin_red.png">
+    <None Update="textures\blocks\mushroom_block_skin_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mushroom_block_skin_stem.png">
+    <None Update="textures\blocks\mushroom_block_skin_stem.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mushroom_brown.png">
+    <None Update="textures\blocks\mushroom_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mushroom_red.png">
+    <None Update="textures\blocks\mushroom_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mycelium_side.png">
+    <None Update="textures\blocks\mycelium_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\mycelium_top.png">
+    <None Update="textures\blocks\mycelium_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\netherrack.png">
+    <None Update="textures\blocks\netherrack.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\nether_brick.png">
+    <None Update="textures\blocks\nether_brick.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\nether_wart_block.png">
+    <None Update="textures\blocks\nether_wart_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\nether_wart_stage_0.png">
+    <None Update="textures\blocks\nether_wart_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\nether_wart_stage_1.png">
+    <None Update="textures\blocks\nether_wart_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\nether_wart_stage_2.png">
+    <None Update="textures\blocks\nether_wart_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\noteblock.png">
+    <None Update="textures\blocks\noteblock.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\observer_back.png">
+    <None Update="textures\blocks\observer_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\observer_back_lit.png">
+    <None Update="textures\blocks\observer_back_lit.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\observer_front.png">
+    <None Update="textures\blocks\observer_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\observer_side.png">
+    <None Update="textures\blocks\observer_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\observer_top.png">
+    <None Update="textures\blocks\observer_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\obsidian.png">
+    <None Update="textures\blocks\obsidian.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\piston_bottom.png">
+    <None Update="textures\blocks\piston_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\piston_inner.png">
+    <None Update="textures\blocks\piston_inner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\piston_side.png">
+    <None Update="textures\blocks\piston_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\piston_top_normal.png">
+    <None Update="textures\blocks\piston_top_normal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\piston_top_sticky.png">
+    <None Update="textures\blocks\piston_top_sticky.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\planks_acacia.png">
+    <None Update="textures\blocks\planks_acacia.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\planks_big_oak.png">
+    <None Update="textures\blocks\planks_big_oak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\planks_birch.png">
+    <None Update="textures\blocks\planks_birch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\planks_jungle.png">
+    <None Update="textures\blocks\planks_jungle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\planks_oak.png">
+    <None Update="textures\blocks\planks_oak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\planks_spruce.png">
+    <None Update="textures\blocks\planks_spruce.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\portal.png">
+    <None Update="textures\blocks\portal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\portal_placeholder.png">
+    <None Update="textures\blocks\portal_placeholder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\potatoes_stage_0.png">
+    <None Update="textures\blocks\potatoes_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\potatoes_stage_1.png">
+    <None Update="textures\blocks\potatoes_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\potatoes_stage_2.png">
+    <None Update="textures\blocks\potatoes_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\potatoes_stage_3.png">
+    <None Update="textures\blocks\potatoes_stage_3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\prismarine_bricks.png">
+    <None Update="textures\blocks\prismarine_bricks.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\prismarine_dark.png">
+    <None Update="textures\blocks\prismarine_dark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\prismarine_rough.png">
+    <None Update="textures\blocks\prismarine_rough.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\pumpkin_face_off.png">
+    <None Update="textures\blocks\pumpkin_face_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\pumpkin_face_on.png">
+    <None Update="textures\blocks\pumpkin_face_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\pumpkin_side.png">
+    <None Update="textures\blocks\pumpkin_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\pumpkin_stem_connected.png">
+    <None Update="textures\blocks\pumpkin_stem_connected.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\pumpkin_stem_disconnected.png">
+    <None Update="textures\blocks\pumpkin_stem_disconnected.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\pumpkin_top.png">
+    <None Update="textures\blocks\pumpkin_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\purpur_block.png">
+    <None Update="textures\blocks\purpur_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\purpur_pillar.png">
+    <None Update="textures\blocks\purpur_pillar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_bottom.png">
+    <None Update="textures\blocks\quartz_block_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_chiseled.png">
+    <None Update="textures\blocks\quartz_block_chiseled.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_chiseled_top.png">
+    <None Update="textures\blocks\quartz_block_chiseled_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_lines.png">
+    <None Update="textures\blocks\quartz_block_lines.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_lines_top.png">
+    <None Update="textures\blocks\quartz_block_lines_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_side.png">
+    <None Update="textures\blocks\quartz_block_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_block_top.png">
+    <None Update="textures\blocks\quartz_block_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\quartz_ore.png">
+    <None Update="textures\blocks\quartz_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_activator.png">
+    <None Update="textures\blocks\rail_activator.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_activator_powered.png">
+    <None Update="textures\blocks\rail_activator_powered.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_detector.png">
+    <None Update="textures\blocks\rail_detector.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_detector_powered.png">
+    <None Update="textures\blocks\rail_detector_powered.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_golden.png">
+    <None Update="textures\blocks\rail_golden.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_golden_powered.png">
+    <None Update="textures\blocks\rail_golden_powered.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_normal.png">
+    <None Update="textures\blocks\rail_normal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\rail_normal_turned.png">
+    <None Update="textures\blocks\rail_normal_turned.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\reactor_core_stage_0.png">
+    <None Update="textures\blocks\reactor_core_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\reactor_core_stage_1.png">
+    <None Update="textures\blocks\reactor_core_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\reactor_core_stage_2.png">
+    <None Update="textures\blocks\reactor_core_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_block.png">
+    <None Update="textures\blocks\redstone_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_dust_cross.png">
+    <None Update="textures\blocks\redstone_dust_cross.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_dust_line.png">
+    <None Update="textures\blocks\redstone_dust_line.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_lamp_off.png">
+    <None Update="textures\blocks\redstone_lamp_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_lamp_on.png">
+    <None Update="textures\blocks\redstone_lamp_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_ore.png">
+    <None Update="textures\blocks\redstone_ore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_torch_off.png">
+    <None Update="textures\blocks\redstone_torch_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\redstone_torch_on.png">
+    <None Update="textures\blocks\redstone_torch_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_nether_brick.png">
+    <None Update="textures\blocks\red_nether_brick.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_sand.png">
+    <None Update="textures\blocks\red_sand.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_sandstone_bottom.png">
+    <None Update="textures\blocks\red_sandstone_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_sandstone_carved.png">
+    <None Update="textures\blocks\red_sandstone_carved.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_sandstone_normal.png">
+    <None Update="textures\blocks\red_sandstone_normal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_sandstone_smooth.png">
+    <None Update="textures\blocks\red_sandstone_smooth.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\red_sandstone_top.png">
+    <None Update="textures\blocks\red_sandstone_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\reeds.tga">
+    <None Update="textures\blocks\reeds.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeater_off.png">
+    <None Update="textures\blocks\repeater_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeater_on.png">
+    <None Update="textures\blocks\repeater_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_back.png">
+    <None Update="textures\blocks\repeating_command_block_back.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_back_mipmap.png">
+    <None Update="textures\blocks\repeating_command_block_back_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_conditional.png">
+    <None Update="textures\blocks\repeating_command_block_conditional.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_conditional_mipmap.png">
+    <None Update="textures\blocks\repeating_command_block_conditional_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_front.png">
+    <None Update="textures\blocks\repeating_command_block_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_front_mipmap.png">
+    <None Update="textures\blocks\repeating_command_block_front_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_side.png">
+    <None Update="textures\blocks\repeating_command_block_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\repeating_command_block_side_mipmap.png">
+    <None Update="textures\blocks\repeating_command_block_side_mipmap.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sand.png">
+    <None Update="textures\blocks\sand.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sandstone_bottom.png">
+    <None Update="textures\blocks\sandstone_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sandstone_carved.png">
+    <None Update="textures\blocks\sandstone_carved.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sandstone_normal.png">
+    <None Update="textures\blocks\sandstone_normal.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sandstone_smooth.png">
+    <None Update="textures\blocks\sandstone_smooth.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sandstone_top.png">
+    <None Update="textures\blocks\sandstone_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sapling_acacia.png">
+    <None Update="textures\blocks\sapling_acacia.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sapling_birch.png">
+    <None Update="textures\blocks\sapling_birch.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sapling_jungle.png">
+    <None Update="textures\blocks\sapling_jungle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sapling_oak.png">
+    <None Update="textures\blocks\sapling_oak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sapling_roofed_oak.png">
+    <None Update="textures\blocks\sapling_roofed_oak.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sapling_spruce.png">
+    <None Update="textures\blocks\sapling_spruce.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\scaffolding_bottom.tga">
+    <None Update="textures\blocks\scaffolding_bottom.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\scaffolding_side.tga">
+    <None Update="textures\blocks\scaffolding_side.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\scaffolding_top.tga">
+    <None Update="textures\blocks\scaffolding_top.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\seagrass.png">
+    <None Update="textures\blocks\seagrass.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\seagrass_carried.png">
+    <None Update="textures\blocks\seagrass_carried.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\seagrass_doubletall_bottom_a.tga">
+    <None Update="textures\blocks\seagrass_doubletall_bottom_a.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\seagrass_doubletall_bottom_b.tga">
+    <None Update="textures\blocks\seagrass_doubletall_bottom_b.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\seagrass_doubletall_top_a.tga">
+    <None Update="textures\blocks\seagrass_doubletall_top_a.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\seagrass_doubletall_top_b.tga">
+    <None Update="textures\blocks\seagrass_doubletall_top_b.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sea_lantern.png">
+    <None Update="textures\blocks\sea_lantern.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sea_pickle.png">
+    <None Update="textures\blocks\sea_pickle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_black.png">
+    <None Update="textures\blocks\shulker_top_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_blue.png">
+    <None Update="textures\blocks\shulker_top_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_brown.png">
+    <None Update="textures\blocks\shulker_top_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_cyan.png">
+    <None Update="textures\blocks\shulker_top_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_gray.png">
+    <None Update="textures\blocks\shulker_top_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_green.png">
+    <None Update="textures\blocks\shulker_top_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_light_blue.png">
+    <None Update="textures\blocks\shulker_top_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_lime.png">
+    <None Update="textures\blocks\shulker_top_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_magenta.png">
+    <None Update="textures\blocks\shulker_top_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_orange.png">
+    <None Update="textures\blocks\shulker_top_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_pink.png">
+    <None Update="textures\blocks\shulker_top_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_purple.png">
+    <None Update="textures\blocks\shulker_top_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_red.png">
+    <None Update="textures\blocks\shulker_top_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_silver.png">
+    <None Update="textures\blocks\shulker_top_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_undyed.png">
+    <None Update="textures\blocks\shulker_top_undyed.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_white.png">
+    <None Update="textures\blocks\shulker_top_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\shulker_top_yellow.png">
+    <None Update="textures\blocks\shulker_top_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\slime.png">
+    <None Update="textures\blocks\slime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smithing_table_bottom.png">
+    <None Update="textures\blocks\smithing_table_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smithing_table_front.png">
+    <None Update="textures\blocks\smithing_table_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smithing_table_side.png">
+    <None Update="textures\blocks\smithing_table_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smithing_table_top.png">
+    <None Update="textures\blocks\smithing_table_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smoker_bottom.png">
+    <None Update="textures\blocks\smoker_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smoker_front_off.png">
+    <None Update="textures\blocks\smoker_front_off.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smoker_front_on.png">
+    <None Update="textures\blocks\smoker_front_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smoker_side.png">
+    <None Update="textures\blocks\smoker_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\smoker_top.png">
+    <None Update="textures\blocks\smoker_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\snow.png">
+    <None Update="textures\blocks\snow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\soul_sand.png">
+    <None Update="textures\blocks\soul_sand.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sponge.png">
+    <None Update="textures\blocks\sponge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sponge_wet.png">
+    <None Update="textures\blocks\sponge_wet.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\spruce_trapdoor.png">
+    <None Update="textures\blocks\spruce_trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone.png">
+    <None Update="textures\blocks\stone.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonebrick.png">
+    <None Update="textures\blocks\stonebrick.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonebrick_carved.png">
+    <None Update="textures\blocks\stonebrick_carved.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonebrick_cracked.png">
+    <None Update="textures\blocks\stonebrick_cracked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonebrick_mossy.png">
+    <None Update="textures\blocks\stonebrick_mossy.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter2_bottom.png">
+    <None Update="textures\blocks\stonecutter2_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter2_saw.tga">
+    <None Update="textures\blocks\stonecutter2_saw.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter2_side.png">
+    <None Update="textures\blocks\stonecutter2_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter2_top.png">
+    <None Update="textures\blocks\stonecutter2_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter_bottom.png">
+    <None Update="textures\blocks\stonecutter_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter_other_side.png">
+    <None Update="textures\blocks\stonecutter_other_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter_side.png">
+    <None Update="textures\blocks\stonecutter_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stonecutter_top.png">
+    <None Update="textures\blocks\stonecutter_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_andesite.png">
+    <None Update="textures\blocks\stone_andesite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_andesite_smooth.png">
+    <None Update="textures\blocks\stone_andesite_smooth.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_diorite.png">
+    <None Update="textures\blocks\stone_diorite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_diorite_smooth.png">
+    <None Update="textures\blocks\stone_diorite_smooth.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_granite.png">
+    <None Update="textures\blocks\stone_granite.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_granite_smooth.png">
+    <None Update="textures\blocks\stone_granite_smooth.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_slab_side.png">
+    <None Update="textures\blocks\stone_slab_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stone_slab_top.png">
+    <None Update="textures\blocks\stone_slab_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_acacia_log.png">
+    <None Update="textures\blocks\stripped_acacia_log.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_acacia_log_top.png">
+    <None Update="textures\blocks\stripped_acacia_log_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_birch_log.png">
+    <None Update="textures\blocks\stripped_birch_log.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_birch_log_top.png">
+    <None Update="textures\blocks\stripped_birch_log_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_dark_oak_log.png">
+    <None Update="textures\blocks\stripped_dark_oak_log.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_dark_oak_log_top.png">
+    <None Update="textures\blocks\stripped_dark_oak_log_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_jungle_log.png">
+    <None Update="textures\blocks\stripped_jungle_log.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_jungle_log_top.png">
+    <None Update="textures\blocks\stripped_jungle_log_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_oak_log.png">
+    <None Update="textures\blocks\stripped_oak_log.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_oak_log_top.png">
+    <None Update="textures\blocks\stripped_oak_log_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_spruce_log.png">
+    <None Update="textures\blocks\stripped_spruce_log.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\stripped_spruce_log_top.png">
+    <None Update="textures\blocks\stripped_spruce_log_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_air.png">
+    <None Update="textures\blocks\structure_air.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_block.png">
+    <None Update="textures\blocks\structure_block.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_block_corner.png">
+    <None Update="textures\blocks\structure_block_corner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_block_data.png">
+    <None Update="textures\blocks\structure_block_data.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_block_export.png">
+    <None Update="textures\blocks\structure_block_export.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_block_load.png">
+    <None Update="textures\blocks\structure_block_load.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_block_save.png">
+    <None Update="textures\blocks\structure_block_save.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\structure_void.png">
+    <None Update="textures\blocks\structure_void.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sweet_berry_bush_stage0.png">
+    <None Update="textures\blocks\sweet_berry_bush_stage0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sweet_berry_bush_stage1.png">
+    <None Update="textures\blocks\sweet_berry_bush_stage1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sweet_berry_bush_stage2.png">
+    <None Update="textures\blocks\sweet_berry_bush_stage2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\sweet_berry_bush_stage3.png">
+    <None Update="textures\blocks\sweet_berry_bush_stage3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\tallgrass.png">
+    <None Update="textures\blocks\tallgrass.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\tallgrass.tga">
+    <None Update="textures\blocks\tallgrass.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\tallgrass_carried.tga">
+    <None Update="textures\blocks\tallgrass_carried.tga">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\tnt_bottom.png">
+    <None Update="textures\blocks\tnt_bottom.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\tnt_side.png">
+    <None Update="textures\blocks\tnt_side.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\tnt_top.png">
+    <None Update="textures\blocks\tnt_top.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\torch_on.png">
+    <None Update="textures\blocks\torch_on.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\trapdoor.png">
+    <None Update="textures\blocks\trapdoor.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\trapped_chest_front.png">
+    <None Update="textures\blocks\trapped_chest_front.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\trip_wire.png">
+    <None Update="textures\blocks\trip_wire.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\trip_wire_source.png">
+    <None Update="textures\blocks\trip_wire_source.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\turtle_egg_not_cracked.png">
+    <None Update="textures\blocks\turtle_egg_not_cracked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\turtle_egg_slightly_cracked.png">
+    <None Update="textures\blocks\turtle_egg_slightly_cracked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\turtle_egg_very_cracked.png">
+    <None Update="textures\blocks\turtle_egg_very_cracked.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\vine.png">
+    <None Update="textures\blocks\vine.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\vine_carried.png">
+    <None Update="textures\blocks\vine_carried.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\waterlily.png">
+    <None Update="textures\blocks\waterlily.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\water_flow.png">
+    <None Update="textures\blocks\water_flow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\water_flow_grey.png">
+    <None Update="textures\blocks\water_flow_grey.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\water_placeholder.png">
+    <None Update="textures\blocks\water_placeholder.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\water_still.png">
+    <None Update="textures\blocks\water_still.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\water_still_grey.png">
+    <None Update="textures\blocks\water_still_grey.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\web.png">
+    <None Update="textures\blocks\web.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_0.png">
+    <None Update="textures\blocks\wheat_stage_0.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_1.png">
+    <None Update="textures\blocks\wheat_stage_1.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_2.png">
+    <None Update="textures\blocks\wheat_stage_2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_3.png">
+    <None Update="textures\blocks\wheat_stage_3.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_4.png">
+    <None Update="textures\blocks\wheat_stage_4.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_5.png">
+    <None Update="textures\blocks\wheat_stage_5.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_6.png">
+    <None Update="textures\blocks\wheat_stage_6.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wheat_stage_7.png">
+    <None Update="textures\blocks\wheat_stage_7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_black.png">
+    <None Update="textures\blocks\wool_colored_black.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_blue.png">
+    <None Update="textures\blocks\wool_colored_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_brown.png">
+    <None Update="textures\blocks\wool_colored_brown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_cyan.png">
+    <None Update="textures\blocks\wool_colored_cyan.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_gray.png">
+    <None Update="textures\blocks\wool_colored_gray.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_green.png">
+    <None Update="textures\blocks\wool_colored_green.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_light_blue.png">
+    <None Update="textures\blocks\wool_colored_light_blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_lime.png">
+    <None Update="textures\blocks\wool_colored_lime.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_magenta.png">
+    <None Update="textures\blocks\wool_colored_magenta.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_orange.png">
+    <None Update="textures\blocks\wool_colored_orange.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_pink.png">
+    <None Update="textures\blocks\wool_colored_pink.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_purple.png">
+    <None Update="textures\blocks\wool_colored_purple.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_red.png">
+    <None Update="textures\blocks\wool_colored_red.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_silver.png">
+    <None Update="textures\blocks\wool_colored_silver.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_white.png">
+    <None Update="textures\blocks\wool_colored_white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\blocks\wool_colored_yellow.png">
+    <None Update="textures\blocks\wool_colored_yellow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="xtextures\terrain_texture.json">
+    <None Update="textures\terrain_texture.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
