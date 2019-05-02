@@ -45,17 +45,18 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 
 ```
   -w, --world       Required. Sets the path the Minecraft Bedrock Edition Map
-
-  -o, --output      (Default: .) Sets the output path for the generated map tiles
-
-  -s, --strategy    (Default: ParallelFor) Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)
-
+  -o, --output      (Default: .) Sets the output path for the generated map 
+                    tiles
+  --htmlfile        (Default: map.html) Sets name of html map file
+  -s, --strategy    (Default: ParallelFor) Sets the render strategy. Valid are 
+                    SingleFor and ParallelFor (Multithreaded)
   --coords          (Default: true) Render text coordinates in each chunk
-
+  --limitx          Limits the chunk rendering in the x dimension (inclusive). 
+                    Provide two values with comma separated, eg: -10,10
+  --limitz          Limits the chunk rendering in the z dimension (inclusive). 
+                    Provide two values with comma separated, eg: -10,10
   --threads         (Default: 16) Set maximum of used threads
-
   --help            Display this help screen.
-
   --version         Display version information.
 ```
 
