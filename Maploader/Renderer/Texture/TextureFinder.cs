@@ -128,6 +128,9 @@ namespace Maploader.Renderer.Texture
             {"minecraft:turtle_egg", true},
             {"minecraft:cake", true},
             {"minecraft:scaffolding", true},
+            {"minecraft:mob_spawner", true},
+            {"minecraft:slime", true},
+            {"minecraft:reeds", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -164,7 +167,7 @@ namespace Maploader.Renderer.Texture
             // For debugging purposes
 
 #if consoledebug
-            if (name.Contains(""))
+            if (x == 1 && z == 12)
             {
                 Console.WriteLine($"{x} {z} {y}: {name},{data}");
             }
