@@ -1,7 +1,7 @@
-Chat: [![Discord](https://img.shields.io/discord/569841820092203011.svg?logo=discord&logoColor=white)](https://discord.gg/J2sBaXa) 
-Windows: [![Build status](https://ci.appveyor.com/api/projects/status/tfspbbi72bx73qg8?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs)
-Linux: [![Build status](https://ci.appveyor.com/api/projects/status/xo9ew31l49hayjcm?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs-ytqjm)
-master branch status badge
+Chat: [![Discord](https://img.shields.io/discord/569841820092203011.svg?logo=discord&logoColor=white)](https://discord.gg/J2sBaXa) <br>
+Windows: [![Build status](https://ci.appveyor.com/api/projects/status/tfspbbi72bx73qg8?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs) <br>
+Linux: [![Build status](https://ci.appveyor.com/api/projects/status/xo9ew31l49hayjcm?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs-ytqjm) <br>
+
 
 ## papyrus.cs
 Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2.
