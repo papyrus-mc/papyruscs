@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\Users\\r\\AppData\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\LocalState\\games\\com.mojang\\minecraftWorlds\\RhIAAFEzQQA=\\db\" -o c:\\papyrus --threads 8 --coords true --htmlfile index.html"
+      "commandLineArgs": "-w \"C:\\temp\\world_bedrock\\db\" -o c:\\papyrus --threads 8 --coords true --htmlfile index.html --limitx -31,31 --limitz 31,-31"
     }
   }
 }

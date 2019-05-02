@@ -121,6 +121,11 @@ namespace PapyrusCs
                 return -1;
             }
 
+
+
+
+
+            // Start Generation
             Console.WriteLine("Generating a list of all chunk keys in the database. This could take a few minutes");
             var keys = world.ChunkKeys.ToHashSet();
             
@@ -148,6 +153,20 @@ namespace PapyrusCs
             Console.WriteLine($"  Z: {zmin} to {zmax}");
             Console.WriteLine();
 
+            if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
+            {
+                xmin = options.LimitXLow.Value;
+                xmax = options.LimitXHigh.Value;
+                Console.WriteLine($"Limiting X to {xmin} to {xmax}");
+            }
+            if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
+            {
+                zmin = options.LimitZLow.Value;
+                zmax = options.LimitZHigh.Value;
+                Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
+            }
+  
+
 
             Console.WriteLine("Reading terrain_texture.json...");
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures","terrain_texture.json"));
@@ -171,7 +190,6 @@ namespace PapyrusCs
             Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
             Console.WriteLine($"This results in {zoom+1} zoom levels");
             List<Exception> exes = new List<Exception>();
-
 
             _time = Stopwatch.StartNew();
 
@@ -237,7 +255,7 @@ namespace PapyrusCs
 
         private static void RenderZoom(object sender, ZoomRenderedEventArgs e)
         {
-            Console.Write($"\r{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
+            Console.WriteLine($"{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
         }
 
         private static int _totalChunksRendered = 0;
