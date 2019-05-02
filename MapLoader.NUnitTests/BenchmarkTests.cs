@@ -31,10 +31,10 @@ namespace Maploader.Tests.Tests
             var dut = new World.World();
             dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
 
-            var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
+            var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures", "terrain_texture.json"));
             var ts = new TerrainTextureJsonParser(json, "");
             var textures = ts.Textures;
-            var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Textures"));
+            var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures"));
 
             int chunkRadius = 1;
             int centerOffsetX = 1;//65;
