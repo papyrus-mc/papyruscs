@@ -16,13 +16,20 @@ namespace Maploader.Tests.Tests
     class BenchmarkTests
     {
         [Test]
+        public void OpenWorld()
+        {
+            var dut = new World.World();
+            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
+            dut.Close();
+
+            Assert.Pass();
+        }
+
+        [Test]
         public void BenchmarkRender()
         {
             var dut = new World.World();
-            //dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\1+ahXI06AQA=\db"));
-            //dut.Open(@"C:\Users\r\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\minecraftWorlds\world\db");
             dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
-
 
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Textures\terrain_texture.json"));
             var ts = new TerrainTextureJsonParser(json, "");
@@ -50,10 +57,27 @@ namespace Maploader.Tests.Tests
                     }
                 }
             };
+            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark.png");
+            b.Save(path);
+            Console.WriteLine(path);
+            dut.Close();
+        }
 
+        [Test]
+        public void Uint64Test()
+        {
+            int x = 1;
+            int z = 1;
+            unchecked
+            {
+                var k = (UInt64)(
+                    ((UInt64)(x) << 32) |
+                    ((UInt64)(z) & 0xFFFFFFFF)
+                );
 
-            b.Save(AppDomain.CurrentDomain.BaseDirectory + "\\chunkmini.png");
-
+                Console.WriteLine("{0:x8}", k);
+                Assert.AreEqual(k, 0x100000001);
+            }
 
         }
 

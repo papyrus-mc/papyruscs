@@ -3,13 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{11364FF0-984E-4FE0-BA39-C57012D83EDD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maploader", "Maploader\Maploader.csproj", "{5A307016-F416-402D-B5DF-023E8F1A3120}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "leveldb-sharp-std", "leveldb-sharp-std\leveldb-sharp-std.csproj", "{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Maploader.Tests", "Maploader.Tests\Maploader.Tests.csproj", "{2E0657C3-51E7-434B-BF72-C506402F0FC7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusCs", "PapyrusCs\PapyrusCs.csproj", "{64ACD805-CE05-4A59-98FF-FBCD3E95134B}"
 EndProject
@@ -30,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapLoader.NUnitTests", "MapLoader.NUnitTests\MapLoader.NUnitTests.csproj", "{8A87A116-D0B8-4B0A-A543-0086BA77B74B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapLoader.NUnitTests", "MapLoader.NUnitTests\MapLoader.NUnitTests.csproj", "{8A87A116-D0B8-4B0A-A543-0086BA77B74B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,10 +34,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{11364FF0-984E-4FE0-BA39-C57012D83EDD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A307016-F416-402D-B5DF-023E8F1A3120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A307016-F416-402D-B5DF-023E8F1A3120}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A307016-F416-402D-B5DF-023E8F1A3120}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -50,10 +42,6 @@ Global
 		{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2E0657C3-51E7-434B-BF72-C506402F0FC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2E0657C3-51E7-434B-BF72-C506402F0FC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2E0657C3-51E7-434B-BF72-C506402F0FC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2E0657C3-51E7-434B-BF72-C506402F0FC7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{64ACD805-CE05-4A59-98FF-FBCD3E95134B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{64ACD805-CE05-4A59-98FF-FBCD3E95134B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64ACD805-CE05-4A59-98FF-FBCD3E95134B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,9 +55,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{11364FF0-984E-4FE0-BA39-C57012D83EDD} = {11421248-2E1B-4166-A405-CC9689AB28EA}
 		{54B47E8B-B57C-4AF2-8CBE-B850D9913DD5} = {F2FA56EB-053B-4EC7-895C-02A0AA7A74E2}
-		{2E0657C3-51E7-434B-BF72-C506402F0FC7} = {11421248-2E1B-4166-A405-CC9689AB28EA}
 		{6D666B11-D13A-44FB-8D2C-80A0334D5C4D} = {F2FA56EB-053B-4EC7-895C-02A0AA7A74E2}
 		{8A87A116-D0B8-4B0A-A543-0086BA77B74B} = {11421248-2E1B-4166-A405-CC9689AB28EA}
 	EndGlobalSection

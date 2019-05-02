@@ -31,6 +31,9 @@ namespace PapyrusCs
             [Option('o', "output", Required = false, HelpText = "Sets the output path for the generated map tiles", Default = ".")]
             public string OutputPath { get; set; }
 
+            [Option("htmlfile", Required = false, HelpText = "Sets name of html map file", Default = "map.html")]
+            public string MapHtml { get; set; }
+
             [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)", Default = Strategy.ParallelFor)]
             public Strategy Strategy { get; set; }
 
@@ -103,7 +106,6 @@ namespace PapyrusCs
                 Console.WriteLine($"The value '{options.LimitZ}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
             }
-
 
             var world = new World();
             try
@@ -218,7 +220,7 @@ namespace PapyrusCs
                 mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 1).ToString());
                 mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
 
-                File.WriteAllText(Path.Combine(options.OutputPath, "map.html"), mapHtml);
+                File.WriteAllText(Path.Combine(options.OutputPath, options.MapHtml), mapHtml);
             }
             catch (Exception ex)
             {
