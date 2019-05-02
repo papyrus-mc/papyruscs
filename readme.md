@@ -1,3 +1,8 @@
+Chat: [![Discord](https://img.shields.io/discord/569841820092203011.svg?logo=discord&logoColor=white)](https://discord.gg/J2sBaXa) <br>
+Windows: [![Build status](https://ci.appveyor.com/api/projects/status/tfspbbi72bx73qg8?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs) <br>
+Linux: [![Build status](https://ci.appveyor.com/api/projects/status/xo9ew31l49hayjcm?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs-ytqjm) <br>
+
+
 ## papyrus.cs
 Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2.
 It currently runs only under windows, but support for linux is planned.
@@ -43,17 +48,18 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 
 ```
   -w, --world       Required. Sets the path the Minecraft Bedrock Edition Map
-
-  -o, --output      (Default: .) Sets the output path for the generated map tiles
-
-  -s, --strategy    (Default: ParallelFor) Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)
-
+  -o, --output      (Default: .) Sets the output path for the generated map 
+                    tiles
+  --htmlfile        (Default: map.html) Sets name of html map file
+  -s, --strategy    (Default: ParallelFor) Sets the render strategy. Valid are 
+                    SingleFor and ParallelFor (Multithreaded)
   --coords          (Default: true) Render text coordinates in each chunk
-
+  --limitx          Limits the chunk rendering in the x dimension (inclusive). 
+                    Provide two values with comma separated, eg: -10,10
+  --limitz          Limits the chunk rendering in the z dimension (inclusive). 
+                    Provide two values with comma separated, eg: -10,10
   --threads         (Default: 16) Set maximum of used threads
-
   --help            Display this help screen.
-
   --version         Display version information.
 ```
 

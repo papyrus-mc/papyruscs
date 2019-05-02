@@ -40,10 +40,20 @@ namespace PapyrusCs
             [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = true)]
             public bool RenderCoords { get; set; }
 
+            [Option("limitx", Required = false, HelpText = "Limits the chunk rendering in the x dimension (inclusive). Provide two values with comma separated, eg: -10,10")]
+            public string LimitX { get; set; }
+
+            [Option("limitz", Required = false, HelpText = "Limits the chunk rendering in the z dimension (inclusive). Provide two values with comma separated, eg: -10,10")]
+            public string LimitZ { get; set; }
+
             [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 16)]
             public int MaxNumberOfThreads { get; set; }
 
             public bool Loaded { get; set; }
+            public int? LimitXLow { get; set; }
+            public int? LimitXHigh { get; set; }
+            public int? LimitZLow { get; set; }
+            public int? LimitZHigh { get; set; }
         }
 
         static int Main(string[] args)
@@ -54,10 +64,46 @@ namespace PapyrusCs
             {
                 options = o;
                 options.Loaded = true;
+
             });
 
             if (!options.Loaded)
             {
+                return -1;
+            }
+
+            // Parameter Validation
+            try
+            {
+                if (options.LimitX != null)
+                {
+                    var splittedLimit = options.LimitX.Split(',').Select(x => Convert.ToInt32(x)).OrderBy(x => x).ToArray();
+                    if (splittedLimit.Length != 2)
+                        throw new ArgumentOutOfRangeException("LimitX");
+                    options.LimitXLow = splittedLimit[0];
+                    options.LimitXHigh = splittedLimit[1];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
+                return -1;
+            }
+
+            try
+            {
+                if (options.LimitZ != null)
+                {
+                    var splittedLimit = options.LimitZ.Split(',').Select(x => Convert.ToInt32(x)).OrderBy(x => x).ToArray();
+                    if (splittedLimit.Length != 2)
+                        throw new ArgumentOutOfRangeException("LimitZ");
+                    options.LimitZLow = splittedLimit[0];
+                    options.LimitZHigh = splittedLimit[1];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The value '{options.LimitZ}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
             }
 
@@ -75,6 +121,11 @@ namespace PapyrusCs
                 return -1;
             }
 
+
+
+
+
+            // Start Generation
             Console.WriteLine("Generating a list of all chunk keys in the database. This could take a few minutes");
             var keys = world.ChunkKeys.ToHashSet();
             
@@ -102,6 +153,20 @@ namespace PapyrusCs
             Console.WriteLine($"  Z: {zmin} to {zmax}");
             Console.WriteLine();
 
+            if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
+            {
+                xmin = options.LimitXLow.Value;
+                xmax = options.LimitXHigh.Value;
+                Console.WriteLine($"Limiting X to {xmin} to {xmax}");
+            }
+            if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
+            {
+                zmin = options.LimitZLow.Value;
+                zmax = options.LimitZHigh.Value;
+                Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
+            }
+  
+
 
             Console.WriteLine("Reading terrain_texture.json...");
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures","terrain_texture.json"));
@@ -125,7 +190,6 @@ namespace PapyrusCs
             Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
             Console.WriteLine($"This results in {zoom+1} zoom levels");
             List<Exception> exes = new List<Exception>();
-
 
             _time = Stopwatch.StartNew();
 
@@ -191,7 +255,7 @@ namespace PapyrusCs
 
         private static void RenderZoom(object sender, ZoomRenderedEventArgs e)
         {
-            Console.Write($"\r{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
+            Console.WriteLine($"{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
         }
 
         private static int _totalChunksRendered = 0;
