@@ -189,9 +189,7 @@ namespace Maploader.Renderer.Texture
                 case "lectern":
                     return "textures/blocks/lectern_top";
                 case "cake":
-                    return GetTexture("cake_top",0).Translate(
-                        new Rectangle(0, 0, 16, 16),
-                        new Rectangle(1, 1, 14, 14));
+                    return GetTexture("cake_top",0);
                 case "bed":
                     switch (data & 0xF7)
                     {
