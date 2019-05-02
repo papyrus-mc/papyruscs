@@ -37,10 +37,20 @@ namespace PapyrusCs
             [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = true)]
             public bool RenderCoords { get; set; }
 
+            [Option("limitx", Required = false, HelpText = "Limits the chunk rendering in the x dimension (inclusive). Provide two values with comma separated, eg: -10,10")]
+            public string LimitX { get; set; }
+
+            [Option("limitz", Required = false, HelpText = "Limits the chunk rendering in the z dimension (inclusive). Provide two values with comma separated, eg: -10,10")]
+            public string LimitZ { get; set; }
+
             [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 16)]
             public int MaxNumberOfThreads { get; set; }
 
             public bool Loaded { get; set; }
+            public int? LimitXLow { get; set; }
+            public int? LimitXHigh { get; set; }
+            public int? LimitZLow { get; set; }
+            public int? LimitZHigh { get; set; }
         }
 
         static int Main(string[] args)
@@ -51,10 +61,46 @@ namespace PapyrusCs
             {
                 options = o;
                 options.Loaded = true;
+
             });
 
             if (!options.Loaded)
             {
+                return -1;
+            }
+
+            // Parameter Validation
+            try
+            {
+                if (options.LimitX != null)
+                {
+                    var splittedLimit = options.LimitX.Split(',').Select(x => Convert.ToInt32(x)).OrderBy(x => x).ToArray();
+                    if (splittedLimit.Length != 2)
+                        throw new ArgumentOutOfRangeException("LimitX");
+                    options.LimitXLow = splittedLimit[0];
+                    options.LimitXHigh = splittedLimit[1];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
+                return -1;
+            }
+
+            try
+            {
+                if (options.LimitZ != null)
+                {
+                    var splittedLimit = options.LimitZ.Split(',').Select(x => Convert.ToInt32(x)).OrderBy(x => x).ToArray();
+                    if (splittedLimit.Length != 2)
+                        throw new ArgumentOutOfRangeException("LimitZ");
+                    options.LimitZLow = splittedLimit[0];
+                    options.LimitZHigh = splittedLimit[1];
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"The value '{options.LimitZ}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
             }
 
