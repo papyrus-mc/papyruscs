@@ -58,6 +58,9 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
                     Provide two values with comma separated, eg: -10,10
   --limitz          Limits the chunk rendering in the z dimension (inclusive). 
                     Provide two values with comma separated, eg: -10,10
+  -y, --limity      (Default: -1) Limits the chunk rendering in the y dimension 
+                    (inclusive). For y provide just one positive value, eg: 10. 
+                    -1 means: all
   --threads         (Default: 16) Set maximum of used threads
   --help            Display this help screen.
   --version         Display version information.
