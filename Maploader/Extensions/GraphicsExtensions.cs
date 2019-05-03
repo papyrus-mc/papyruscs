@@ -50,8 +50,6 @@ namespace Maploader.Extensions
                     var ab = destPixel[3] / 256d;
                     var ac = aa + (1 - aa) * ab;
 
-                    vector3
-
                     var dr = (brightness * srcPixel[0] * aa + (1 - aa) * ab * destPixel[0]);
                     var dg = (brightness * srcPixel[1] * aa + (1 - aa) * ab * destPixel[1]);
                     var db = (brightness * srcPixel[2] * aa + (1 - aa) * ab * destPixel[2]);

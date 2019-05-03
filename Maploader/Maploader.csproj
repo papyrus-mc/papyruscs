@@ -23,6 +23,7 @@
     <PackageReference Include="CoreFNBT" Version="1.0.9" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview3.19128.7" />
+    <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
