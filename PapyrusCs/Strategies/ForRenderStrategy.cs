@@ -81,7 +81,7 @@ namespace PapyrusCs.Strategies
 
                                     chunksRendered++;
 
-                                    chunkRenderer.RenderChunk(chunk, g, cx * ChunkSize, cz * ChunkSize);
+                                    chunkRenderer.RenderChunk(chunk, g, cx * ChunkSize, cz * ChunkSize, b);
                                     anydrawn = true;
                                 }
 
@@ -103,6 +103,7 @@ namespace PapyrusCs.Strategies
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine(ex);
                         Exceptions.Add(ex);
                     }
                 });
