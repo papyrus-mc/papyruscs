@@ -8,5 +8,6 @@ namespace Maploader.Renderer
         public bool RenderCoords { get; set; } = false;
         public int MaxNumberOfThreads { get; set; } = 16;
         public HashSet<UInt64> Keys { get; set; }
+        public int YMax { get; set; }
     }
 }

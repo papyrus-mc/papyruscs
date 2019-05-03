@@ -46,6 +46,9 @@ namespace PapyrusCs
             [Option("limitz", Required = false, HelpText = "Limits the chunk rendering in the z dimension (inclusive). Provide two values with comma separated, eg: -10,10")]
             public string LimitZ { get; set; }
 
+            [Option('y', "limity", Required = false, HelpText = "Limits the chunk rendering in the y dimension (inclusive). For y provide just one positive value, eg: 10. -1 means: all", Default = -1)]
+            public int LimitY { get; set; }
+
             [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 16)]
             public int MaxNumberOfThreads { get; set; }
 
@@ -165,6 +168,10 @@ namespace PapyrusCs
                 zmax = options.LimitZHigh.Value;
                 Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
             }
+            if (options.LimitY > 0)
+            {
+                Console.WriteLine($"Limiting Y to {options.LimitY}");
+            }
   
 
 
@@ -206,7 +213,12 @@ namespace PapyrusCs
                     strat = new SingleForRenderStrategy();
                     break;
             }
-            strat.RenderSettings = new RenderSettings() { RenderCoords = options.RenderCoords, MaxNumberOfThreads = options.MaxNumberOfThreads, Keys = keys64 };
+            strat.RenderSettings = new RenderSettings() {
+                RenderCoords = options.RenderCoords,
+                MaxNumberOfThreads = options.MaxNumberOfThreads,
+                Keys = keys64,
+                YMax = options.LimitY
+        };
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;

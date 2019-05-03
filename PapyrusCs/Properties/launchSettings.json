@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\temp\\world_bedrock\\db\" -o c:\\papyrus --threads 8 --coords true --htmlfile index.html --limitx -31,31 --limitz 31,-31"
+      "commandLineArgs": "-w \"C:\\temp\\world_bedrock\\db\" -o c:\\papyrus --threads 8 --coords true --htmlfile index.html --limitx -31,31 --limitz 31,-31 -y 12"
     }
   }
 }

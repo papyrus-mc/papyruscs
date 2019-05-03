@@ -28,12 +28,18 @@ namespace Maploader.Renderer
         public void RenderChunk(Chunk c, Graphics g, int xOffset, int zOffset)
         {
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
+            var blocksOrderedByXZ = xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1));
 
-            foreach (var blocks in xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1)))
+
+            foreach (var blocks in blocksOrderedByXZ)
             {
                 var blocksToRender = new Stack<BlockCoord>();
 
-                foreach (var blockColumn in blocks.OrderByDescending(x => x.Value.Y)) // Look for transparent blocks
+                IEnumerable<KeyValuePair<uint, BlockCoord>> blockColumns = blocks.OrderByDescending(x => x.Value.Y);
+                if (renderSettings.YMax > 0)
+                    blockColumns = blockColumns.Where(x => x.Value.Y <= renderSettings.YMax);
+
+                foreach (var blockColumn in blockColumns) // Look for transparent blocks
                 {
                     var block = blockColumn.Value;
      
