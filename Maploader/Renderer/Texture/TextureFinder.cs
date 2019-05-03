@@ -111,7 +111,26 @@ namespace Maploader.Renderer.Texture
             {"minecraft:beetroot", true},
             {"minecraft:nether_wart", true},
             {"minecraft:bell", true},
+            {"minecraft:standing_banner", true},
 
+            { "minecraft:wooden_button", true},
+            {"minecraft:spruce_button", true},
+            {"minecraft:birch_button", true},
+            {"minecraft:jungle_button", true},
+            {"minecraft:acacia_button", true},
+            {"minecraft:dark_oak_button", true},
+
+            {"minecraft:spruce_wall_sign", true},
+            {"minecraft:birch_wall_sign", true},
+            {"minecraft:jungle_wall_sign", true},
+            {"minecraft:acacia_wall_sign", true},
+            {"minecraft:darkoak_wall_sign", true},
+            {"minecraft:turtle_egg", true},
+            {"minecraft:cake", true},
+            {"minecraft:scaffolding", true},
+            {"minecraft:mob_spawner", true},
+            {"minecraft:slime", true},
+            {"minecraft:reeds", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -148,7 +167,7 @@ namespace Maploader.Renderer.Texture
             // For debugging purposes
 
 #if consoledebug
-            if (name.Contains(""))
+            if (x == 1 && z == 12)
             {
                 Console.WriteLine($"{x} {z} {y}: {name},{data}");
             }
@@ -172,6 +191,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("ice_packed", data);
                 case "lectern":
                     return "textures/blocks/lectern_top";
+                case "cake":
+                    return GetTexture("cake_top",0);
                 case "bed":
                     switch (data & 0xF7)
                     {
@@ -419,6 +440,9 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stone", data).Translate(1, 1, 14, 14);
                     ;
 
+                case "frame":
+                    return RenderFrame(data, "sign");
+
                 case "standing_sign":
                     return RenderSign(data, "sign");
                 case "spruce_standing_sign":
@@ -499,8 +523,6 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stained_clay", data);
 
 
-                case "frame":
-                    return null;
 
 
                 case "end_portal_frame":
@@ -522,10 +544,19 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("door_upper", 6);
 
                 case "spruce_button":
+                    return RenderButton(data, "spruce_planks");
                 case "wooden_button":
+                    return RenderButton(data, "planks");
                 case "stone_button":
+                    return RenderButton(data, "stone");
                 case "dark_oak_button":
-                    return null;
+                    return RenderButton(data, "dark_oak_planks");
+                case "acacia_button":
+                    return RenderButton(data, "acacia_planks");
+                case "birch_button":
+                    return RenderButton(data, "birch_planks");
+                case "jungle_button":
+                    return RenderButton(data, "jungle_planks");
 
                 case "standing_banner":
                 case "tripWire":
@@ -536,7 +567,9 @@ namespace Maploader.Renderer.Texture
                 case "darkoak_wall_sign":
                 case "spruce_wall_sign":
                 case "birch_wall_sign":
-                    break;
+                case "jungle_wall_sign":
+                case "acacia_wall_sign":
+                    return RenderWallSign(data, name.Replace("wall_", ""));
 
                 case "melon_block":
                     return GetTexture("melon_top", data);
@@ -550,7 +583,10 @@ namespace Maploader.Renderer.Texture
                 case "purpur_block":
                     return GetTexture("purpur_block_side", data);
 
-
+                case "turtle_egg":
+                        return GetTexture("turtle_egg", 0).Translate(
+                            new Rectangle(0, 0, 4, 4),
+                            new Rectangle(6, 6, 4, 4));
 
 
                 case "powered_comparator":
@@ -696,7 +732,32 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-   
+        private TextureStack RenderWallSign(long data, string texture)
+        {
+            var t = GetTexture(texture, 0).Translate(
+                new Rectangle(0, 7, 14, 2),
+                new Rectangle(1, 0, 14, 2)
+            );
+            switch (data)
+            {
+                case 0:
+                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                case 1:
+                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                case 2:
+                    return t.Rotate(RotateFlipType.Rotate180FlipNone);
+                case 3:
+                    return t.Rotate(RotateFlipType.RotateNoneFlipNone);
+                case 4:
+                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                case 5:
+                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+            }
+
+            return null;
+        }
+
+
         private TextureStack RenderRail(long data, string texture)
         {
             switch (data)
@@ -720,21 +781,60 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderSign(long data, string texture)
         {
-            try
-            {
-                return GetTexture(texture, 0).Translate(
-                    new Rectangle(0, 7, 14, 2),
-                    new Rectangle(1, 7, 14, 2)
-                );
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine();
-            }
-
-            return null;
+            return GetTexture(texture, 0).Translate(
+                new Rectangle(0, 7, 14, 2),
+                new Rectangle(1, 7, 14, 2)
+            );
         }
 
+        private TextureStack RenderFrame(long data, string texture)
+        {
+            var t = GetTexture(texture, 0).Translate(
+                new Rectangle(0, 7, 14, 2),
+                new Rectangle(1, 0, 14, 2)
+            );
+            switch (data)
+            {
+                case 0:
+                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                case 1:
+                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                case 3:
+                    return t.Rotate(RotateFlipType.Rotate180FlipNone);
+                case 2:
+                    return t.Rotate(RotateFlipType.RotateNoneFlipNone);
+            }
+
+            return t;
+        }
+
+        private TextureStack RenderButton(long data, string texture)
+        {
+            var t = GetTexture(texture, 0).Translate(
+                new Rectangle(6, 6, 4, 3),
+                new Rectangle(6, 0, 4, 3)
+            );
+            switch (data)
+            {
+                case 1:
+                    return t.Translate(
+                        new Rectangle(6, 6, 4, 4),
+                        new Rectangle(6, 6, 4, 4));
+                case 2:
+                    return t.Rotate(RotateFlipType.Rotate180FlipNone);
+              
+                case 3:
+                    return t.Rotate(RotateFlipType.RotateNoneFlipNone);
+                case 4:
+                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                case 5:
+                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                default:
+                    return null;
+            }
+
+            return t;
+        }
 
         private TextureStack RenderFenceGate(long data, string texture)
         {
