@@ -21,19 +21,20 @@ namespace Maploader.Renderer
             this.textureFinder = textureFinder ?? throw new ArgumentNullException(nameof(textureFinder));
             this.renderSettings = settings ?? new RenderSettings();
 
-            b = new Brillouin(renderSettings.BrillouinJ);
+            b = new Brillouin(renderSettings.BrillouinJ, renderSettings.BrillouinDivider);
         }
 
         public List<string> MissingTextures { get; } = new List<string>();
 
         private Brillouin b;
 
-        public void RenderChunk(Chunk c, Graphics g, int xOffset, int zOffset, Bitmap dest)
+        public void RenderChunk(Bitmap dest, Chunk c, Graphics g, int xOffset, int zOffset)
         {
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
             var blocksOrderedByXZ = xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1));
+            var brightnessOffset = Math.Min(64, renderSettings.YMax);
 
-            
+
             foreach (var blocks in blocksOrderedByXZ)
             {
                 var blocksToRender = new Stack<BlockCoord>();
@@ -59,7 +60,7 @@ namespace Maploader.Renderer
                         textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z, block.Y);
                     if (textures == null)
                     {
-                        Console.WriteLine($"Missing(2): {block.ToString().PadRight(30)}");
+                        Console.WriteLine($"Missing Texture(2): {block.ToString().PadRight(30)}");
                         MissingTextures.Add($"ID: {block.Block.Id}");
                         continue;
                     }
@@ -71,13 +72,19 @@ namespace Maploader.Renderer
                         {
                             var x = xOffset + block.X * 16;
                             var z = zOffset + block.Z * 16;
-                           
-                            dest.DrawTest(bitmapTile, x, z, b.GetBrightness(block.Y - Math.Min(64, renderSettings.YMax)));
 
+                            if (renderSettings.RenderMode == RenderMode.Heightmap)
+                            {
+                                dest.DrawImageWithBrightness(bitmapTile, x, z, b.GetBrightness(block.Y - brightnessOffset));
+                            }
+                            else
+                            {
+                                dest.DrawImageWithBrightness(bitmapTile, x, z, 1);
+                            }
                         }
                         else
                         {
-                            Console.WriteLine($"Missing(1): {block.ToString().PadRight(30)} -- {texture.Filename}");
+                            Console.WriteLine($"Missing Texture(1): {block.ToString().PadRight(30)} -- {texture.Filename}");
                             MissingTextures.Add($"ID: {block.Block.Id}, {texture.Filename}");
                         }
                     }

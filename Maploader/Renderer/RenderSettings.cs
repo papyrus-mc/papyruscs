@@ -10,5 +10,7 @@ namespace Maploader.Renderer
         public HashSet<UInt64> Keys { get; set; }
         public int YMax { get; set; } = -1;
         public float BrillouinJ { get; set; } = 10000;
+        public RenderMode RenderMode { get; set; }
+        public float BrillouinDivider { get; set; }
     }
 }

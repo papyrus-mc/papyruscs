@@ -55,7 +55,7 @@ namespace Maploader.Tests.Tests
                     var c = dut.GetChunk(dx + centerOffsetX, dz + centerOffsetZ);
                     if (c != null)
                     {
-                        render.RenderChunk(c, g, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256, b);
+                        render.RenderChunk(b, c, g, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
                     }
                 }
             }

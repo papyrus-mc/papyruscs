@@ -8,9 +8,10 @@ namespace Maploader.Renderer.Heightmap
 {
     public class Brillouin
     {
+        private readonly float divider;
         private readonly float j;
 
-        private float Compute(float x)
+        private float brillouin(float x)
         {
             if (Math.Abs(x) < 0.01)
                 return 0;
@@ -24,12 +25,13 @@ namespace Maploader.Renderer.Heightmap
         public float GetBrightness(int height)
         {
             if (!Cache.ContainsKey(height))
-                Cache[height] = 1 + Compute(1 / 20f * height);
+                Cache[height] = 1 + brillouin(height / divider);
 
             return Cache[height];
         }
-        public Brillouin(float j)
+        public Brillouin(float j, float divider = 20)
         {
+            this.divider = divider;
             this.j = j;
         }
     }
