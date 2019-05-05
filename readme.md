@@ -47,23 +47,53 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 ```papyruscs --world "My World/db" --output "C:\papyrus"```
 
 ```
-  -w, --world       Required. Sets the path the Minecraft Bedrock Edition Map
-  -o, --output      (Default: .) Sets the output path for the generated map 
-                    tiles
-  --htmlfile        (Default: map.html) Sets name of html map file
-  -s, --strategy    (Default: ParallelFor) Sets the render strategy. Valid are 
-                    SingleFor and ParallelFor (Multithreaded)
-  --coords          (Default: true) Render text coordinates in each chunk
-  --limitx          Limits the chunk rendering in the x dimension (inclusive). 
-                    Provide two values with comma separated, eg: -10,10
-  --limitz          Limits the chunk rendering in the z dimension (inclusive). 
-                    Provide two values with comma separated, eg: -10,10
-  -y, --limity      (Default: -1) Limits the chunk rendering in the y dimension 
-                    (inclusive). For y provide just one positive value, eg: 10. 
-                    -1 means: all
-  --threads         (Default: 16) Set maximum of used threads
-  --help            Display this help screen.
-  --version         Display version information.
+  -w, --world            Required. Sets the path the Minecraft Bedrock Edition
+                         Map
+
+  -o, --output           (Default: .) Sets the output path for the generated
+                         map tiles
+
+  --htmlfile             (Default: map.html) Sets name of html map file
+
+  -s, --strategy         (Default: ParallelFor) Sets the render strategy. Valid
+                         are SingleFor and ParallelFor (Multithreaded)
+
+  --coords               (Default: true) Render text coordinates in each chunk
+
+  --limitx               Limits the chunk rendering in the x dimension
+                         (inclusive). Provide two values with comma separated,
+                         eg: -10,10
+
+  --limitz               Limits the chunk rendering in the z dimension
+                         (inclusive). Provide two values with comma separated,
+                         eg: -10,10
+
+  -y, --limity           (Default: -1) Limits the chunk rendering in the y
+                         dimension (inclusive). For y provide just one positive
+                         value, eg: 10. -1 means: all
+
+  --threads              (Default: 16) Set maximum of used threads
+
+  -r, --rendermode       (Default: Heightmap) RenderMode: Basic - Render
+                         without brightness adjustment. Heightmap - Render with
+                         brightness adjustment based on brillouin function and
+                         height of block
+
+  --brillouin_j          (Default: 10000) Sets factor j for heightmap
+                         brightness formula brillouin: brightness =
+                         1+brillouin(height / divider): See
+                         https://de.wikipedia.org/wiki/Brillouin-Funktion for a
+                         diagram of the function.
+
+  --brillouin_divider    (Default: 20) Sets divider for heightmap brightness
+                         formula brillouin: brightness = 1+brillouin(height /
+                         divider). See
+                         https://de.wikipedia.org/wiki/Brillouin-Funktion for a
+                         diagram of the function.
+
+  --help                 Display this help screen.
+
+  --version              Display version information.
 ```
 
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
