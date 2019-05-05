@@ -22,6 +22,13 @@ namespace PapyrusCs
             ParallelFor,
         }
 
+        public enum RenderMode
+        {
+            Basic,
+            Heightmap,
+        }
+
+
         public class Options
         {
 
@@ -51,6 +58,12 @@ namespace PapyrusCs
 
             [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 16)]
             public int MaxNumberOfThreads { get; set; }
+
+            [Option('j', "brillouinj", Required = false, HelpText = "Sets factor j for heightmap brightness formular brillouin", Default = 10000f)]
+            public float BrillouinJ { get; set; }
+
+            [Option('r', "rendermode", Required = false, HelpText = "RenderMode: Basic - Render without brightness adjustment.\nHeightmap - Render with brightness adjustment based on.height of block", Default = RenderMode.Heightmap)]
+            public RenderMode RenderMode { get; set; }
 
             public bool Loaded { get; set; }
             public int? LimitXLow { get; set; }
@@ -87,7 +100,7 @@ namespace PapyrusCs
                     options.LimitXHigh = splittedLimit[1];
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine($"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
@@ -104,7 +117,7 @@ namespace PapyrusCs
                     options.LimitZHigh = splittedLimit[1];
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine($"The value '{options.LimitZ}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
@@ -217,8 +230,9 @@ namespace PapyrusCs
                 RenderCoords = options.RenderCoords,
                 MaxNumberOfThreads = options.MaxNumberOfThreads,
                 Keys = keys64,
-                YMax = options.LimitY
-        };
+                YMax = options.LimitY,
+                BrillouinJ = options.BrillouinJ
+            };
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;
@@ -247,7 +261,7 @@ namespace PapyrusCs
             {
                 var mapHtml = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
                 mapHtml = mapHtml.Replace("%maxnativezoom%", zoom.ToString());
-                mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 1).ToString());
+                mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 2).ToString());
                 mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
 
                 File.WriteAllText(Path.Combine(options.OutputPath, options.MapHtml), mapHtml);

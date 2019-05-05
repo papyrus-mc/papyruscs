@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using JetBrains.Annotations;
 using Maploader.Extensions;
 using Maploader.Renderer.Heightmap;
 using Maploader.Renderer.Texture;
@@ -13,20 +14,19 @@ namespace Maploader.Renderer
     public class ChunkRenderer
     {
         private readonly TextureFinder textureFinder;
-        private readonly RenderSettings renderSettings = new RenderSettings();
+        private readonly RenderSettings renderSettings;
 
-        public ChunkRenderer(TextureFinder textureFinder, RenderSettings renderSettings = null)
+        public ChunkRenderer([NotNull] TextureFinder textureFinder, RenderSettings settings = null)
         {
-            this.textureFinder = textureFinder;
-            if (renderSettings != null)
-            {
-                this.renderSettings = renderSettings;
-            }
+            this.textureFinder = textureFinder ?? throw new ArgumentNullException(nameof(textureFinder));
+            this.renderSettings = settings ?? new RenderSettings();
+
+            b = new Brillouin(renderSettings.BrillouinJ);
         }
 
         public List<string> MissingTextures { get; } = new List<string>();
 
-        public Brillouin b { get; } = new Brillouin();
+        private Brillouin b;
 
         public void RenderChunk(Chunk c, Graphics g, int xOffset, int zOffset, Bitmap dest)
         {
@@ -71,10 +71,8 @@ namespace Maploader.Renderer
                         {
                             var x = xOffset + block.X * 16;
                             var z = zOffset + block.Z * 16;
-                            //g.DrawImage(bitmapTile, xOffset + block.X * 16, zOffset + block.Z * 16);
-                            //g.DrawImageBrightness(bitmapTile, xOffset + block.X * 16, zOffset + block.Z * 16,b.GetBrightness(block.Y));
-                            //dest.DrawImageBrightness(bitmapTile, xOffset + block.X * 16, zOffset + block.Z * 16, b.GetBrightness(block.Y));
-                            dest.DrawTest(bitmapTile, x, z, b.GetBrightness(block.Y - 64));
+                           
+                            dest.DrawTest(bitmapTile, x, z, b.GetBrightness(block.Y - Math.Min(64, renderSettings.YMax)));
 
                         }
                         else

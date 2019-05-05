@@ -8,7 +8,9 @@ namespace Maploader.Renderer.Heightmap
 {
     public class Brillouin
     {
-        private static double Compute(double j, double x)
+        private readonly float j;
+
+        private float Compute(float x)
         {
             if (Math.Abs(x) < 0.01)
                 return 0;
@@ -16,18 +18,19 @@ namespace Maploader.Renderer.Heightmap
                    - 1 / (2 * j) * Coth(1 / (2 * j) * x);
         }
 
-        private static double Coth(double x) => Math.Cosh(x) / Math.Sinh(x);
+        private static float Coth(float x) => (float) (Math.Cosh(x) / Math.Sinh(x));
 
-        private Dictionary<int, double> Cache { get; } = new Dictionary<int, double>();
-        public double GetBrightness(int height)
+        private Dictionary<int, float> Cache { get; } = new Dictionary<int, float>();
+        public float GetBrightness(int height)
         {
             if (!Cache.ContainsKey(height))
-                Cache[height] = 1 + Compute(10000, 1 / 20d * height);
+                Cache[height] = 1 + Compute(1 / 20f * height);
 
             return Cache[height];
         }
-        public Brillouin()
+        public Brillouin(float j)
         {
+            this.j = j;
         }
     }
 }

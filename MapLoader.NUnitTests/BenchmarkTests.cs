@@ -88,7 +88,7 @@ namespace Maploader.Tests.Tests
         [Test]
         public void BrillouinFkt()
         {
-            var dut = new Brillouin();
+            var dut = new Brillouin(10000);
 
         }
     }

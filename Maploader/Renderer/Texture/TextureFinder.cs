@@ -721,12 +721,7 @@ namespace Maploader.Renderer.Texture
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
                 case "sweet_berry_bush":
-                    if (data < 4)
-                    {
-                        return GetTexture($"sweet_berry_bush_{data}", 0);
-                    }
-
-                    return null;
+                    return GetTexture($"sweet_berry_bush_{data%4}", 0);
             }
 
             return null;
@@ -832,8 +827,6 @@ namespace Maploader.Renderer.Texture
                 default:
                     return null;
             }
-
-            return t;
         }
 
         private TextureStack RenderFenceGate(long data, string texture)
