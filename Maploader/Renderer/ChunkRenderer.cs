@@ -72,13 +72,14 @@ namespace Maploader.Renderer
                             var x = xOffset + block.X * 16;
                             var z = zOffset + block.Z * 16;
 
-                            if (renderSettings.RenderMode == RenderMode.Heightmap)
+                            switch (renderSettings.RenderMode)
                             {
-                                dest.DrawImageWithBrightness(bitmapTile, x, z, b.GetBrightness(block.Y - brightnessOffset));
-                            }
-                            else
-                            {
-                                dest.DrawImageWithBrightness(bitmapTile, x, z, 1);
+                                case RenderMode.Heightmap:
+                                    dest.DrawImageWithBrightness(bitmapTile, x, z, b.GetBrightness(block.Y - brightnessOffset));
+                                    break;
+                                default:
+                                    dest.DrawImageWithBrightness(bitmapTile, x, z, 1);
+                                    break;
                             }
                         }
                         else

@@ -8,9 +8,9 @@ using leveldb_sharp_std;
 
 namespace Maploader.World
 {
-    public class World
+    public class DbWrapper
     {
-        private DB db;
+        public DB db { get; private set; }
 
         public void Open(string pathDb)
         {
@@ -18,6 +18,23 @@ namespace Maploader.World
             options.Compression = CompressionType.ZlibRaw;
 
             db = new DB(options, pathDb);
+        }
+        public void Close()
+        {
+            db.Dispose();
+            db = null;
+        }
+    }
+
+    public class World
+    {
+        private byte[] staticKey = new byte[10];
+        private DB db;
+
+        public World(DbWrapper wrapper)
+        {
+            this.db = wrapper.db;
+            staticKey[8] = 47;
         }
 
 
@@ -29,13 +46,13 @@ namespace Maploader.World
 
             var subChunks = new Dictionary<byte, byte[]>();
 
-            var key = CreateKey(x, z);
+            CreateKey(x, z, ref staticKey);
 
             for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
             {
-                key[9] = subChunkIdx;
+                staticKey[9] = subChunkIdx;
 
-                var data = db.Get(key);
+                var data = db.Get(staticKey);
                 if (data != null)
                 {
                     subChunks[subChunkIdx] = data;
@@ -117,7 +134,7 @@ namespace Maploader.World
                         for (int storage = 0; storage < storages; storage++)
                         {
                             byte paletteAndFlag = bs.ReadByte();
-                            bool isRuntime = (paletteAndFlag & 1) != 0;
+                            //bool isRuntime = (paletteAndFlag & 1) != 0;
                             int bitsPerBlock = paletteAndFlag >> 1;
                             int blocksPerWord = (int)Math.Floor(32.0 / bitsPerBlock);
                             int wordCount = (int)Math.Ceiling(4096.0 / blocksPerWord);
@@ -125,28 +142,16 @@ namespace Maploader.World
 
 
                             ms.Seek(wordCount * 4, SeekOrigin.Current); //4 bytes per word.
-                            //Palette localPallete; //To get 'real' data
+
                             PersistancePalette localPalette = null;
-                            if (isRuntime)
+                            localPalette = new PersistancePalette(bs.ReadInt32());
+                            for (int palletId = 0; palletId < localPalette.Size; palletId++)
                             {
-                                /*localPallete = new RuntimePallete(VarNumberSerializer.readSVarInt(bytes));
-                                for (int palletId = 0; palletId < localPallete.size(); palletId++)
-                                {
-                                    localPallete.put(palletId, VarNumberSerializer.readSVarInt(bytes));
-                                }*/
-                            }
-                            else
-                            {
-                                localPalette = new PersistancePalette(bs.ReadInt32());
-                                for (int palletId = 0; palletId < localPalette.Size; palletId++)
-                                {
-                                    var (name, val) = GetNbtVal(ms);
-                                    localPalette.Put(palletId, name, val);
-                                }
+                                var (name, val) = GetNbtVal(ms);
+                                localPalette.Put(palletId, name, val);
                             }
 
                             long afterPaletteIndex = ms.Position;
-
                             ms.Position = blockIndex;
 
                             int position = 0;
@@ -161,18 +166,8 @@ namespace Maploader.World
                                     int x = (position >> 8) & 0xF;
                                     int y = position & 0xF;
                                     int z = (position >> 4) & 0xF;
+                                    chunk.SetBlockId(x, yOffset + y, z, localPalette.Keys[state], true);
 
-                                    try
-                                    {
-                                        // Todo: doppelte keys treten immer noch auf!?
-                                        chunk.SetBlockId(x, yOffset + y, z, localPalette.Keys[state], true);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Console.WriteLine(ex.Message);
-                                    }
-                                    //section.setBlockId(x, y, z, localPallete.getBlockId(state));
-                                    //section.setBlockData(x, y, z, localPallete.getBlockData(state));
                                     position++;
 
                                     // Todo: irgendwas läuft hier noch nicht ganz rund, wir brechen mal ab
@@ -183,15 +178,11 @@ namespace Maploader.World
                                 if (position >= 4096)
                                     break;
                             }
-
                             ms.Position = afterPaletteIndex;
                         }
-
                         break;
-
                 }
             }
-
         }
 
         private static (string, int) GetNbtVal(MemoryStream ms)
@@ -236,25 +227,26 @@ namespace Maploader.World
 
         }
 
-        private static byte[] CreateKey(int x, int z)
+        private static void CreateKey(int x, int z, ref byte[] key)
         {
             // Todo: make it faster
-            var key = new byte[10];
-            using (var ms = new MemoryStream(key))
-            using (var bs = new BinaryWriter(ms))
-            {
-                bs.Write(x);
-                bs.Write(z);
-                bs.Write((byte) 47);
-            }
+            //var key = new byte[10];
+            //using (var ms = new MemoryStream(key))
+            //using (var bs = new BinaryWriter(ms))
+            //{
+            //bs.Write(x);
+            //bs.Write(z);
+            //bs.Write((byte) 47);
+            //}
 
-            return key;
-        }
-
-        public void Close()
-        {
-            db.Dispose();
-            db = null;
+            key[0] = (byte)(x & 0xFF);
+            key[1] = (byte)((x >> 8)& 0xFF);
+            key[2] = (byte)((x >> 16)& 0xFF);
+            key[3] = (byte) ((x >> 24)& 0xFF);
+            key[4] = (byte)(z & 0xFF);
+            key[5] = (byte)((z >> 8) & 0xFF);
+            key[6] = (byte)((z >> 16) & 0xFF);
+            key[7] = (byte)((z >> 24) & 0xFF);
         }
     }
 }
