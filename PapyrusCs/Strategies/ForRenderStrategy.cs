@@ -30,7 +30,6 @@ namespace PapyrusCs.Strategies
         public int ChunkSize { get; set; } = 16;
         public int ChunksPerDimension { get; set; } = 2;
         public int TileSize { get; set; }
-        public World World { get; set; }
         public int TotalChunkCount { get; set; }
         public int InitialZoomLevel { get; set; }
         public ConcurrentBag<string> MissingTextures { get; } = new ConcurrentBag<string>();
@@ -45,6 +44,7 @@ namespace PapyrusCs.Strategies
                 new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads},
                 x =>
                 {
+                    var world = new World(Db);
 
                     try
                     {
@@ -75,7 +75,7 @@ namespace PapyrusCs.Strategies
                                     if (!RenderSettings.Keys.Contains(key))
                                         continue;
 
-                                    var chunk = World.GetChunk(x + cx, z + cz);
+                                    var chunk = world.GetChunk(x + cx, z + cz);
                                     if (chunk == null)
                                         continue;
 
@@ -146,6 +146,8 @@ namespace PapyrusCs.Strategies
 
                 OuterLoopStrategy(BetterEnumerable.SteppedRange(0,sourceDiameter, 2), new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads }, x =>
                 {
+                    var world = new World(Db);
+
                     for (int z = 0; z < 2 * destDiameter; z += 2)
                     {
                         var b1 = LoadBitmap(sourceZoom, x, z);
@@ -209,5 +211,6 @@ namespace PapyrusCs.Strategies
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
 
         public int InitialDiameter { get; set; }
+        public DbWrapper Db { get; set; }
     }
 }

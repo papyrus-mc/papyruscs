@@ -19,13 +19,13 @@ namespace PapyrusCs.Strategies
         int ChunkSize { get; set; }
         int ChunksPerDimension { get; set; }
         int TileSize { get; set; }
-        World World { get; set; }
         int TotalChunkCount { get; set; }
         int InitialZoomLevel { get; set; }
         ConcurrentBag<string> MissingTextures { get; }
         List<Exception> Exceptions { get; }
         RenderSettings RenderSettings { get; set; }
         int InitialDiameter { get; set; }
+        DbWrapper Db { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 
