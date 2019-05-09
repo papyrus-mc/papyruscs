@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Maploader.Core;
+using Maploader.Extensions;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
@@ -35,7 +37,10 @@ namespace PapyrusCs.Strategies
         public int InitialZoomLevel { get; set; }
         public ConcurrentBag<string> MissingTextures { get; } = new ConcurrentBag<string>();
         public List<Exception> Exceptions { get; } = new List<Exception>();
+        public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
+        public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
 
+        public int InitialDiameter { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 
@@ -45,15 +50,13 @@ namespace PapyrusCs.Strategies
                 new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads},
                 x =>
                 {
+                    int chunksRendered = 0;
 
                     try
                     {
                         var finder = new TextureFinder(TextureDictionary, TexturePath);
                         var chunkRenderer = new ChunkRenderer(finder, RenderSettings);
-                        //Console.WriteLine($"Processing X-Line: {x}: {chunkNo}/{chunkCount}");
-                        var s = Stopwatch.StartNew();
 
-                        int chunksRendered = 0;
                         for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
                         {
                             using (var b = new Bitmap(TileSize, TileSize))
@@ -87,15 +90,24 @@ namespace PapyrusCs.Strategies
 
                                 if (anydrawn)
                                 {
-                                    var fx = (x - XMin) / ChunksPerDimension;
-                                    var fz = (z - ZMin) / ChunksPerDimension;
+                                    var fx = (x) / ChunksPerDimension;
+                                    var fz = (z) / ChunksPerDimension;
 
                                     SaveBitmap(InitialZoomLevel, fx, fz, b);
                                 }
                             }
-                        }
-                        ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
 
+                            if (chunksRendered >= 32)
+                            {
+                                ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
+                                chunksRendered = 0;
+                            }
+                        }
+
+                        if (chunksRendered > 0)
+                        {
+                            ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
+                        }
                         foreach (var str in chunkRenderer.MissingTextures)
                         {
                             MissingTextures.Add(str);
@@ -107,46 +119,48 @@ namespace PapyrusCs.Strategies
                         Exceptions.Add(ex);
                     }
                 });
-
-        }
-
-        private void SaveBitmap(int zoom, int x, int z, Bitmap b)
-        {
-            var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
-
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            b.Save(filepath);
-        }
-
-        private Bitmap LoadBitmap(int zoom, int x, int z)
-        {
-            var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
-            if (File.Exists(filepath))
-            {
-                return new Bitmap(filepath);
-            }
-
-            return null;
+            Console.WriteLine("\nDone rendering initial level\n");
         }
 
         public void RenderZoomLevels()
         {
             var sourceZoomLevel = this.InitialZoomLevel;
             var sourceDiameter = this.InitialDiameter;
+
+            var sourceLevelXmin = XMin / ChunksPerDimension;
+            var sourceLevelXmax = XMax / ChunksPerDimension;
+            var sourceLevelZmin = ZMin / ChunksPerDimension;
+            var sourceLevelZmax = ZMax / ChunksPerDimension;
+
+
             while (sourceZoomLevel > 0)
             {
                 var destDiameter = sourceDiameter / 2;
-
                 var sourceZoom = sourceZoomLevel;
-                var destZoom = sourceZoomLevel-1;
+                var destZoom = sourceZoomLevel - 1;
                 var linesRendered = 0;
+         
 
-                OuterLoopStrategy(BetterEnumerable.SteppedRange(0,sourceDiameter, 2), new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads }, x =>
+                if (sourceLevelXmin.IsOdd()) // always start at an even coordinate
+                    sourceLevelXmin--;
+
+                if (sourceLevelXmax.IsOdd())
+                    sourceLevelXmax++;
+
+                if (sourceLevelZmin.IsOdd()) // always start at an even coordinate
+                    sourceLevelZmin--;
+
+                if (sourceLevelZmax.IsOdd())
+                    sourceLevelZmax++;
+
+
+                Console.WriteLine($"Rendering Level {destZoom} with source coordinates X {sourceLevelXmin} to {sourceLevelXmax}, Z {sourceLevelZmin} to {sourceLevelZmax}");
+
+                OuterLoopStrategy(BetterEnumerable.SteppedRange(sourceLevelXmin, sourceLevelXmax, 2), 
+                    new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads }, 
+                    x =>
                 {
-                    for (int z = 0; z < 2 * destDiameter; z += 2)
+                    for (int z = sourceLevelZmin; z < sourceLevelZmax; z += 2)
                     {
                         var b1 = LoadBitmap(sourceZoom, x, z);
                         var b2 = LoadBitmap(sourceZoom, x + 1, z);
@@ -188,7 +202,7 @@ namespace PapyrusCs.Strategies
 
                             if (didDraw)
                             {
-                                SaveBitmap(destZoom, x/2, z/2, bfinal);
+                                SaveBitmap(destZoom, x / 2, z / 2, bfinal);
                             }
                         }
                     }
@@ -197,7 +211,13 @@ namespace PapyrusCs.Strategies
 
                     ZoomLevelRenderd?.Invoke(this, new ZoomRenderedEventArgs(linesRendered, sourceDiameter, destZoom));
 
+
                 });
+
+                sourceLevelZmin /= 2;
+                sourceLevelZmax /= 2;
+                sourceLevelXmin /= 2;
+                sourceLevelXmax /= 2;
 
                 sourceDiameter = destDiameter;
                 sourceZoomLevel = destZoom;
@@ -205,9 +225,28 @@ namespace PapyrusCs.Strategies
 
         }
 
-        public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
-        public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
+        private void SaveBitmap(int zoom, int x, int z, Bitmap b)
+        {
+            var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
+            var filepath = Path.Combine(path, $"{z}.png");
 
-        public int InitialDiameter { get; set; }
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            b.Save(filepath);
+        }
+
+        private Bitmap LoadBitmap(int zoom, int x, int z)
+        {
+            var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
+            var filepath = Path.Combine(path, $"{z}.png");
+            if (File.Exists(filepath))
+            {
+                return new Bitmap(filepath);
+            }
+
+            return null;
+        }
+
+    
     }
 }

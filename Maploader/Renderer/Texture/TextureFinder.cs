@@ -55,8 +55,8 @@ namespace Maploader.Renderer.Texture
             {"minecraft:iron_bars", true },
             {"minecraft:end_rod", true },
             {"minecraft:wall_sign", true },
-            {"minecraft:mushroom_red", true },
-            {"minecraft:mushroom_brown", true },
+            {"minecraft:red_mushroom", true },
+            {"minecraft:brown_mushroom", true },
             {"minecraft:fire", true },
             {"minecraft:pumpkin_stem", true },
             {"minecraft:melon_stem", true },
@@ -166,12 +166,11 @@ namespace Maploader.Renderer.Texture
         {
             // For debugging purposes
 
-#if consoledebug
-            if (x == 1 && z == 12)
+            if (Debug)
             {
                 Console.WriteLine($"{x} {z} {y}: {name},{data}");
             }
-#endif
+
 
             // oh look at all this mess...
             switch (name)
@@ -226,7 +225,8 @@ namespace Maploader.Renderer.Texture
                 case "double_wooden_slab":
                     return GetTexture("planks", data);
 
-
+                case "prismarine_bricks_stairs":
+                    return GetTexture("prismarine_bricks", 0);
 
                 case "oak_stairs":
                     return GetTexture("planks", 0); // data = direction
@@ -284,6 +284,7 @@ namespace Maploader.Renderer.Texture
                             return GetTexture("double_plant_carried", data & 0xF7);
                         case 0:
                             return GetTexture("double_plant_bottom", data & 0xF7);
+                            break;
                     }
 
                     return null;
@@ -891,6 +892,7 @@ namespace Maploader.Renderer.Texture
         }
 
         public Dictionary<TextureInfo, Bitmap> Cache { get; } = new Dictionary<TextureInfo, Bitmap>();
+        public bool Debug { get; set; }
 
         /// <summary>
         /// Not thread safe

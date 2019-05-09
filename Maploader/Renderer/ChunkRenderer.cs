@@ -32,6 +32,8 @@ namespace Maploader.Renderer
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
             var blocksOrderedByXZ = xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1));
             var brightnessOffset = Math.Min(64, renderSettings.YMax);
+            if (brightnessOffset == -1)
+                brightnessOffset = 64;
 
 
             foreach (var blocks in blocksOrderedByXZ)

@@ -14,9 +14,18 @@
 	body {
 		margin: 0px;
 	}
+
+	#coords {
+		background: white;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		display: block;
+		z-index: 800
+	}
 	
 	.leaflet-tile {
-  border: solid red 0px;
+  border: solid red 1px;
 }
 </style>
 </head>
@@ -28,6 +37,7 @@
 <div id='map'></div>
 <script>
 	var map = L.map('map', {
+		crs: L.CRS.Simple
 	});
 
 	var mapdata = L.tileLayer('./map/{z}/{x}/{y}.png', {
@@ -36,10 +46,19 @@
 		maxNativeZoom: %maxnativezoom%,
 		maxZoom: %maxzoom%,
 		noWrap: true,
-		
+		tileSize: 512
+
 	}).addTo(map);
 
 	map.setView([0, 0], 0);
+
+	map.on("mousemove", function (event) {
+	  console.log("Coordinates: " + event.latlng.toString());
+	  //L.marker(event.latlng).addTo(map);
+	  
+	  var myDiv = document.getElementById("coords");
+	  myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * 128) + " Y: " + Math.floor(event.latlng.lat * 128);
+	});
 </script>
  
 </body>

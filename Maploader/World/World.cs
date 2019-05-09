@@ -56,6 +56,17 @@ namespace Maploader.World
 
         private LookupTable.BlockLookupTable Table { get; } = new LookupTable.BlockLookupTable();
 
+        public IEnumerable<byte[]> Keys
+        {
+            get
+            {
+                foreach (var data in db)
+                {
+                    yield return data.Key;
+                }
+            }
+        }
+
         public IEnumerable<Coordinate2D> ChunkKeys
         {
             get
@@ -186,12 +197,9 @@ namespace Maploader.World
 
                             ms.Position = afterPaletteIndex;
                         }
-
                         break;
-
                 }
             }
-
         }
 
         private static (string, int) GetNbtVal(MemoryStream ms)
@@ -255,6 +263,11 @@ namespace Maploader.World
         {
             db.Dispose();
             db = null;
+        }
+
+        public byte[] GetData(byte[] key)
+        {
+            return db[key];
         }
     }
 }
