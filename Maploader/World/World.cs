@@ -261,8 +261,15 @@ namespace Maploader.World
 
         public void Close()
         {
-            db.Dispose();
-            db = null;
+            try
+            {
+                db.Dispose();
+                db = null;
+            }
+            catch
+            {
+
+            }
         }
 
         public byte[] GetData(byte[] key)

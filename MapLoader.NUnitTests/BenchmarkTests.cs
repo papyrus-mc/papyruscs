@@ -13,6 +13,7 @@ namespace MapLoader.NUnitTests
     class BenchmarkTests
     {
         [Test]
+        [Ignore("debugging")]
         public void Open()
         {
             Console.WriteLine("hello world");
