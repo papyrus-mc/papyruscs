@@ -67,11 +67,11 @@ namespace PapyrusCs
                 return -1;
             }
 
-            var dbWrapper = new DbWrapper();
+            var world = new World();
             try
             {
                 Console.WriteLine("Opening world...");
-                dbWrapper.Open(options.MinecraftWorld);
+                world.Open(options.MinecraftWorld);
             }
             catch (Exception ex)
             {
@@ -81,7 +81,9 @@ namespace PapyrusCs
                 return -1;
             }
 
-            var world = new World(dbWrapper);
+
+
+
 
             // Start Generation
             Console.WriteLine("Generating a list of all chunk keys in the database. This could take a few minutes");
@@ -180,7 +182,7 @@ namespace PapyrusCs
             };
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
-            strat.Db = dbWrapper;
+            strat.World = world;
             strat.TotalChunkCount = chunkCount;
             strat.TexturePath = Path.Combine(Environment.CurrentDirectory, "textures");
             strat.TextureDictionary = textures;
@@ -217,7 +219,7 @@ namespace PapyrusCs
                 Console.WriteLine(ex.Message);
             }
 
-            dbWrapper.Close();
+            world.Close();
 
             Console.WriteLine("Total Time {0}", _time.Elapsed);
 

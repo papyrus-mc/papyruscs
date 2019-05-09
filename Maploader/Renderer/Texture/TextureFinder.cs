@@ -901,27 +901,30 @@ namespace Maploader.Renderer.Texture
         {
             if (info == null)
                 return null;
+            var localPath = info.Filename;
+
+            localPath = localPath.Replace("textures/", "");
+            localPath = localPath.Replace('/', Path.DirectorySeparatorChar);
 
             if (Cache.ContainsKey(info))
             {
                 return Cache[info];
             }
 
-            var localPath = info.Filename;
-            localPath = localPath.Replace("textures/", "");
-            localPath = localPath.Replace('/', Path.DirectorySeparatorChar);
-
             try
             {
+                string extension = ".jpg";
                 string filepath = Path.Combine(path, localPath);
                 Bitmap b = null;
                 if (File.Exists(filepath + ".png"))
                 {
-                    b = new Bitmap(filepath + ".png");
+                    extension = ".png";
+                    b = new Bitmap(filepath + extension);
                 }
                 else if (File.Exists(filepath + ".tga"))
                 {
-                    b = TgaReader.Load(filepath + ".tga");
+                    extension = ".tga";
+                    b = TgaReader.Load(filepath + extension);
                 }
 
                 if (b == null)
