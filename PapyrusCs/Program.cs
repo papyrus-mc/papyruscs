@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -18,6 +19,8 @@ namespace PapyrusCs
         {
         static int Main(string[] args)
         {
+            _time = Stopwatch.StartNew();
+
             var options = new Options();
 
             Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
@@ -86,32 +89,43 @@ namespace PapyrusCs
 
 
             // Start Generation
-            Console.WriteLine("Generating a list of all chunk keys in the database. This could take a few minutes");
-            var keys = world.ChunkKeys.ToHashSet();
-            
-            HashSet<UInt64> keys64 = null; 
-            unchecked
+            int xmin = 0;
+            int xmax = 0;
+            int zmin = 0;
+            int zmax = 0;
+            HashSet<UInt64> hashedCoordinateKeys = null;
+
+            if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue && options.LimitZHigh.HasValue &&
+                options.LimitZLow.HasValue)
             {
-                keys64 = keys.Select(x => (UInt64)(
-                                    ((UInt64)(x.X) << 32) |
-                                    ((UInt64)(x.Y) & 0xFFFFFFFF)
-                                 )).ToHashSet();
+                _totalChunk = (options.LimitXHigh.Value - options.LimitXLow.Value + 1) *
+                              (options.LimitZHigh.Value - options.LimitZLow.Value + 1);
             }
-            int chunkCount = keys.Count;
-            Console.WriteLine($"Total Chunk count {keys.Count}");
-            Console.WriteLine();
-            _totalChunk = chunkCount;
+            else
+            {
 
-            var xmin = keys.Min(x => x.X);
-            var xmax = keys.Max(x => x.X);
-            var zmin = keys.Min(x => x.Y);
-            var zmax = keys.Max(x => x.Y);
+                Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
+                var keys = world.ChunkKeys.ToHashSet();
 
+                unchecked
+                {
+                    hashedCoordinateKeys = keys.Select(x => Coordinate2D.CreateHashKey(x.X, x.Y)).ToHashSet();
+                }
 
-            Console.WriteLine($"The total dimensions of the map are");
-            Console.WriteLine($"  X: {xmin} to {xmax}");
-            Console.WriteLine($"  Z: {zmin} to {zmax}");
-            Console.WriteLine();
+                _totalChunk = keys.Count;
+                Console.WriteLine($"Total Chunk count {keys.Count}");
+                Console.WriteLine();
+
+                xmin = keys.Min(x => x.X);
+                xmax = keys.Max(x => x.X);
+                zmin = keys.Min(x => x.Y);
+                zmax = keys.Max(x => x.Y);
+
+                Console.WriteLine($"The total dimensions of the map are");
+                Console.WriteLine($"  X: {xmin} to {xmax}");
+                Console.WriteLine($"  Z: {zmin} to {zmax}");
+                Console.WriteLine();
+            }
 
             if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
             {
@@ -155,7 +169,6 @@ namespace PapyrusCs
             Console.WriteLine($"This results in {zoom+1} zoom levels");
             List<Exception> exes = new List<Exception>();
 
-            _time = Stopwatch.StartNew();
 
             IRenderStrategy strat = null;
             switch (options.Strategy)
@@ -175,7 +188,7 @@ namespace PapyrusCs
                 RenderCoords = options.RenderCoords,
                 RenderMode = options.RenderMode,
                 MaxNumberOfThreads = options.MaxNumberOfThreads,
-                Keys = keys64,
+                Keys = hashedCoordinateKeys,
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider
@@ -183,7 +196,7 @@ namespace PapyrusCs
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;
-            strat.TotalChunkCount = chunkCount;
+            strat.TotalChunkCount = _totalChunk;
             strat.TexturePath = Path.Combine(Environment.CurrentDirectory, "textures");
             strat.TextureDictionary = textures;
             strat.OutputPath = options.OutputPath;
@@ -210,7 +223,7 @@ namespace PapyrusCs
                 mapHtml = mapHtml.Replace("%maxnativezoom%", zoom.ToString());
                 mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 2).ToString());
                 mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
-
+                mapHtml = mapHtml.Replace("%factor%", (Math.Pow(2, zoom-4)).ToString());
                 File.WriteAllText(Path.Combine(options.OutputPath, options.MapHtml), mapHtml);
             }
             catch (Exception ex)
@@ -228,7 +241,7 @@ namespace PapyrusCs
 
         private static void RenderZoom(object sender, ZoomRenderedEventArgs e)
         {
-            Console.WriteLine($"{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
+            Console.Write($"\r{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
         }
 
         private static int _totalChunksRendered = 0;

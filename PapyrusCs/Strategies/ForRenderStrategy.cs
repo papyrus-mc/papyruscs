@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Maploader.Core;
@@ -46,6 +47,11 @@ namespace PapyrusCs.Strategies
 
         public void RenderInitialLevel()
         {
+            if (XMin.IsOdd())
+                XMin--;
+            if (ZMin.IsOdd())
+                ZMin--;
+
             OuterLoopStrategy(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension), 
                 new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads},
                 x =>
@@ -66,17 +72,13 @@ namespace PapyrusCs.Strategies
                                 for (int cx = 0; cx < ChunksPerDimension; cx++)
                                 for (int cz = 0; cz < ChunksPerDimension; cz++)
                                 {
-                                    UInt64 key = 0;
-                                    unchecked
-                                    {
-                                        key = (UInt64) (
-                                            ((UInt64) (x + cx) << 32) |
-                                            ((UInt64) (z + cz) & 0xFFFFFFFF)
-                                        );
-                                    }
 
-                                    if (!RenderSettings.Keys.Contains(key))
-                                        continue;
+                                    if (RenderSettings.Keys != null)
+                                    {
+                                            UInt64 key = Coordinate2D.CreateHashKey(x + cx, z + cz);
+                                            if (!RenderSettings.Keys.Contains(key))
+                                                continue;
+                                    }
 
                                     var chunk = World.GetChunk(x + cx, z + cz);
                                     if (chunk == null)
@@ -122,6 +124,8 @@ namespace PapyrusCs.Strategies
             Console.WriteLine("\nDone rendering initial level\n");
         }
 
+      
+
         public void RenderZoomLevels()
         {
             var sourceZoomLevel = this.InitialZoomLevel;
@@ -154,7 +158,7 @@ namespace PapyrusCs.Strategies
                     sourceLevelZmax++;
 
 
-                Console.WriteLine($"Rendering Level {destZoom} with source coordinates X {sourceLevelXmin} to {sourceLevelXmax}, Z {sourceLevelZmin} to {sourceLevelZmax}");
+                Console.WriteLine($"\nRendering Level {destZoom} with source coordinates X {sourceLevelXmin} to {sourceLevelXmax}, Z {sourceLevelZmin} to {sourceLevelZmax}");
 
                 OuterLoopStrategy(BetterEnumerable.SteppedRange(sourceLevelXmin, sourceLevelXmax, 2), 
                     new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads }, 

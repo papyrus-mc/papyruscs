@@ -25,7 +25,7 @@
 	}
 	
 	.leaflet-tile {
-  border: solid red 1px;
+  border: solid red 0px;
 }
 </style>
 </head>
@@ -34,7 +34,9 @@
   <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
    crossorigin=""></script>
-<div id='map'></div>
+<div id='map'>
+	<div id='coords'></div>
+</div>
 <script>
 	var map = L.map('map', {
 		crs: L.CRS.Simple
@@ -57,7 +59,9 @@
 	  //L.marker(event.latlng).addTo(map);
 	  
 	  var myDiv = document.getElementById("coords");
-	  myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * 128) + " Y: " + Math.floor(event.latlng.lat * 128);
+	  var factor = %factor%
+	  
+	  myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * factor) + " Y: " + (-1-Math.floor(event.latlng.lat * factor));
 	});
 </script>
  

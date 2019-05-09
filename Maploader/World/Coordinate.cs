@@ -1,10 +1,20 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Maploader.Extensions;
 
 namespace Maploader.World
 {
     public class Coordinate2D
     {
+        public static ulong CreateHashKey(int x, int z)
+        {
+            unchecked
+            {
+                ulong key = (UInt64) (((UInt64) (x) << 32) | ((UInt64) (z) & 0xFFFFFFFF));
+                return key;
+            }
+        }
+
         public Coordinate2D(int x, int y)
         {
             X = x;

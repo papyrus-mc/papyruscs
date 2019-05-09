@@ -18,7 +18,7 @@ namespace PapyrusCs
         [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)", Default = Strategy.ParallelFor)]
         public Strategy Strategy { get; set; }
 
-        [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = true)]
+        [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = false)]
         public bool RenderCoords { get; set; }
 
         [Option("limitx", Required = false, HelpText = "Limits the chunk rendering in the x dimension (inclusive). Provide two values with comma separated, eg: -10,10")]
