@@ -1,69 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   crossorigin=""/>
-  
-   <style>
-	#map { 
-		height: 100vh; 
-		background: light;
-	}
-	
-	body {
-		margin: 0px;
-	}
 
-	#coords {
-		background: white;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		display: block;
-		z-index: 800
-	}
-	
-	.leaflet-tile {
-  border: solid red 0px;
-}
-</style>
+<head>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+		integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+		crossorigin="" />
+
+	<style>
+		#map {
+			height: 100vh;
+			background: light;
+		}
+
+		body {
+			margin: 0px;
+		}
+
+		#coords {
+			background: white;
+			position: fixed;
+			left: 0;
+			top: 100%;
+			transform: translateY(-100%);
+			display: block;
+			z-index: 800;
+			font-size: 16px;
+		}
+
+		.leaflet-tile {
+			border: solid red 0px;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body margin=0 padding=0>
-  <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-   integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-   crossorigin=""></script>
-<div id='map'>
-	<div id='coords'></div>
-</div>
-<script>
-	var map = L.map('map', {
-		crs: L.CRS.Simple
-	});
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+		integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+		crossorigin=""></script>
+	<div id='map'>
+		<div id='coords'>Click, Tap, or Move Mouse for coordinates</div>
+	</div>
+	<script>
+		var map = L.map('map', {
+			crs: L.CRS.Simple
+		});
 
-	var mapdata = L.tileLayer('./map/{z}/{x}/{y}.png', {
-		attribution: 'PapyrusCS',
-		minZoom: 0,
-		maxNativeZoom: %maxnativezoom%,
-		maxZoom: %maxzoom%,
-		noWrap: true,
-		tileSize: 512
+		var mapdata = L.tileLayer('./map/{z}/{x}/{y}.png', {
+			attribution: 'PapyrusCS',
+			minZoom: 0,
+			maxNativeZoom: % maxnativezoom %,
+			maxZoom: % maxzoom %,
+			noWrap: true,
+			tileSize: 512
 
-	}).addTo(map);
+		}).addTo(map);
 
-	map.setView([0, 0], 0);
+		map.setView([0, 0], 0);
 
-	map.on("mousemove", function (event) {
-	  console.log("Coordinates: " + event.latlng.toString());
-	  //L.marker(event.latlng).addTo(map);
-	  
-	  var myDiv = document.getElementById("coords");
-	  var factor = %factor%
-	  
-	  myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * factor) + " Y: " + (-1-Math.floor(event.latlng.lat * factor));
-	});
-</script>
- 
+		function display_coordinates(event) {
+			console.log("Coordinates: " + event.latlng.toString());
+			//L.marker(event.latlng).addTo(map);
+
+			var myDiv = document.getElementById("coords");
+			var factor = % factor %
+
+				myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * factor) + " Y: " + (-1 - Math.floor(event.latlng.lat * factor));
+		}
+
+		map.on("mousemove", display_coordinates);
+		map.on("click", display_coordinates);
+	</script>
+
 </body>
+
 </html>
