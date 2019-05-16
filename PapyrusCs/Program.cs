@@ -197,7 +197,7 @@ namespace PapyrusCs
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;
             strat.TotalChunkCount = _totalChunk;
-            strat.TexturePath = Path.Combine(Environment.CurrentDirectory, "textures");
+            strat.TexturePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures");
             strat.TextureDictionary = textures;
             strat.OutputPath = options.OutputPath;
             strat.TileSize = tileSize;

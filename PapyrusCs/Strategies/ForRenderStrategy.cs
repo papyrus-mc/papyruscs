@@ -28,8 +28,8 @@ namespace PapyrusCs.Strategies
         public int ZMin { get; set; }
         public int ZMax { get; set; }
         public string OutputPath { get; set; }
-        public Dictionary<string, Texture> TextureDictionary {get;set;}
-        public string TexturePath { get; set; } 
+        public Dictionary<string, Texture> TextureDictionary { get; set; }
+        public string TexturePath { get; set; }
         public int ChunkSize { get; set; } = 16;
         public int ChunksPerDimension { get; set; } = 2;
         public int TileSize { get; set; }
@@ -52,8 +52,8 @@ namespace PapyrusCs.Strategies
             if (ZMin.IsOdd())
                 ZMin--;
 
-            OuterLoopStrategy(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension), 
-                new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads},
+            OuterLoopStrategy(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension),
+                new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads },
                 x =>
                 {
                     int chunksRendered = 0;
@@ -65,24 +65,30 @@ namespace PapyrusCs.Strategies
 
                         for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
                         {
-                            using (var b = new Bitmap(TileSize, TileSize))
-                            using (var g = Graphics.FromImage(b))
-                            {
-                                bool anydrawn = false;
-                                for (int cx = 0; cx < ChunksPerDimension; cx++)
+
+                            Bitmap b = null;
+                            Graphics g = null;
+                            bool anydrawn = false;
+                            for (int cx = 0; cx < ChunksPerDimension; cx++)
                                 for (int cz = 0; cz < ChunksPerDimension; cz++)
                                 {
 
                                     if (RenderSettings.Keys != null)
                                     {
-                                            UInt64 key = Coordinate2D.CreateHashKey(x + cx, z + cz);
-                                            if (!RenderSettings.Keys.Contains(key))
-                                                continue;
+                                        UInt64 key = Coordinate2D.CreateHashKey(x + cx, z + cz);
+                                        if (!RenderSettings.Keys.Contains(key))
+                                            continue;
                                     }
 
                                     var chunk = World.GetChunk(x + cx, z + cz);
                                     if (chunk == null)
                                         continue;
+
+                                    if (b == null)
+                                    {
+                                        b = new Bitmap(TileSize, TileSize);
+                                        g = Graphics.FromImage(b);
+                                    }
 
                                     chunksRendered++;
 
@@ -90,14 +96,16 @@ namespace PapyrusCs.Strategies
                                     anydrawn = true;
                                 }
 
-                                if (anydrawn)
-                                {
-                                    var fx = (x) / ChunksPerDimension;
-                                    var fz = (z) / ChunksPerDimension;
+                            if (anydrawn && b != null)
+                            {
+                                var fx = (x) / ChunksPerDimension;
+                                var fz = (z) / ChunksPerDimension;
 
-                                    SaveBitmap(InitialZoomLevel, fx, fz, b);
-                                }
+                                SaveBitmap(InitialZoomLevel, fx, fz, b);
+                                g.Dispose();
+                                b.Dispose();
                             }
+
 
                             if (chunksRendered >= 32)
                             {
@@ -124,7 +132,7 @@ namespace PapyrusCs.Strategies
             Console.WriteLine("\nDone rendering initial level\n");
         }
 
-      
+
 
         public void RenderZoomLevels()
         {
@@ -143,7 +151,7 @@ namespace PapyrusCs.Strategies
                 var sourceZoom = sourceZoomLevel;
                 var destZoom = sourceZoomLevel - 1;
                 var linesRendered = 0;
-         
+
 
                 if (sourceLevelXmin.IsOdd()) // always start at an even coordinate
                     sourceLevelXmin--;
@@ -160,8 +168,8 @@ namespace PapyrusCs.Strategies
 
                 Console.WriteLine($"\nRendering Level {destZoom} with source coordinates X {sourceLevelXmin} to {sourceLevelXmax}, Z {sourceLevelZmin} to {sourceLevelZmax}");
 
-                OuterLoopStrategy(BetterEnumerable.SteppedRange(sourceLevelXmin, sourceLevelXmax, 2), 
-                    new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads }, 
+                OuterLoopStrategy(BetterEnumerable.SteppedRange(sourceLevelXmin, sourceLevelXmax, 2),
+                    new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads },
                     x =>
                 {
                     for (int z = sourceLevelZmin; z < sourceLevelZmax; z += 2)
@@ -171,46 +179,48 @@ namespace PapyrusCs.Strategies
                         var b3 = LoadBitmap(sourceZoom, x, z + 1);
                         var b4 = LoadBitmap(sourceZoom, x + 1, z + 1);
 
-                        bool didDraw = false;
-                        using (var bfinal = new Bitmap(TileSize, TileSize))
-                        using (var gfinal = Graphics.FromImage(bfinal))
+                        if (b1 !=null || b2 != null || b3 != null || b4 != null)
                         {
-                            var halfTileSize = TileSize / 2;
-
-                            if (b1 != null)
+                            bool didDraw = false;
+                            using (var bfinal = new Bitmap(TileSize, TileSize))
+                            using (var gfinal = Graphics.FromImage(bfinal))
                             {
-                                gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
-                                didDraw = true;
-                            }
+                                var halfTileSize = TileSize / 2;
 
-                            if (b2 != null)
-                            {
-                                gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
-                                didDraw = true;
+                                if (b1 != null)
+                                {
+                                    gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
+                                    didDraw = true;
+                                }
 
-                            }
+                                if (b2 != null)
+                                {
+                                    gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
+                                    didDraw = true;
 
-                            if (b3 != null)
-                            {
-                                gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
-                                didDraw = true;
+                                }
 
-                            }
+                                if (b3 != null)
+                                {
+                                    gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
+                                    didDraw = true;
 
-                            if (b4 != null)
-                            {
-                                gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
-                                didDraw = true;
+                                }
 
-                            }
+                                if (b4 != null)
+                                {
+                                    gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
+                                    didDraw = true;
 
-                            if (didDraw)
-                            {
-                                SaveBitmap(destZoom, x / 2, z / 2, bfinal);
+                                }
+
+                                if (didDraw)
+                                {
+                                    SaveBitmap(destZoom, x / 2, z / 2, bfinal);
+                                }
                             }
                         }
                     }
-
                     Interlocked.Add(ref linesRendered, 2);
 
                     ZoomLevelRenderd?.Invoke(this, new ZoomRenderedEventArgs(linesRendered, sourceDiameter, destZoom));
@@ -251,6 +261,6 @@ namespace PapyrusCs.Strategies
             return null;
         }
 
-    
+
     }
 }
