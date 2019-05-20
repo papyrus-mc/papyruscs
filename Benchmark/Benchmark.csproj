@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PapyrusCs\PapyrusCs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.DotNet.InternalAbstractions">
+      <HintPath>..\..\..\..\Users\DeepBlue1\.nuget\packages\microsoft.dotnet.internalabstractions\1.0.0\lib\netstandard1.3\Microsoft.DotNet.InternalAbstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

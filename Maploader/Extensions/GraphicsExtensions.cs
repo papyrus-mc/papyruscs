@@ -40,6 +40,7 @@ namespace Maploader.Extensions
 
                     var vSrc = new Vector3(srcPixel[0], srcPixel[1], srcPixel[2]);
                     var vDest = new Vector3(destPixel[0], destPixel[1], destPixel[2]);
+
                     var vComb = (brightness * vSrc * aa + ((1 - aa) * ab) * vDest)/ac;
 
                     vComb = Vector3.Clamp(vComb, Vector3.Zero, v255);

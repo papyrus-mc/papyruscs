@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using PapyrusCs.Database;
 
 namespace PapyrusCs.Strategies
 {
@@ -26,6 +27,7 @@ namespace PapyrusCs.Strategies
         List<Exception> Exceptions { get; }
         RenderSettings RenderSettings { get; set; }
         int InitialDiameter { get; set; }
+        Func<PapyrusContext> DatabaseCreator { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 
