@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -7,79 +6,9 @@ using Maploader.Renderer;
 using Maploader.Renderer.Heightmap;
 using Maploader.Renderer.Texture;
 using NUnit.Framework;
-using PapyrusCs.Database;
 
 namespace MapLoader.NUnitTests
 {
-    [TestFixture]
-    public class OtherTests
-    {
-        [TestCase(0, 0, 1)]
-        [TestCase(1, 1, 1)]
-        [TestCase(2, 2, 1)]
-        [TestCase(3, 3, 1)]
-
-        [TestCase(0, 0, 2)]
-        [TestCase(0, 1, 2)]
-        [TestCase(1, 2, 2)]
-        [TestCase(1, 3, 2)]
-        [TestCase(2, 4, 2)]
-        [TestCase(2, 5, 2)]
-
-        [TestCase(0, 0, 3)]
-        [TestCase(0, 1, 3)]
-        [TestCase(0, 2, 3)]
-        [TestCase(1, 3, 3)]
-        [TestCase(1, 4, 3)]
-        [TestCase(1, 5, 3)]
-        [TestCase(2, 6, 3)]
-        [TestCase(2, 7, 3)]
-        [TestCase(2, 8, 3)]
-
-        [TestCase(-1, -1, 1)]
-        [TestCase(-2, -2, 1)]
-        [TestCase(-3, -3, 1)]
-        [TestCase(-4, -4, 1)]
-
-        [TestCase(-1, -1, 2)]
-        [TestCase(-1, -2, 2)]
-        [TestCase(-2, -3, 2)]
-        [TestCase(-2, -4, 2)]
-        [TestCase(-3, -5, 2)]
-        [TestCase(-3, -6, 2)]
-
-        [TestCase(-1, -1, 3)]
-        [TestCase(-1, -2, 3)]
-        [TestCase(-1, -3, 3)]
-        [TestCase(-2, -4, 3)]
-        [TestCase(-2, -5, 3)]
-        [TestCase(-2, -6, 3)]
-        [TestCase(-3, -7, 3)]
-        [TestCase(-3, -8, 3)]
-        [TestCase(-3, -9, 3)]
-        public void CombineChunks(int result, int x, int chunkPerDimension)
-        {
-            var group = GetGroup(x, chunkPerDimension);
-            Assert.That(group, Is.EqualTo(result));
-        }
-
-        private int GetGroup(int coord, int chunkPerDimension)
-        {
-            if (coord >= 0)
-                return coord / chunkPerDimension;
-            return ((coord + 1) / chunkPerDimension) - 1;
-        }
-
-        [Test]
-        public void ChunkKeyTest()
-        {
-            var key = new LevelDbWorldKey2(new byte[]{1,0,0,0,1,0,0,0,47,0});
-            Assert.That(key.X, Is.EqualTo(1));ay
-            Assert.That(key.Z, Is.EqualTo(1));
-        }
-
-    }
-
     [TestFixture]
     class BenchmarkTests
     {
@@ -101,16 +30,6 @@ namespace MapLoader.NUnitTests
             //dut.Close();
 
             Assert.Pass();
-        }
-
-        [Test]
-        public void HashCodeByteArray()
-        {
-            var a = new byte[] {1, 2, 3, 4};
-            var b = new byte[] {1, 2, 3, 4};
-
-            Console.WriteLine(a.GetHashCode());
-            Console.WriteLine(b.GetHashCode());
         }
 
         [Test]

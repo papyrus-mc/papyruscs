@@ -11,8 +11,6 @@ using CommandLine;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
-using Microsoft.EntityFrameworkCore;
-using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 
 namespace PapyrusCs
@@ -86,6 +84,10 @@ namespace PapyrusCs
                 return -1;
             }
 
+
+
+
+
             // Start Generation
             int xmin = 0;
             int xmax = 0;
@@ -141,15 +143,8 @@ namespace PapyrusCs
             {
                 Console.WriteLine($"Limiting Y to {options.LimitY}");
             }
+  
 
-            // db stuff
-            var c = new Creator();
-            var db = c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
-            db.Database.Migrate();
-
-            // other stuff
-            var renderedSubchunks = db.Checksums.ToImmutableDictionary(x => x.LevelDbKey, x => x.Crc32);
-            Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
 
             Console.WriteLine("Reading terrain_texture.json...");
             var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures","terrain_texture.json"));
@@ -189,8 +184,6 @@ namespace PapyrusCs
                     break;
             }
 
-
-            strat.DatabaseCreator = () => c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
             strat.RenderSettings = new RenderSettings() {
                 RenderCoords = options.RenderCoords,
                 RenderMode = options.RenderMode,
@@ -198,7 +191,7 @@ namespace PapyrusCs
                 Keys = hashedCoordinateKeys,
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
-                BrillouinDivider = options.BrillouinDivider,
+                BrillouinDivider = options.BrillouinDivider
             };
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;

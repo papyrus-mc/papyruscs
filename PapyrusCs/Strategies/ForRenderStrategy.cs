@@ -13,7 +13,6 @@ using Maploader.Extensions;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
-using PapyrusCs.Database;
 
 namespace PapyrusCs.Strategies
 {
@@ -43,7 +42,6 @@ namespace PapyrusCs.Strategies
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
 
         public int InitialDiameter { get; set; }
-        public Func<PapyrusContext> DatabaseCreator { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 

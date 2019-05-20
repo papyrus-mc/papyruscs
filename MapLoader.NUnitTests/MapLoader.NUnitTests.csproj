@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Maploader\Maploader.csproj" />
-    <ProjectReference Include="..\PapyrusCs\PapyrusCs.csproj" />
   </ItemGroup>
 
   <ItemGroup>
