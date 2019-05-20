@@ -2,7 +2,8 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\homeworld\\db\" -o c:\\papyrus\\190504_3 --threads 8 --htmlfile index.html --limitx -16,16 --limitz -16,16"
+      "commandLineArgs": "-w \"C:\\papyruscs\\season 5\\db\" -o c:\\papyrus\\season5 --threads 8 --htmlfile index.html",
+      "workingDirectory": "c:\\temp"
     }
   }
 }
