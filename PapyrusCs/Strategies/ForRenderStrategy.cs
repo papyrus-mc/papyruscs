@@ -44,6 +44,7 @@ namespace PapyrusCs.Strategies
 
         public int InitialDiameter { get; set; }
         public Func<PapyrusContext> DatabaseCreator { get; set; }
+        public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 
@@ -75,10 +76,10 @@ namespace PapyrusCs.Strategies
                                 for (int cz = 0; cz < ChunksPerDimension; cz++)
                                 {
 
-                                    if (RenderSettings.Keys != null)
+                                    if (AllWorldKeys != null)
                                     {
-                                        UInt64 key = Coordinate2D.CreateHashKey(x + cx, z + cz);
-                                        if (!RenderSettings.Keys.Contains(key))
+                                        var key = new LevelDbWorldKey2(x+cx,z+cz);
+                                        if (!AllWorldKeys.Contains(key))
                                             continue;
                                     }
 

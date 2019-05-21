@@ -91,7 +91,7 @@ namespace PapyrusCs
             int xmax = 0;
             int zmin = 0;
             int zmax = 0;
-            HashSet<UInt64> hashedCoordinateKeys = null;
+            HashSet<LevelDbWorldKey2> allSubChunks = null;
 
             if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue && options.LimitZHigh.HasValue &&
                 options.LimitZLow.HasValue)
@@ -103,21 +103,17 @@ namespace PapyrusCs
             {
 
                 Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-                var keys = world.ChunkKeys.ToHashSet();
-
-                unchecked
-                {
-                    hashedCoordinateKeys = keys.Select(x => Coordinate2D.CreateHashKey(x.X, x.Y)).ToHashSet();
-                }
+                var keys = world.OverworldKeys.ToList();
+                allSubChunks = keys.Select(x => new LevelDbWorldKey2(x)).ToHashSet();
 
                 _totalChunk = keys.Count;
                 Console.WriteLine($"Total Chunk count {keys.Count}");
                 Console.WriteLine();
 
-                xmin = keys.Min(x => x.X);
-                xmax = keys.Max(x => x.X);
-                zmin = keys.Min(x => x.Y);
-                zmax = keys.Max(x => x.Y);
+                xmin = allSubChunks.Min(x => x.X);
+                xmax = allSubChunks.Max(x => x.X);
+                zmin = allSubChunks.Min(x => x.Z);
+                zmax = allSubChunks.Max(x => x.Z);
 
                 Console.WriteLine($"The total dimensions of the map are");
                 Console.WriteLine($"  X: {xmin} to {xmax}");
@@ -142,36 +138,25 @@ namespace PapyrusCs
                 Console.WriteLine($"Limiting Y to {options.LimitY}");
             }
 
-            // db stuff
-            var c = new Creator();
-            var db = c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
-            db.Database.Migrate();
-
-            // other stuff
-            var renderedSubchunks = db.Checksums.ToImmutableDictionary(x => x.LevelDbKey, x => x.Crc32);
-            Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
-
-            Console.WriteLine("Reading terrain_texture.json...");
-            var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures","terrain_texture.json"));
-            var ts = new TerrainTextureJsonParser(json, "");
-            var textures = ts.Textures;
-            Console.WriteLine();
-
             const int chunkSize = 256;
             int chunksPerDimension = 2;
             int tileSize = chunkSize * chunksPerDimension;
 
-            var maxDiameter = Math.Max(Math.Abs(xmax - xmin + 1), Math.Abs(zmax - zmin + 1));
-            Console.WriteLine($"The maximum diameter of the map is {maxDiameter}");
+            // db stuff
+            Directory.CreateDirectory(options.OutputPath);
+            var c = new Creator();
+            var db = c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
+            //db.Database.Migrate();
+            db.Database.Migrate();
 
-            maxDiameter = (maxDiameter+(chunksPerDimension-1)) / chunksPerDimension;
-            Console.WriteLine($"For {chunksPerDimension} chunks per tile, new max diameter is {maxDiameter}");
+            // other stuff
+            var renderedSubchunks = db.Checksums.ToImmutableDictionary(x => new LevelDbWorldKey2(x.LevelDbKey), x => x.Crc32);
+            Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
 
-            var zoom = (int) (Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2)));
-            int extendedDia = (int) Math.Pow(2, zoom);
+            var textures = ReadTerrainTextureJson();
 
-            Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
-            Console.WriteLine($"This results in {zoom+1} zoom levels");
+
+            var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
             List<Exception> exes = new List<Exception>();
 
 
@@ -192,14 +177,14 @@ namespace PapyrusCs
 
             strat.DatabaseCreator = () => c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
             strat.RenderSettings = new RenderSettings() {
-                RenderCoords = options.RenderCoords,
+                RenderCoordinateStrings = options.RenderCoords,
                 RenderMode = options.RenderMode,
                 MaxNumberOfThreads = options.MaxNumberOfThreads,
-                Keys = hashedCoordinateKeys,
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider,
             };
+            strat.AllWorldKeys = allSubChunks;
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;
@@ -244,6 +229,33 @@ namespace PapyrusCs
             Console.WriteLine("Total Time {0}", _time.Elapsed);
 
             return 0;
+        }
+
+        private static int CalculateZoom(int xmax, int xmin, int zmax, int zmin, int chunksPerDimension, out int extendedDia)
+        {
+            var maxDiameter = Math.Max(Math.Abs(xmax - xmin + 1), Math.Abs(zmax - zmin + 1));
+            Console.WriteLine($"The maximum diameter of the map is {maxDiameter}");
+
+            maxDiameter = (maxDiameter + (chunksPerDimension - 1)) / chunksPerDimension;
+            Console.WriteLine($"For {chunksPerDimension} chunks per tile, new max diameter is {maxDiameter}");
+
+            var zoom = (int) (Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2)));
+            extendedDia = (int) Math.Pow(2, zoom);
+
+            Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
+            Console.WriteLine($"This results in {zoom + 1} zoom levels");
+            return zoom;
+        }
+
+        private static Dictionary<string, Texture> ReadTerrainTextureJson()
+        {
+            Console.WriteLine("Reading terrain_texture.json...");
+            var json = File.ReadAllText(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures", "terrain_texture.json"));
+            var ts = new TerrainTextureJsonParser(json, "");
+            var textures = ts.Textures;
+            Console.WriteLine();
+            return textures;
         }
 
         private static void RenderZoom(object sender, ZoomRenderedEventArgs e)

@@ -6,7 +6,9 @@ namespace PapyrusCs.Database
     {
         public bool Equals(LevelDbWorldKey2 other)
         {
-            return KeyType == other.KeyType && X == other.X && Z == other.Z && SubChunkId == other.SubChunkId;
+            return (SubChunkId == 0xFF || other.SubChunkId == 0xFF)
+                ? KeyType == other.KeyType && X == other.X && Z == other.Z
+                : KeyType == other.KeyType && X == other.X && Z == other.Z && SubChunkId == other.SubChunkId;
         }
 
         public override bool Equals(object obj)
@@ -21,7 +23,7 @@ namespace PapyrusCs.Database
                 var hashCode = KeyType.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int) X;
                 hashCode = (hashCode * 397) ^ (int) Z;
-                hashCode = (hashCode * 397) ^ SubChunkId.GetHashCode();
+                //hashCode = (hashCode * 397) ^ SubChunkId.GetHashCode();
                 return hashCode;
             }
         }
@@ -42,6 +44,14 @@ namespace PapyrusCs.Database
             Z = (key[4] | (key[5] << 8) | (key[6] << 16) | (key[7] << 24));
             KeyType = key[8];
             SubChunkId = key[9];
+        }
+
+        public LevelDbWorldKey2(int x, int z)
+        {
+            X = x;
+            Z = z;
+            KeyType = 47;
+            SubChunkId = 0xFF;
         }
 
         public byte KeyType { get; }

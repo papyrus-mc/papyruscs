@@ -67,6 +67,25 @@ namespace Maploader.World
             }
         }
 
+
+        public IEnumerable<byte[]> OverworldKeys
+        {
+            get
+            {
+                foreach (var element in db)
+                {
+                    var key = element.Key;
+                    if (key.Length != 10)
+                        continue;
+                    if (key[8] != 47)
+                        continue;
+                    if (key != null)
+                        yield return key;
+                }
+            }
+        }
+
+
         public IEnumerable<Coordinate2D> ChunkKeys
         {
             get

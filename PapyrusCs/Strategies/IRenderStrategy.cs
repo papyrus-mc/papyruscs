@@ -28,6 +28,7 @@ namespace PapyrusCs.Strategies
         RenderSettings RenderSettings { get; set; }
         int InitialDiameter { get; set; }
         Func<PapyrusContext> DatabaseCreator { get; set; }
+        HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 

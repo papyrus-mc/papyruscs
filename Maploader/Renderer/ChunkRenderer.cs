@@ -92,7 +92,7 @@ namespace Maploader.Renderer
                 }
             }
 
-            if (renderSettings.RenderCoords)
+            if (renderSettings.RenderCoordinateStrings)
             {
                 g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black,
                     xOffset, zOffset);
