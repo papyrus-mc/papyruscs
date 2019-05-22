@@ -8,6 +8,19 @@ using leveldb_sharp_std;
 
 namespace Maploader.World
 {
+    public class SubChunkData
+    {
+        public byte[] Key { get; set; }
+        public byte[] Data { get; set; }
+        public UInt32 Crc32 { get; set; }
+        public byte Index { get; set; }
+    }
+
+    public class ChunkData
+    {
+        public List<SubChunkData> SubChunks { get; set; }
+    }
+
     public class World
     {
         private DB db;
@@ -20,6 +33,46 @@ namespace Maploader.World
             db = new DB(options, pathDb);
         }
 
+
+        public ChunkData GetOverworldChunkData(int x, int z)
+        {
+            if (db == null)
+                throw new InvalidOperationException("Open Db first");
+
+            var ret = new ChunkData();
+            var key = CreateKey(x, z);
+
+            for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
+            {
+                key[9] = subChunkIdx;
+
+                var data = db.Get(key);
+                if (data != null)
+                {
+                    var subChunkData = new SubChunkData()
+                    {
+                        Index = subChunkIdx,
+                        Data = data,
+                        Key = key,
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data)
+                    };
+                    ret.SubChunks.Add(subChunkData);
+                }
+            }
+
+            return ret;
+        }
+
+        public Chunk GetChunk(int x, int z, ChunkData data)
+        {
+            Chunk c = new Chunk(x, z);
+            foreach (var subChunkRaw in data.SubChunks)
+            {
+                CopySubChunkToChunk(c, subChunkRaw.Index, subChunkRaw.Data);
+            }
+
+            return c;
+        }
 
         public Chunk GetChunk(int x, int z)
         {
@@ -50,6 +103,7 @@ namespace Maploader.World
             {
                 CopySubChunkToChunk(c, subChunkRaw);
             }
+
             return c;
 
         }
@@ -102,10 +156,15 @@ namespace Maploader.World
 
         private void CopySubChunkToChunk(Chunk chunk, KeyValuePair<byte, byte[]> subChunkRawData)
         {
-            byte subChunkId = subChunkRawData.Key;
+            CopySubChunkToChunk(chunk, subChunkRawData.Key, subChunkRawData.Value);
+        }
+
+        private void CopySubChunkToChunk(Chunk chunk, byte yIndex, byte[] data)
+        {
+            byte subChunkId = yIndex;
             int yOffset = subChunkId * 16;
 
-            using (MemoryStream ms = new MemoryStream(subChunkRawData.Value))
+            using (MemoryStream ms = new MemoryStream(data))
             using (var bs = new BinaryReader(ms, Encoding.Default))
             {
 
@@ -122,9 +181,9 @@ namespace Maploader.World
                             int dataPos = 1 + 4096 + (position / 2);
 
                             if (position % 2 == 0)
-                                blockData = (subChunkRawData.Value[dataPos] >> 4) & 0xF;
+                                blockData = (data[dataPos] >> 4) & 0xF;
                             else
-                                blockData = (subChunkRawData.Value[dataPos] >> 0) & 0xF;
+                                blockData = (data[dataPos] >> 0) & 0xF;
 
                             int x = (position >> 8) & 0xF;
                             int y = position & 0xF;

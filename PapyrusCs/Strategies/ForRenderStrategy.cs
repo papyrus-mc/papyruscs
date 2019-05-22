@@ -59,26 +59,28 @@ namespace PapyrusCs.Strategies
                 new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads },
                 x =>
                 {
-                    int chunksRendered = 0;
-
-                    try
+                    using (var db = DatabaseCreator())
                     {
-                        var finder = new TextureFinder(TextureDictionary, TexturePath);
-                        var chunkRenderer = new ChunkRenderer(finder, RenderSettings);
+                        int chunksRendered = 0;
 
-                        for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
+                        try
                         {
+                            var finder = new TextureFinder(TextureDictionary, TexturePath);
+                            var chunkRenderer = new ChunkRenderer(finder, RenderSettings);
 
-                            Bitmap b = null;
-                            Graphics g = null;
-                            bool anydrawn = false;
-                            for (int cx = 0; cx < ChunksPerDimension; cx++)
+                            for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
+                            {
+
+                                Bitmap b = null;
+                                Graphics g = null;
+                                bool anydrawn = false;
+                                for (int cx = 0; cx < ChunksPerDimension; cx++)
                                 for (int cz = 0; cz < ChunksPerDimension; cz++)
                                 {
 
                                     if (AllWorldKeys != null)
                                     {
-                                        var key = new LevelDbWorldKey2(x+cx,z+cz);
+                                        var key = new LevelDbWorldKey2(x + cx, z + cz);
                                         if (!AllWorldKeys.Contains(key))
                                             continue;
                                     }
@@ -94,42 +96,43 @@ namespace PapyrusCs.Strategies
                                     }
 
                                     chunksRendered++;
-
                                     chunkRenderer.RenderChunk(b, chunk, g, cx * ChunkSize, cz * ChunkSize);
                                     anydrawn = true;
                                 }
 
-                            if (anydrawn && b != null)
-                            {
-                                var fx = (x) / ChunksPerDimension;
-                                var fz = (z) / ChunksPerDimension;
+                                if (anydrawn)
+                                {
+                                    var fx = (x) / ChunksPerDimension;
+                                    var fz = (z) / ChunksPerDimension;
 
-                                SaveBitmap(InitialZoomLevel, fx, fz, b);
-                                g.Dispose();
-                                b.Dispose();
+                                    SaveBitmap(InitialZoomLevel, fx, fz, b);
+                                    g.Dispose();
+                                    b.Dispose();
+                                }
+
+
+                                if (chunksRendered >= 32)
+                                {
+                                    ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
+                                    chunksRendered = 0;
+                                }
                             }
 
-
-                            if (chunksRendered >= 32)
+                            if (chunksRendered > 0)
                             {
                                 ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
-                                chunksRendered = 0;
+                            }
+
+                            foreach (var str in chunkRenderer.MissingTextures)
+                            {
+                                MissingTextures.Add(str);
                             }
                         }
-
-                        if (chunksRendered > 0)
+                        catch (Exception ex)
                         {
-                            ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
+                            Console.WriteLine(ex);
+                            Exceptions.Add(ex);
                         }
-                        foreach (var str in chunkRenderer.MissingTextures)
-                        {
-                            MissingTextures.Add(str);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex);
-                        Exceptions.Add(ex);
                     }
                 });
             Console.WriteLine("\nDone rendering initial level\n");
