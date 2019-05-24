@@ -169,6 +169,9 @@ namespace PapyrusCs
                 case Strategy.SingleFor:
                     strat = new SingleForRenderStrategy();
                     break;
+                case Strategy.Dataflow:
+                    strat = new DataFlowStrategy();
+                    break;
                 default:
                     strat = new SingleForRenderStrategy();
                     break;
@@ -203,7 +206,10 @@ namespace PapyrusCs
             strat.RenderInitialLevel();
             var missingTextures = strat.MissingTextures;
 
-            File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
+            if (missingTextures != null)
+            {
+                File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
+            }
 
             strat.ZoomLevelRenderd += RenderZoom;
             strat.RenderZoomLevels();

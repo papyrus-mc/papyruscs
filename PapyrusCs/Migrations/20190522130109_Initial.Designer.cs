@@ -9,7 +9,7 @@ using PapyrusCs.Database;
 namespace PapyrusCs.Migrations
 {
     [DbContext(typeof(PapyrusContext))]
-    [Migration("20190515134052_Initial")]
+    [Migration("20190522130109_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,8 +29,7 @@ namespace PapyrusCs.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LevelDbKey")
-                        .IsUnique();
+                    b.HasIndex("LevelDbKey");
 
                     b.ToTable("Checksums");
                 });

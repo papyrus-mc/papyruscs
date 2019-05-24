@@ -27,8 +27,7 @@ namespace PapyrusCs.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LevelDbKey")
-                        .IsUnique();
+                    b.HasIndex("LevelDbKey");
 
                     b.ToTable("Checksums");
                 });

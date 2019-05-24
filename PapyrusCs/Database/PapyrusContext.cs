@@ -10,7 +10,7 @@ namespace PapyrusCs.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Checksum>().HasIndex(x => x.LevelDbKey).IsUnique(true);
+            modelBuilder.Entity<Checksum>().HasIndex(x => x.LevelDbKey);
         }
     }
 }

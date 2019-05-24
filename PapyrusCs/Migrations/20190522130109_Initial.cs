@@ -24,8 +24,7 @@ namespace PapyrusCs.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Checksums_LevelDbKey",
                 table: "Checksums",
-                column: "LevelDbKey",
-                unique: true);
+                column: "LevelDbKey");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

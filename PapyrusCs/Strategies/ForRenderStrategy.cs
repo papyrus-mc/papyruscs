@@ -85,9 +85,22 @@ namespace PapyrusCs.Strategies
                                             continue;
                                     }
 
-                                    var chunk = World.GetChunk(x + cx, z + cz);
-                                    if (chunk == null)
+                                    var data = World.GetOverworldChunkData(x + cx, z + cz);
+
+                                    if (data.Empty) 
                                         continue;
+
+                                    if (false)
+                                    {
+                                        foreach (var s in data.SubChunks)
+                                        {
+                                            db.Checksums.Add(new Checksum() {LevelDbKey = s.Key, Crc32 = s.Crc32});
+                                        }
+                                        var savingTask = db.SaveChangesAsync();
+                                        var result = savingTask.Result;
+                                    }
+
+                                    var chunk = World.GetChunk(x + cx, z + cz, data);
 
                                     if (b == null)
                                     {
@@ -98,6 +111,8 @@ namespace PapyrusCs.Strategies
                                     chunksRendered++;
                                     chunkRenderer.RenderChunk(b, chunk, g, cx * ChunkSize, cz * ChunkSize);
                                     anydrawn = true;
+
+                                   
                                 }
 
                                 if (anydrawn)

@@ -14,11 +14,14 @@ namespace Maploader.World
         public byte[] Data { get; set; }
         public UInt32 Crc32 { get; set; }
         public byte Index { get; set; }
+
     }
 
     public class ChunkData
     {
-        public List<SubChunkData> SubChunks { get; set; }
+        public List<SubChunkData> SubChunks { get; } = new List<SubChunkData>();
+        public bool HasData => SubChunks.Count > 0;
+        public bool Empty => SubChunks.Count == 0;
     }
 
     public class World
