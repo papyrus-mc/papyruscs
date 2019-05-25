@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
@@ -65,20 +69,130 @@ namespace PapyrusCs.Strategies
             var keysByXZ = AllWorldKeys.GroupBy(x => x.XZ);
 
             Console.WriteLine("Counting chunks...");
-            List<ChunkKeyStack> chunks = new List<ChunkKeyStack>();
+            List<ChunkKeyStack> chunkKeys = new List<ChunkKeyStack>();
             foreach (var chunkGroup in keysByXZ)
             {
-                chunks.Add(new ChunkKeyStack(chunkGroup));
+                chunkKeys.Add(new ChunkKeyStack(chunkGroup));
             }
 
-            Console.WriteLine($"Found {chunks.Count}...");
+           
 
-            var groupedToTiles = chunks.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(2))
-                .ToDictionary(x => x.Key, x => x);
+            var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension)).ToList();
+
+            var gdbCount = 0;
+            var ccbCount = 0;
+            var outpCount = 0;
+
+            var getDataBlock = new TransformBlock<IEnumerable<ChunkKeyStack>, IEnumerable<ChunkData>>(
+                stacks =>
+                {
+                    var ret = new List<ChunkData>();
+                    foreach (var chunkKeyStack in stacks)
+                    {
+                        ret.Add(World.GetChunkData(chunkKeyStack));
+                    }
+
+                    gdbCount++;
+                    return ret;
+                    
+                }, new ExecutionDataflowBlockOptions() { BoundedCapacity = 512 });
+
+            var createChunkBlock = new TransformBlock<IEnumerable<ChunkData>, IEnumerable<Chunk>>(datas =>
+                {
+                    var chunks = new List<Chunk>();
+                    foreach (var cd in datas)
+                    {
+                        chunks.Add(World.GetChunk(cd.X, cd.Z, cd));
+                    }
+
+                    ccbCount++;
+                    return chunks;
+                }, new ExecutionDataflowBlockOptions() { BoundedCapacity = 16, MaxDegreeOfParallelism = 16});
+
+            var chunkRenderedCounter = 0;
 
 
-            Console.WriteLine();
+            ThreadLocal<RendererCombi> RenderCombi = new ThreadLocal<RendererCombi>(() =>
+                new RendererCombi(TextureDictionary, TexturePath, RenderSettings));
 
+            var output = new ActionBlock<IEnumerable<Chunk>>(datas =>
+            {
+                var b = new Bitmap(TileSize, TileSize);
+                var g = Graphics.FromImage(b);
+
+                var dataList = datas.ToList();
+
+                var first = dataList.First();
+                if (!RenderCombi.IsValueCreated)
+                {
+                    Console.WriteLine("First time on thread " + Thread.CurrentThread.ManagedThreadId);
+                }
+                var chunkRenderer = RenderCombi.Value.ChunkRenderer;
+
+
+                var chunks = dataList.OrderBy(x => x.X).ThenBy(x => x.Z);
+                foreach (var chunk in chunks)
+                {
+                    var x = chunk.X % ChunksPerDimension;
+                    var z = chunk.Z % ChunksPerDimension;
+                    if (x < 0) x += ChunksPerDimension;
+                    if (z < 0) z += ChunksPerDimension;
+                    chunkRenderer.RenderChunk(b, chunk, g, x*ChunkSize,z*ChunkSize );
+                }
+
+                var dx = first.X - first.X % ChunksPerDimension;
+                var dz = first.Z - first.Z % ChunksPerDimension;
+
+                var fx = (dx / ChunksPerDimension);
+                var fz = (dz / ChunksPerDimension);
+
+                SaveBitmap(InitialZoomLevel, fx, fz, b);
+                outpCount++;
+
+                chunkRenderedCounter+=dataList.Count;
+                if (chunkRenderedCounter >= 100)
+                {
+                    ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunkRenderedCounter));
+                    chunkRenderedCounter = 0;
+                }
+
+                g.Dispose();
+                b.Dispose();
+
+            }, new ExecutionDataflowBlockOptions() { BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 16});
+
+            getDataBlock.LinkTo(createChunkBlock, new DataflowLinkOptions() { PropagateCompletion = true, });
+            createChunkBlock.LinkTo(output, new DataflowLinkOptions() { PropagateCompletion = true });
+            //getDataBlock.
+
+            int sacCount = 0;
+            foreach (var groupedToTile in groupedToTiles)
+            {
+                getDataBlock?.SendAsync(groupedToTile).Wait();
+                sacCount++;
+                if (sacCount % 100 == 0)
+                {
+                    Console.WriteLine($"{gdbCount} {ccbCount} {outpCount}");
+                }
+            }
+
+            Console.WriteLine("Post complete");
+            
+            getDataBlock.Complete();
+            while (!output.Completion.Wait(1000))
+            {
+                Console.WriteLine($"\n{gdbCount} {ccbCount} {outpCount}\n");
+            }
+        }
+
+        private void SaveBitmap(int zoom, int x, int z, Bitmap b)
+        {
+            var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
+            var filepath = Path.Combine(path, $"{z}.png");
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            b.Save(filepath);
         }
 
         public void RenderZoomLevels()
@@ -90,25 +204,15 @@ namespace PapyrusCs.Strategies
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
     }
 
-    public class ChunkKeyStack
+    class RendererCombi
     {
-        public Dictionary<byte, LevelDbWorldKey2> Subchunks { get; } = new Dictionary<byte, LevelDbWorldKey2>();
+        public TextureFinder Finder { get; }
+        public ChunkRenderer ChunkRenderer { get; }
 
-        public ChunkKeyStack(IGrouping<ulong, LevelDbWorldKey2> groupedSubChunks)
+        public RendererCombi(Dictionary<string, Texture> textureDictionary, string texturePath, RenderSettings renderSettings)
         {
-            if (!groupedSubChunks.Any())
-            {
-                throw new ArgumentOutOfRangeException(nameof(groupedSubChunks));
-            }
-            foreach (var sc in groupedSubChunks)
-            {
-                Subchunks.Add(sc.SubChunkId, sc);
-            }
-        }
-
-        public override string ToString()
-        {
-            return $"{Subchunks.First().Value.X}, {Subchunks.First().Value.Z}";
+            Finder = new TextureFinder(textureDictionary, texturePath);
+            ChunkRenderer = new ChunkRenderer(Finder, renderSettings);
         }
     }
 }

@@ -2,28 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using fNbt;
 using leveldb_sharp_std;
+using PapyrusCs.Strategies;
 
 namespace Maploader.World
 {
-    public class SubChunkData
-    {
-        public byte[] Key { get; set; }
-        public byte[] Data { get; set; }
-        public UInt32 Crc32 { get; set; }
-        public byte Index { get; set; }
-
-    }
-
-    public class ChunkData
-    {
-        public List<SubChunkData> SubChunks { get; } = new List<SubChunkData>();
-        public bool HasData => SubChunks.Count > 0;
-        public bool Empty => SubChunks.Count == 0;
-    }
-
     public class World
     {
         private DB db;
@@ -356,6 +342,41 @@ namespace Maploader.World
         public byte[] GetData(byte[] key)
         {
             return db[key];
+        }
+
+        public ChunkData GetChunkData(ChunkKeyStack chunkKeyStack)
+        {
+            if (db == null)
+                throw new InvalidOperationException("Open Db first");
+
+            var firstSubChunk = chunkKeyStack.Subchunks.First();
+
+            var ret = new ChunkData
+            {
+                X = firstSubChunk.Value.X,
+                Z = firstSubChunk.Value.Z
+            };
+
+
+            foreach (var kvp in chunkKeyStack.Subchunks)
+            {
+                var key = kvp.Value;
+
+                var data = db.Get(key.Key);
+                if (data != null)
+                {
+                    var subChunkData = new SubChunkData()
+                    {
+                        Index = kvp.Key,
+                        Data = data,
+                        Key = kvp.Value.Key,
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                    };
+                    ret.SubChunks.Add(subChunkData);
+                }
+            }
+
+            return ret;
         }
     }
 }

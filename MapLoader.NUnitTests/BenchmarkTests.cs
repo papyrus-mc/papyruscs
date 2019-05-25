@@ -73,9 +73,13 @@ namespace MapLoader.NUnitTests
         [Test]
         public void ChunkKeyTest()
         {
-            var key = new LevelDbWorldKey2(new byte[]{1,0,0,0,1,0,0,0,47,0});
-            Assert.That(key.X, Is.EqualTo(1));
-            Assert.That(key.Z, Is.EqualTo(1));
+            var key = new LevelDbWorldKey2(new byte[]{2,0,0,0,2,0,0,0,47,0});
+            Assert.That(key.X, Is.EqualTo(2));
+            Assert.That(key.Z, Is.EqualTo(2));
+
+            var group = key.GetXZGroup(2);
+            Assert.That(group, Is.EqualTo(((UInt64)1<<32) + 1));
+
         }
 
     }
