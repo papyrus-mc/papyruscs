@@ -19,7 +19,7 @@ namespace Maploader.World
             return $"Chunk {X},{Z}";
         }
 
-        public Dictionary<UInt32, BlockCoord> Blocks { get; } = new Dictionary<UInt32, BlockCoord>();
+        public Dictionary<UInt32, BlockCoord> Blocks { get; } = new Dictionary<UInt32,  BlockCoord>();
 
 
         public void SetBlockId(int x, int y, int z, BlockData data, bool noException = false)
@@ -58,7 +58,7 @@ namespace Maploader.World
 
             if (!Blocks.ContainsKey(coord))
             {
-                var blockCoord = new BlockCoord(data, x, y, z);
+                var blockCoord = new  BlockCoord(data, x, y, z);
                 Blocks[coord] = blockCoord;
             }
             else

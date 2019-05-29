@@ -211,6 +211,8 @@ namespace PapyrusCs
                 File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
             }
 
+            Console.WriteLine("Time is {0}", _time.Elapsed);
+
             strat.ZoomLevelRenderd += RenderZoom;
             strat.RenderZoomLevels();
 
@@ -272,10 +274,13 @@ namespace PapyrusCs
         private static int _totalChunksRendered = 0;
         private static int _totalChunk = 0;
         private static Stopwatch _time;
+        private static Stopwatch _time2 = new Stopwatch();
         private static void RenderDisplay(object sender, ChunksRenderedEventArgs e)
         {
+            if (!_time2.IsRunning)
+                _time2.Start();
             Interlocked.Add(ref _totalChunksRendered, e.RenderedChunks);
-            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered)/_time.Elapsed.TotalSeconds:0.0} c/s");
+            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered)/_time2.Elapsed.TotalSeconds:0.0} c/s");
         }
 
       
