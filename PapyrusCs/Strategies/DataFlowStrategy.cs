@@ -42,12 +42,14 @@ namespace PapyrusCs.Strategies
         {
             var keysByXZ = AllWorldKeys.GroupBy(x => x.XZ);
 
-            Console.WriteLine("Counting chunks...");
+            Console.Write("Grouping subchunks... ");
             List<ChunkKeyStack> chunkKeys = new List<ChunkKeyStack>();
             foreach (var chunkGroup in keysByXZ)
             {
                 chunkKeys.Add(new ChunkKeyStack(chunkGroup));
             }
+
+            Console.WriteLine(chunkKeys.Count);
 
             var getOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 64, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
@@ -59,6 +61,9 @@ namespace PapyrusCs.Strategies
                 {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
 
             var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension)).ToList();
+            Console.WriteLine($"Grouped by {ChunksPerDimension} to {groupedToTiles.Count} tiles");
+            var average = groupedToTiles.Average(x => x.Count());
+            Console.WriteLine($"Average of {average} chunks per tile");
 
             var gdbCount = 0;
             var ccbCount = 0;
@@ -96,22 +101,23 @@ namespace PapyrusCs.Strategies
             ThreadLocal<RendererCombi> RenderCombi = new ThreadLocal<RendererCombi>(() =>
                 new RendererCombi(TextureDictionary, TexturePath, RenderSettings));
 
-            var bitmapBlock = new TransformBlock<IEnumerable<Chunk>,BitmapInfo>(datas =>
+            var bitmapBlock = new TransformBlock<IEnumerable<Chunk>,BitmapInfo>(chunks =>
             {
                 var b = new Bitmap(TileSize, TileSize);
                 using (var g = Graphics.FromImage(b))
                 {
-                    var dataList = datas.ToList();
-                    var first = dataList.First();
+                    var chunkList = chunks.ToList();
+                    var first = chunkList.First();
                     var chunkRenderer = RenderCombi.Value.ChunkRenderer;
 
-                    foreach (var chunk in dataList)
+                    foreach (var chunk in chunkList)
                     {
                         var x = chunk.X % ChunksPerDimension;
                         var z = chunk.Z % ChunksPerDimension;
                         if (x < 0) x += ChunksPerDimension;
                         if (z < 0) z += ChunksPerDimension;
                         chunkRenderer.RenderChunk(b, chunk, g, x * ChunkSize, z * ChunkSize);
+                        chunkRenderedCounter++;
                     }
 
                     var dx = first.X - first.X % ChunksPerDimension;
@@ -122,7 +128,6 @@ namespace PapyrusCs.Strategies
 
                     bitmapCount++;
 
-                    chunkRenderedCounter += dataList.Count;
                     if (chunkRenderedCounter >= 100)
                     {
                         ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunkRenderedCounter));

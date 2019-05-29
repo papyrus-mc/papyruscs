@@ -106,8 +106,8 @@ namespace PapyrusCs
                 var keys = world.OverworldKeys.ToList();
                 allSubChunks = keys.Select(x => new LevelDbWorldKey2(x)).ToHashSet();
 
-                _totalChunk = keys.Count;
-                Console.WriteLine($"Total Chunk count {keys.Count}");
+                _totalChunk = allSubChunks.Count(x => x.SubChunkId == 0);
+                Console.WriteLine($"Total Chunk count {_totalChunk}");
                 Console.WriteLine();
 
                 xmin = allSubChunks.Min(x => x.X);
