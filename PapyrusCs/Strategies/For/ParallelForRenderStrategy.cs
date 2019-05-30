@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Maploader.Renderer.Imaging;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusCs.Strategies.For
 {
     public class ParallelForRenderStrategy<TImage> : ForRenderStrategy<TImage> where TImage : class
     {

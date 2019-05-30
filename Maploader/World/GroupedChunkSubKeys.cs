@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using PapyrusCs.Database;
 
-namespace PapyrusCs.Strategies
+namespace Maploader.World
 {
-    public class ChunkKeyStack
+    public class GroupedChunkSubKeys
     {
         public Dictionary<byte, LevelDbWorldKey2> Subchunks { get; } = new Dictionary<byte, LevelDbWorldKey2>();
 
-        public ChunkKeyStack(IGrouping<ulong, LevelDbWorldKey2> groupedSubChunks)
+        public GroupedChunkSubKeys(IGrouping<ulong, LevelDbWorldKey2> groupedSubChunks)
         {
             if (!groupedSubChunks.Any())
             {

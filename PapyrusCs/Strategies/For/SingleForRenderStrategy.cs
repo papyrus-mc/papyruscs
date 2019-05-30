@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Maploader.Core;
 using Maploader.Renderer.Imaging;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusCs.Strategies.For
 {
     public class SingleForRenderStrategy<TImage> : ForRenderStrategy<TImage> where TImage : class
     {

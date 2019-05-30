@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using fNbt;
 using leveldb_sharp_std;
-using PapyrusCs.Strategies;
 
 namespace Maploader.World
 {
@@ -344,12 +343,12 @@ namespace Maploader.World
             return db[key];
         }
 
-        public ChunkData GetChunkData(ChunkKeyStack chunkKeyStack)
+        public ChunkData GetChunkData(GroupedChunkSubKeys groupedChunkSubKeys)
         {
             if (db == null)
                 throw new InvalidOperationException("Open Db first");
 
-            var firstSubChunk = chunkKeyStack.Subchunks.First();
+            var firstSubChunk = groupedChunkSubKeys.Subchunks.First();
 
             var ret = new ChunkData
             {
@@ -358,7 +357,7 @@ namespace Maploader.World
             };
 
 
-            foreach (var kvp in chunkKeyStack.Subchunks)
+            foreach (var kvp in groupedChunkSubKeys.Subchunks)
             {
                 var key = kvp.Value;
 

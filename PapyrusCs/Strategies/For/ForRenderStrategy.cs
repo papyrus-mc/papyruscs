@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Maploader.Core;
@@ -16,16 +12,13 @@ using Maploader.Renderer.Texture;
 using Maploader.World;
 using PapyrusCs.Database;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusCs.Strategies.For
 {
     public abstract class ForRenderStrategy<TImage> : IRenderStrategy where TImage : class
     {
-        protected abstract Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy
-        {
-            get;
-        }
+        protected abstract Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy { get; }
 
-        private IGraphicsApi<TImage> graphics;
+        private readonly IGraphicsApi<TImage> graphics;
 
         protected ForRenderStrategy(IGraphicsApi<TImage> graphics)
         {

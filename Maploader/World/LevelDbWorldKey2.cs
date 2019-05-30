@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using Maploader.World;
 
 namespace PapyrusCs.Database
 {
@@ -53,7 +54,7 @@ namespace PapyrusCs.Database
 
         public LevelDbWorldKey2(int x, int z)
         {
-            Key = new byte[]{0};
+            Key = new byte[] {0};
             X = x;
             Z = z;
             KeyType = 47;
@@ -63,22 +64,14 @@ namespace PapyrusCs.Database
         public byte KeyType { get; }
         public Int32 X { get; }
         public Int32 Z { get; }
-        public UInt64 XZ => (((UInt64)X) << 32) | (UInt32)Z;
+        public UInt64 XZ => (((UInt64) X) << 32) | (UInt32) Z;
         public byte SubChunkId { get; }
 
-        public static int GetGroup(int coord, int chunkPerDimension)
-        {
-            if (coord >= 0)
-                return coord / chunkPerDimension;
-            return ((coord + 1) / chunkPerDimension) - 1;
-        }
 
         public UInt64 GetXZGroup(int chunkPerDimension)
         {
-            var xgroup = GetGroup(this.X, chunkPerDimension);
-            var zgroup = GetGroup(this.Z, chunkPerDimension);
-            UInt64 result = ((UInt64) xgroup) << 32;
-            result |= (UInt64) zgroup;
+            UInt64 result = ((UInt64) CoordHelpers.GetGroupedCoordinate(this.X, chunkPerDimension)) << 32;
+            result |= (UInt32) CoordHelpers.GetGroupedCoordinate(this.Z, chunkPerDimension);
 
             return result;
         }

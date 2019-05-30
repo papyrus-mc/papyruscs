@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace PapyrusCs.Database
 {
-    public class Creator : IDesignTimeDbContextFactory<PapyrusContext>
+    public class DbCreator : IDesignTimeDbContextFactory<PapyrusContext>
     {
         public PapyrusContext CreateDbContext(string[] args)
         {

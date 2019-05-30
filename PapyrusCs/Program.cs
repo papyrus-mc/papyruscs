@@ -17,11 +17,18 @@ using Maploader.World;
 using Microsoft.EntityFrameworkCore;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
+using PapyrusCs.Strategies.Dataflow;
+using PapyrusCs.Strategies.For;
 
 namespace PapyrusCs
 {
     class Program
-        {
+    {
+        private static int _totalChunksRendered = 0;
+        private static int _totalChunk = 0;
+        private static Stopwatch _time;
+        private static Stopwatch _time2 = new Stopwatch();
+
         static int Main(string[] args)
         {
             _time = Stopwatch.StartNew();
@@ -96,8 +103,8 @@ namespace PapyrusCs
             int zmax = 0;
             HashSet<LevelDbWorldKey2> allSubChunks = null;
 
-            Func<LevelDbWorldKey2,bool> constraintX = b => true;
-            Func<LevelDbWorldKey2,bool> constraintZ = b => true;
+            Func<LevelDbWorldKey2, bool> constraintX = b => true;
+            Func<LevelDbWorldKey2, bool> constraintZ = b => true;
 
             if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
             {
@@ -108,6 +115,7 @@ namespace PapyrusCs
                 var xmin1 = xmin;
                 constraintX = key => key.X >= xmin1 && key.X <= xmax1;
             }
+
             if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
             {
                 zmin = options.LimitZLow.Value;
@@ -118,13 +126,12 @@ namespace PapyrusCs
                 constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
             }
 
-            Console.WriteLine(
-                "Generating a list of all chunk keys in the database.\nThis could take a few minutes");
+            Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
             var keys = world.OverworldKeys.ToList();
             allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
                 .Where(k => constraintX(k) && constraintZ(k))
                 .ToHashSet();
-        
+
             _totalChunk = allSubChunks.Count(x => x.SubChunkId == 0);
             Console.WriteLine($"Total Chunk count {_totalChunk}");
             Console.WriteLine();
@@ -150,7 +157,7 @@ namespace PapyrusCs
 
             // db stuff
             Directory.CreateDirectory(options.OutputPath);
-            var c = new Creator();
+            var c = new DbCreator();
             var db = c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
             //db.Database.Migrate();
             db.Database.Migrate();
@@ -160,12 +167,32 @@ namespace PapyrusCs
             Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
 
             var textures = ReadTerrainTextureJson();
-
-
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
-            List<Exception> exes = new List<Exception>();
+
+            var strat = InstanciateStrategy(options);
+            ConfigureStrategy(strat, c, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
+            strat.RenderInitialLevel();
+
+            var missingTextures = strat.MissingTextures;
+            if (missingTextures != null)
+            {
+                File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
+            }
 
 
+            Console.WriteLine("Time is {0}", _time.Elapsed);
+            strat.RenderZoomLevels();
+
+
+            WriteMapHtml(zoom, tileSize, options);
+
+            Console.WriteLine("Total Time {0}", _time.Elapsed);
+            world.Close();
+            return 0;
+        }
+
+        private static IRenderStrategy InstanciateStrategy(Options options)
+        {
             IRenderStrategy strat = null;
             switch (options.Strategy)
             {
@@ -183,9 +210,16 @@ namespace PapyrusCs
                     break;
             }
 
+            return strat;
+        }
 
-            strat.DatabaseCreator = () => c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
-            strat.RenderSettings = new RenderSettings() {
+        private static void ConfigureStrategy(IRenderStrategy strat, DbCreator dbc, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
+            int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
+            int zmin, int zmax, int xmin, int xmax)
+        {
+            strat.DatabaseCreator = () => dbc.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
+            strat.RenderSettings = new RenderSettings()
+            {
                 RenderCoordinateStrings = options.RenderCoords,
                 RenderMode = options.RenderMode,
                 MaxNumberOfThreads = options.MaxNumberOfThreads,
@@ -208,28 +242,19 @@ namespace PapyrusCs
             strat.ZMax = zmax;
             strat.XMin = xmin;
             strat.XMax = xmax;
-            strat.ChunksRendered += RenderDisplay; 
-            strat.RenderInitialLevel();
-            var missingTextures = strat.MissingTextures;
-
-            if (missingTextures != null)
-            {
-                File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
-            }
-
-            Console.WriteLine("Time is {0}", _time.Elapsed);
-
+            strat.ChunksRendered += RenderDisplay;
             strat.ZoomLevelRenderd += RenderZoom;
-            strat.RenderZoomLevels();
+        }
 
-
+        private static void WriteMapHtml(int zoom, int tileSize, Options options)
+        {
             try
             {
                 var mapHtml = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
                 mapHtml = mapHtml.Replace("%maxnativezoom%", zoom.ToString());
                 mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 2).ToString());
                 mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
-                mapHtml = mapHtml.Replace("%factor%", (Math.Pow(2, zoom-4)).ToString());
+                mapHtml = mapHtml.Replace("%factor%", (Math.Pow(2, zoom - 4)).ToString());
                 File.WriteAllText(Path.Combine(options.OutputPath, options.MapHtml), mapHtml);
             }
             catch (Exception ex)
@@ -237,12 +262,6 @@ namespace PapyrusCs
                 Console.WriteLine("Could not write map.html");
                 Console.WriteLine(ex.Message);
             }
-
-            world.Close();
-
-            Console.WriteLine("Total Time {0}", _time.Elapsed);
-
-            return 0;
         }
 
         private static int CalculateZoom(int xmax, int xmin, int zmax, int zmin, int chunksPerDimension, out int extendedDia)
@@ -265,8 +284,8 @@ namespace PapyrusCs
             maxDiameter = (maxDiameter + (chunksPerDimension - 1)) / chunksPerDimension;
             Console.WriteLine($"For {chunksPerDimension} chunks per tile, new max diameter is {maxDiameter}");
 
-            var zoom = (int) (Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2)));
-            extendedDia = (int) Math.Pow(2, zoom);
+            var zoom = (int)(Math.Ceiling(Math.Log(maxDiameter) / Math.Log(2)));
+            extendedDia = (int)Math.Pow(2, zoom);
 
             Console.WriteLine($"To generate the zoom levels, we expand the diameter to {extendedDia}");
             Console.WriteLine($"This results in {zoom + 1} zoom levels");
@@ -289,19 +308,16 @@ namespace PapyrusCs
             Console.Write($"\r{e.LinesRendered} of {e.TotalLines} lines render @ zoom level {e.ZoomLevel}      ");
         }
 
-        private static int _totalChunksRendered = 0;
-        private static int _totalChunk = 0;
-        private static Stopwatch _time;
-        private static Stopwatch _time2 = new Stopwatch();
+
         private static void RenderDisplay(object sender, ChunksRenderedEventArgs e)
         {
             if (!_time2.IsRunning)
                 _time2.Start();
             Interlocked.Add(ref _totalChunksRendered, e.RenderedChunks);
-            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered)/_time2.Elapsed.TotalSeconds:0.0} c/s");
+            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered) / _time2.Elapsed.TotalSeconds:0.0} dbc/s");
         }
 
-      
+
     }
 }
 
