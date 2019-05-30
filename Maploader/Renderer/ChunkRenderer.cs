@@ -5,19 +5,22 @@ using System.Linq;
 using JetBrains.Annotations;
 using Maploader.Extensions;
 using Maploader.Renderer.Heightmap;
+using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 
 namespace Maploader.Renderer
 {
-    public class ChunkRenderer
+    public class ChunkRenderer<TImage> where TImage : class
     {
-        private readonly TextureFinder textureFinder;
+        private readonly TextureFinder<TImage> textureFinder;
+        private readonly IGraphicsApi<TImage> graphics;
         private readonly RenderSettings renderSettings;
 
-        public ChunkRenderer([NotNull] TextureFinder textureFinder, RenderSettings settings = null)
+        public ChunkRenderer([NotNull] TextureFinder<TImage> textureFinder, IGraphicsApi<TImage> graphics, RenderSettings settings = null)
         {
             this.textureFinder = textureFinder ?? throw new ArgumentNullException(nameof(textureFinder));
+            this.graphics = graphics;
             this.renderSettings = settings ?? new RenderSettings();
 
             b = new Brillouin(renderSettings.BrillouinJ, renderSettings.BrillouinDivider);
@@ -27,7 +30,7 @@ namespace Maploader.Renderer
 
         private Brillouin b;
 
-        public void RenderChunk(Bitmap dest, Chunk c, Graphics g, int xOffset, int zOffset)
+        public void RenderChunk(TImage dest, Chunk c, int xOffset, int zOffset)
         {
             var xzColumns = c.Blocks.GroupBy(x => x.Value.XZ);
             var blocksOrderedByXZ = xzColumns.OrderBy(x => x.Key.GetLeByte(0)).ThenBy(x => x.Key.GetLeByte(1));
@@ -76,11 +79,11 @@ namespace Maploader.Renderer
 
                             if (renderSettings.RenderMode == RenderMode.Heightmap)
                             {
-                                dest.DrawImageWithBrightness(bitmapTile, x, z, b.GetBrightness(block.Y - brightnessOffset));
+                                graphics.DrawImageWithBrightness(dest, bitmapTile, x, z, b.GetBrightness(block.Y - brightnessOffset));
                             }
                             else
                             {
-                                dest.DrawImageWithBrightness(bitmapTile, x, z, 1);
+                                graphics.DrawImageWithBrightness(dest, bitmapTile, x, z, 1);
                             }
                         }
                         else
@@ -94,8 +97,7 @@ namespace Maploader.Renderer
 
             if (renderSettings.RenderCoordinateStrings)
             {
-                g.DrawString($"{c.X * 16}, {c.Z * 16}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black,
-                    xOffset, zOffset);
+                graphics.DrawString(dest, $"{c.X * 1}, {c.Z * 1}", new Font(FontFamily.GenericSansSerif, 10), Brushes.Black, xOffset, zOffset);
             }
         }
     }

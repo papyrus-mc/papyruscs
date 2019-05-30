@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading;
 using CommandLine;
 using Maploader.Renderer;
+using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using Microsoft.EntityFrameworkCore;
@@ -93,46 +96,49 @@ namespace PapyrusCs
             int zmax = 0;
             HashSet<LevelDbWorldKey2> allSubChunks = null;
 
-            if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue && options.LimitZHigh.HasValue &&
-                options.LimitZLow.HasValue)
-            {
-                _totalChunk = (options.LimitXHigh.Value - options.LimitXLow.Value + 1) *
-                              (options.LimitZHigh.Value - options.LimitZLow.Value + 1);
-            }
-            else
-            {
-
-                Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-                var keys = world.OverworldKeys.ToList();
-                allSubChunks = keys.Select(x => new LevelDbWorldKey2(x)).ToHashSet();
-
-                _totalChunk = allSubChunks.Count(x => x.SubChunkId == 0);
-                Console.WriteLine($"Total Chunk count {_totalChunk}");
-                Console.WriteLine();
-
-                xmin = allSubChunks.Min(x => x.X);
-                xmax = allSubChunks.Max(x => x.X);
-                zmin = allSubChunks.Min(x => x.Z);
-                zmax = allSubChunks.Max(x => x.Z);
-
-                Console.WriteLine($"The total dimensions of the map are");
-                Console.WriteLine($"  X: {xmin} to {xmax}");
-                Console.WriteLine($"  Z: {zmin} to {zmax}");
-                Console.WriteLine();
-            }
+            Func<LevelDbWorldKey2,bool> constraintX = b => true;
+            Func<LevelDbWorldKey2,bool> constraintZ = b => true;
 
             if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
             {
                 xmin = options.LimitXLow.Value;
                 xmax = options.LimitXHigh.Value;
                 Console.WriteLine($"Limiting X to {xmin} to {xmax}");
+                var xmax1 = xmax;
+                var xmin1 = xmin;
+                constraintX = key => key.X >= xmin1 && key.X <= xmax1;
             }
             if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
             {
                 zmin = options.LimitZLow.Value;
                 zmax = options.LimitZHigh.Value;
                 Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
+                var zmax1 = zmax;
+                var zmin1 = zmin;
+                constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
             }
+
+            Console.WriteLine(
+                "Generating a list of all chunk keys in the database.\nThis could take a few minutes");
+            var keys = world.OverworldKeys.ToList();
+            allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
+                .Where(k => constraintX(k) && constraintZ(k))
+                .ToHashSet();
+        
+            _totalChunk = allSubChunks.Count(x => x.SubChunkId == 0);
+            Console.WriteLine($"Total Chunk count {_totalChunk}");
+            Console.WriteLine();
+
+            xmin = allSubChunks.Min(x => x.X);
+            xmax = allSubChunks.Max(x => x.X);
+            zmin = allSubChunks.Min(x => x.Z);
+            zmax = allSubChunks.Max(x => x.Z);
+
+            Console.WriteLine($"The total dimensions of the map are");
+            Console.WriteLine($"  X: {xmin} to {xmax}");
+            Console.WriteLine($"  Z: {zmin} to {zmax}");
+            Console.WriteLine();
+
             if (options.LimitY > 0)
             {
                 Console.WriteLine($"Limiting Y to {options.LimitY}");
@@ -164,16 +170,16 @@ namespace PapyrusCs
             switch (options.Strategy)
             {
                 case Strategy.ParallelFor:
-                    strat = new ParallelForRenderStrategy();
+                    strat = new ParallelForRenderStrategy<Bitmap>(new SystemDrawing());
                     break;
                 case Strategy.SingleFor:
-                    strat = new SingleForRenderStrategy();
+                    strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
                     break;
                 case Strategy.Dataflow:
-                    strat = new DataFlowStrategy();
+                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing());
                     break;
                 default:
-                    strat = new SingleForRenderStrategy();
+                    strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
                     break;
             }
 
@@ -241,6 +247,18 @@ namespace PapyrusCs
 
         private static int CalculateZoom(int xmax, int xmin, int zmax, int zmin, int chunksPerDimension, out int extendedDia)
         {
+            if (xmin > 0 && xmax > 0)
+                xmin = 0;
+
+            if (zmin > 0 && zmax > 0)
+                zmin = 0;
+
+            if (xmin < 0 && xmax < 0)
+                xmax = 0;
+
+            if (zmin < 0 && zmax < 0)
+                zmax = 0;
+
             var maxDiameter = Math.Max(Math.Abs(xmax - xmin + 1), Math.Abs(zmax - zmin + 1));
             Console.WriteLine($"The maximum diameter of the map is {maxDiameter}");
 

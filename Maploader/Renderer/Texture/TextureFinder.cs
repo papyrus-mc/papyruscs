@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using DmitryBrant.ImageFormats;
+using Maploader.Renderer.Imaging;
 
 namespace Maploader.Renderer.Texture
 {
-    public class TextureFinder
+    public class TextureFinder<TImage> where TImage : class
     {
         /// <summary>
         /// Returns if a texture is transparent
@@ -135,11 +135,13 @@ namespace Maploader.Renderer.Texture
 
         private readonly Dictionary<string, Texture> texturesJson;
         private readonly string path;
+        private readonly IGraphicsApi<TImage> graphics;
 
-        public TextureFinder(Dictionary<string, Texture> texturesJson, string path)
+        public TextureFinder(Dictionary<string, Texture> texturesJson, string path, IGraphicsApi<TImage> graphics)
         {
             this.texturesJson = texturesJson;
             this.path = path;
+            this.graphics = graphics;
         }
 
         public TextureStack FindTexturePath(string name, long data, int x, int z, int y)
@@ -199,22 +201,22 @@ namespace Maploader.Renderer.Texture
                             return CreateTexture((data & 8) == 8
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlipType.Rotate90FlipNone);
+                                .Rotate(RotateFlip.Rotate90FlipNone);
                         case 1:
                             return CreateTexture((data & 8) == 8
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlipType.Rotate180FlipNone);
+                                .Rotate(RotateFlip.Rotate180FlipNone);
                         case 2:
                             return CreateTexture((data & 8) == 8
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlipType.Rotate270FlipNone);
+                                .Rotate(RotateFlip.Rotate270FlipNone);
                         case 3:
                             return CreateTexture((data & 8) == 8
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlipType.RotateNoneFlipNone);
+                                .Rotate(RotateFlip.RotateNoneFlipNone);
                     }
 
                     return null;
@@ -297,11 +299,11 @@ namespace Maploader.Renderer.Texture
                         case 0:
                             return GetTexture("rail_normal", data);
                         case 1:
-                            return GetTexture("rail_normal", data).Rotate(RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal", data).Rotate(RotateFlip.Rotate90FlipNone);
                         case 2:
-                            return GetTexture("rail_normal", data).Rotate(RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal", data).Rotate(RotateFlip.Rotate90FlipNone);
                         case 3:
-                            return GetTexture("rail_normal", data).Rotate(RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal", data).Rotate(RotateFlip.Rotate90FlipNone);
                         case 4:
                             return GetTexture("rail_normal", data);
                         case 5:
@@ -309,11 +311,11 @@ namespace Maploader.Renderer.Texture
                         case 6:
                             return GetTexture("rail_normal_turned", data);
                         case 7:
-                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlip.Rotate90FlipNone);
                         case 8:
-                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlipType.Rotate180FlipNone);
+                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlip.Rotate180FlipNone);
                         case 9:
-                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlipType.Rotate270FlipNone);
+                            return GetTexture("rail_normal_turned", data).Rotate(RotateFlip.Rotate270FlipNone);
                     }
 
                     return null;
@@ -384,13 +386,13 @@ namespace Maploader.Renderer.Texture
                         case BlockFace.Up:
                             return GetTexture("observer_north", 0);
                         case BlockFace.North:
-                            return GetTexture("observer_top", 0, null, RotateFlipType.Rotate180FlipNone);
+                            return GetTexture("observer_top", 0, null, RotateFlip.Rotate180FlipNone);
                         case BlockFace.South:
                             return GetTexture("observer_top", 0);
                         case BlockFace.West:
-                            return GetTexture("observer_top", 0, null, RotateFlipType.Rotate90FlipNone);
+                            return GetTexture("observer_top", 0, null, RotateFlip.Rotate90FlipNone);
                         case BlockFace.East:
-                            return GetTexture("observer_top", 0, null, RotateFlipType.Rotate270FlipNone);
+                            return GetTexture("observer_top", 0, null, RotateFlip.Rotate270FlipNone);
                     }
 
                     return GetTexture("observer_top", data);
@@ -408,8 +410,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("smoker_top", 0);
                 case "bell":
                     return GetTexture("bell_top", 0).Translate(
-                        new Rectangle(0, 0, 8, 8),
-                        new Rectangle(4, 4, 8, 8));
+                        new Rect(0, 0, 8, 8),
+                        new Rect(4, 4, 8, 8));
                 case "composter":
                     return GetTexture("composter_bottom", 0);
                 case "campfire":
@@ -472,8 +474,8 @@ namespace Maploader.Renderer.Texture
 
                 case "fence":
                     return GetTexture("planks", data, new TextureTranslation(
-                        new Rectangle(5, 5, 6, 6),
-                        new Rectangle(0, 0, 16, 16)));
+                        new Rect(5, 5, 6, 6),
+                        new Rect(0, 0, 16, 16)));
                 case "podzol":
                     return GetTexture("dirt_podzol_top", data);
                 case "grass":
@@ -507,14 +509,14 @@ namespace Maploader.Renderer.Texture
 
                 case "flower_pot":
                     return GetTexture("flower_pot", data, new TextureTranslation(
-                        new Rectangle(5, 5, 6, 6),
-                        new Rectangle(5, 10, 6, 6)));
+                        new Rect(5, 5, 6, 6),
+                        new Rect(5, 10, 6, 6)));
 
                 case "conduit":
                     return GetTexture("conduit", data,
                         new TextureTranslation(
-                            new Rectangle(5, 5, 6, 6),
-                            new Rectangle(12, 0, 6, 6)));
+                            new Rect(5, 5, 6, 6),
+                            new Rect(12, 0, 6, 6)));
 
                 case "kelp":
                     return GetTexture("kelp_top", data);
@@ -586,8 +588,8 @@ namespace Maploader.Renderer.Texture
 
                 case "turtle_egg":
                         return GetTexture("turtle_egg", 0).Translate(
-                            new Rectangle(0, 0, 4, 4),
-                            new Rectangle(6, 6, 4, 4));
+                            new Rect(0, 0, 4, 4),
+                            new Rect(6, 6, 4, 4));
 
 
                 case "powered_comparator":
@@ -660,8 +662,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("slime_block", data);
                 case "bamboo":
                     return GetTexture("bamboo_stem", data, new TextureTranslation(
-                        new Rectangle(6, 0, 4, 16),
-                        new Rectangle(0, 0, 4, 16)
+                        new Rect(6, 0, 4, 16),
+                        new Rect(0, 0, 4, 16)
                     ));
 
                 case "powered_repeater":
@@ -731,23 +733,23 @@ namespace Maploader.Renderer.Texture
         private TextureStack RenderWallSign(long data, string texture)
         {
             var t = GetTexture(texture, 0).Translate(
-                new Rectangle(0, 7, 14, 2),
-                new Rectangle(1, 0, 14, 2)
+                new Rect(0, 7, 14, 2),
+                new Rect(1, 0, 14, 2)
             );
             switch (data)
             {
                 case 0:
-                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
                 case 1:
-                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
                 case 2:
-                    return t.Rotate(RotateFlipType.Rotate180FlipNone);
+                    return t.Rotate(RotateFlip.Rotate180FlipNone);
                 case 3:
-                    return t.Rotate(RotateFlipType.RotateNoneFlipNone);
+                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
                 case 4:
-                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
                 case 5:
-                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
             }
 
             return null;
@@ -761,11 +763,11 @@ namespace Maploader.Renderer.Texture
                 case 0:
                     return GetTexture(texture, data);
                 case 1:
-                    return GetTexture(texture, data).Rotate(RotateFlipType.Rotate90FlipNone);
+                    return GetTexture(texture, data).Rotate(RotateFlip.Rotate90FlipNone);
                 case 2:
-                    return GetTexture(texture, data).Rotate(RotateFlipType.Rotate90FlipNone);
+                    return GetTexture(texture, data).Rotate(RotateFlip.Rotate90FlipNone);
                 case 3:
-                    return GetTexture(texture, data).Rotate(RotateFlipType.Rotate90FlipNone);
+                    return GetTexture(texture, data).Rotate(RotateFlip.Rotate90FlipNone);
                 case 4:
                     return GetTexture(texture, data);
                 case 5:
@@ -778,27 +780,27 @@ namespace Maploader.Renderer.Texture
         private TextureStack RenderSign(long data, string texture)
         {
             return GetTexture(texture, 0).Translate(
-                new Rectangle(0, 7, 14, 2),
-                new Rectangle(1, 7, 14, 2)
+                new Rect(0, 7, 14, 2),
+                new Rect(1, 7, 14, 2)
             );
         }
 
         private TextureStack RenderFrame(long data, string texture)
         {
             var t = GetTexture(texture, 0).Translate(
-                new Rectangle(0, 7, 14, 2),
-                new Rectangle(1, 0, 14, 2)
+                new Rect(0, 7, 14, 2),
+                new Rect(1, 0, 14, 2)
             );
             switch (data)
             {
                 case 0:
-                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
                 case 1:
-                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
                 case 3:
-                    return t.Rotate(RotateFlipType.Rotate180FlipNone);
+                    return t.Rotate(RotateFlip.Rotate180FlipNone);
                 case 2:
-                    return t.Rotate(RotateFlipType.RotateNoneFlipNone);
+                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
             }
 
             return t;
@@ -807,24 +809,24 @@ namespace Maploader.Renderer.Texture
         private TextureStack RenderButton(long data, string texture)
         {
             var t = GetTexture(texture, 0).Translate(
-                new Rectangle(6, 6, 4, 3),
-                new Rectangle(6, 0, 4, 3)
+                new Rect(6, 6, 4, 3),
+                new Rect(6, 0, 4, 3)
             );
             switch (data)
             {
                 case 1:
                     return t.Translate(
-                        new Rectangle(6, 6, 4, 4),
-                        new Rectangle(6, 6, 4, 4));
+                        new Rect(6, 6, 4, 4),
+                        new Rect(6, 6, 4, 4));
                 case 2:
-                    return t.Rotate(RotateFlipType.Rotate180FlipNone);
+                    return t.Rotate(RotateFlip.Rotate180FlipNone);
               
                 case 3:
-                    return t.Rotate(RotateFlipType.RotateNoneFlipNone);
+                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
                 case 4:
-                    return t.Rotate(RotateFlipType.Rotate90FlipNone);
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
                 case 5:
-                    return t.Rotate(RotateFlipType.Rotate270FlipNone);
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
                 default:
                     return null;
             }
@@ -836,62 +838,62 @@ namespace Maploader.Renderer.Texture
             {
                 case 0:
                 case 2:
-                    return GetTexture(texture, 0).Translate(new Rectangle(0, 6, 16, 4));
+                    return GetTexture(texture, 0).Translate(new Rect(0, 6, 16, 4));
                 case 1:
                 case 3:
-                    return GetTexture(texture, 0).Translate(new Rectangle(0, 6, 16, 4)).Rotate(RotateFlipType.Rotate90FlipNone);
+                    return GetTexture(texture, 0).Translate(new Rect(0, 6, 16, 4)).Rotate(RotateFlip.Rotate90FlipNone);
 
                 case 4:
                     return GetTexture(texture, 0)
                                .Translate(
-                                   new Rectangle(0, 6, 10, 4),
-                                   new Rectangle(6, 0, 10, 4))
-                               .Rotate(RotateFlipType.Rotate90FlipNone)
+                                   new Rect(0, 6, 10, 4),
+                                   new Rect(6, 0, 10, 4))
+                               .Rotate(RotateFlip.Rotate90FlipNone)
 
                            + GetTexture(texture, 0)
                                .Translate(
-                                   new Rectangle(0, 6, 10, 4),
-                                   new Rectangle(6, 12, 10, 4))
-                               .Rotate(RotateFlipType.Rotate90FlipNone);
+                                   new Rect(0, 6, 10, 4),
+                                   new Rect(6, 12, 10, 4))
+                               .Rotate(RotateFlip.Rotate90FlipNone);
                 case 6:
                     return GetTexture(texture, 0)
                                .Translate(
-                                   new Rectangle(0, 6, 10, 4),
-                                   new Rectangle(6, 0, 10, 4))
-                               .Rotate(RotateFlipType.Rotate270FlipNone)
+                                   new Rect(0, 6, 10, 4),
+                                   new Rect(6, 0, 10, 4))
+                               .Rotate(RotateFlip.Rotate270FlipNone)
 
                            + GetTexture(texture, 0)
                                .Translate(
-                                   new Rectangle(0, 6, 10, 4),
-                                   new Rectangle(6, 12, 10, 4))
-                               .Rotate(RotateFlipType.Rotate270FlipNone);
+                                   new Rect(0, 6, 10, 4),
+                                   new Rect(6, 12, 10, 4))
+                               .Rotate(RotateFlip.Rotate270FlipNone);
                 case 5:
                     return GetTexture(texture, 0)
                                .Translate(
-                                new Rectangle(0, 6, 10, 4),
-                                new Rectangle(6, 0, 10, 4))
-                               .Rotate(RotateFlipType.Rotate180FlipNone)
+                                new Rect(0, 6, 10, 4),
+                                new Rect(6, 0, 10, 4))
+                               .Rotate(RotateFlip.Rotate180FlipNone)
 
                             + GetTexture(texture, 0)
                                 .Translate(
-                                new Rectangle(0, 6, 10, 4),
-                                new Rectangle(6, 12, 10, 4))
-                                .Rotate(RotateFlipType.Rotate180FlipNone);
+                                new Rect(0, 6, 10, 4),
+                                new Rect(6, 12, 10, 4))
+                                .Rotate(RotateFlip.Rotate180FlipNone);
                         
                 case 7:
                     return GetTexture(texture, 0).Translate(
-                               new Rectangle(0, 6, 10, 4),
-                               new Rectangle(6, 0, 10, 4))
+                               new Rect(0, 6, 10, 4),
+                               new Rect(6, 0, 10, 4))
                            + GetTexture(texture, 0).Translate(
-                               new Rectangle(0, 6, 10, 4),
-                               new Rectangle(6, 12, 10, 4));
+                               new Rect(0, 6, 10, 4),
+                               new Rect(6, 12, 10, 4));
 
             }
 
             return null;
         }
 
-        public Dictionary<TextureInfo, Bitmap> Cache { get; } = new Dictionary<TextureInfo, Bitmap>();
+        public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
         public bool Debug { get; set; }
 
         /// <summary>
@@ -899,7 +901,7 @@ namespace Maploader.Renderer.Texture
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Bitmap GetTextureImage(TextureInfo info)
+        public TImage GetTextureImage(TextureInfo info)
         {
             if (info == null)
                 return null;
@@ -917,16 +919,16 @@ namespace Maploader.Renderer.Texture
             {
                 string extension = ".jpg";
                 string filepath = Path.Combine(path, localPath);
-                Bitmap b = null;
+                TImage b = null;
                 if (File.Exists(filepath + ".png"))
                 {
                     extension = ".png";
-                    b = new Bitmap(filepath + extension);
+                    b = graphics.LoadImage(filepath + ".png");
                 }
                 else if (File.Exists(filepath + ".tga"))
                 {
                     extension = ".tga";
-                    b = TgaReader.Load(filepath + extension);
+                    b = graphics.LoadImage(filepath + ".tga");
                 }
 
                 if (b == null)
@@ -936,18 +938,14 @@ namespace Maploader.Renderer.Texture
 
                 if (info.Translation != null)
                 {
-                    var bnew = new Bitmap(16,16);
-                    using (var gnew = Graphics.FromImage(bnew))
-                    {
-                        gnew.DrawImage(b, info.Translation.Dest, info.Translation.Source, GraphicsUnit.Pixel);
-                    }
-
+                    var bnew = graphics.CreateEmptyImage(16, 16);
+                    graphics.DrawImage(bnew, b, info.Translation.Dest, info.Translation.Source);
                     b = bnew;
                 }
 
-                if (info.Rotation != RotateFlipType.RotateNoneFlipNone)
+                if (info.Rotation != RotateFlip.RotateNoneFlipNone)
                 {
-                    b.RotateFlip(info.Rotation);
+                    graphics.RotateFlip(b, info.Rotation);
                 }
                 
                 if (!Cache.ContainsKey(info))
@@ -968,10 +966,10 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack CreateTexture(string texturePath)
         {
-            return new TextureStack(texturePath, null, RotateFlipType.RotateNoneFlipNone);
+            return new TextureStack(texturePath, null, RotateFlip.RotateNoneFlipNone);
         }
 
-        private TextureStack GetTexture(string name, long data, TextureTranslation translation = null, RotateFlipType rot = RotateFlipType.RotateNoneFlipNone)
+        private TextureStack GetTexture(string name, long data, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
         {
             string texturePath = null;
             if (texturesJson.ContainsKey(name))

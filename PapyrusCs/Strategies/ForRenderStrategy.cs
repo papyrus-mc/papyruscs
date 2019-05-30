@@ -11,17 +11,25 @@ using System.Threading.Tasks;
 using Maploader.Core;
 using Maploader.Extensions;
 using Maploader.Renderer;
+using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using PapyrusCs.Database;
 
 namespace PapyrusCs.Strategies
 {
-    public abstract class ForRenderStrategy : IRenderStrategy
+    public abstract class ForRenderStrategy<TImage> : IRenderStrategy where TImage : class
     {
         protected abstract Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy
         {
             get;
+        }
+
+        private IGraphicsApi<TImage> graphics;
+
+        protected ForRenderStrategy(IGraphicsApi<TImage> graphics)
+        {
+            this.graphics = graphics;
         }
 
         public int XMin { get; set; }
@@ -65,14 +73,13 @@ namespace PapyrusCs.Strategies
 
                         try
                         {
-                            var finder = new TextureFinder(TextureDictionary, TexturePath);
-                            var chunkRenderer = new ChunkRenderer(finder, RenderSettings);
+                            var finder = new TextureFinder<TImage>(TextureDictionary, TexturePath, graphics);
+                            var chunkRenderer = new ChunkRenderer<TImage>(finder, graphics, RenderSettings);
 
                             for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
                             {
 
-                                Bitmap b = null;
-                                Graphics g = null;
+                                TImage b = null;
                                 bool anydrawn = false;
                                 for (int cx = 0; cx < ChunksPerDimension; cx++)
                                 for (int cz = 0; cz < ChunksPerDimension; cz++)
@@ -104,12 +111,11 @@ namespace PapyrusCs.Strategies
 
                                     if (b == null)
                                     {
-                                        b = new Bitmap(TileSize, TileSize);
-                                        g = Graphics.FromImage(b);
+                                        b = graphics.CreateEmptyImage(TileSize, TileSize);
                                     }
 
                                     chunksRendered++;
-                                    chunkRenderer.RenderChunk(b, chunk, g, cx * ChunkSize, cz * ChunkSize);
+                                    chunkRenderer.RenderChunk(b, chunk, cx * ChunkSize, cz * ChunkSize);
                                     anydrawn = true;
 
                                    
@@ -121,8 +127,6 @@ namespace PapyrusCs.Strategies
                                     var fz = (z) / ChunksPerDimension;
 
                                     SaveBitmap(InitialZoomLevel, fx, fz, b);
-                                    g.Dispose();
-                                    b.Dispose();
                                 }
 
 
@@ -202,43 +206,31 @@ namespace PapyrusCs.Strategies
 
                         if (b1 !=null || b2 != null || b3 != null || b4 != null)
                         {
-                            bool didDraw = false;
-                            using (var bfinal = new Bitmap(TileSize, TileSize))
-                            using (var gfinal = Graphics.FromImage(bfinal))
+                            var bfinal = graphics.CreateEmptyImage(TileSize, TileSize);
                             {
                                 var halfTileSize = TileSize / 2;
 
                                 if (b1 != null)
                                 {
-                                    gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
-                                    didDraw = true;
+                                    graphics.DrawImage(bfinal, b1, 0, 0, halfTileSize, halfTileSize);
                                 }
 
                                 if (b2 != null)
                                 {
-                                    gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
-                                    didDraw = true;
-
+                                    graphics.DrawImage(bfinal, b2, halfTileSize, 0, halfTileSize, halfTileSize);
                                 }
 
                                 if (b3 != null)
                                 {
-                                    gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
-                                    didDraw = true;
-
+                                    graphics.DrawImage(bfinal, b3, 0, halfTileSize, halfTileSize, halfTileSize);
                                 }
 
                                 if (b4 != null)
                                 {
-                                    gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
-                                    didDraw = true;
-
+                                    graphics.DrawImage(bfinal, b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
                                 }
 
-                                if (didDraw)
-                                {
-                                    SaveBitmap(destZoom, x / 2, z / 2, bfinal);
-                                }
+                                SaveBitmap(destZoom, x / 2, z / 2, bfinal);
                             }
                         }
                     }
@@ -260,23 +252,23 @@ namespace PapyrusCs.Strategies
 
         }
 
-        private void SaveBitmap(int zoom, int x, int z, Bitmap b)
+        private void SaveBitmap(int zoom, int x, int z, TImage b)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
             var filepath = Path.Combine(path, $"{z}.png");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            b.Save(filepath);
+            graphics.SaveImage(b, filepath);
         }
 
-        private Bitmap LoadBitmap(int zoom, int x, int z)
+        private TImage LoadBitmap(int zoom, int x, int z)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
             var filepath = Path.Combine(path, $"{z}.png");
             if (File.Exists(filepath))
             {
-                return new Bitmap(filepath);
+                return graphics.LoadImage(filepath);
             }
 
             return null;

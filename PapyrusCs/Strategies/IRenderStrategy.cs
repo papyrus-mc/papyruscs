@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using Maploader.Renderer;
+using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using PapyrusCs.Database;
@@ -38,22 +39,30 @@ namespace PapyrusCs.Strategies
         event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
     }
 
-    class RendererCombi
+    class RendererCombi<TImage> where TImage : class
     {
-        public TextureFinder Finder { get; }
-        public ChunkRenderer ChunkRenderer { get; }
+        public TextureFinder<TImage> Finder { get; }
+        public ChunkRenderer<TImage> ChunkRenderer { get; }
 
-        public RendererCombi(Dictionary<string, Texture> textureDictionary, string texturePath, RenderSettings renderSettings)
+        public RendererCombi(Dictionary<string, Texture> textureDictionary, string texturePath, RenderSettings renderSettings, IGraphicsApi<TImage> graphics)
         {
-            Finder = new TextureFinder(textureDictionary, texturePath);
-            ChunkRenderer = new ChunkRenderer(Finder, renderSettings);
+            Finder = new TextureFinder<TImage>(textureDictionary, texturePath, graphics);
+            ChunkRenderer = new ChunkRenderer<TImage>(Finder, graphics, renderSettings);
         }
     }
 
-    class BitmapInfo
+    class ImageInfo<TImage> where TImage : class
     {
-        public Bitmap B { get; set; }
+        public TImage B { get; set; }
         public int X { get; set; }
         public int Z { get; set; }
+
+        public void Dispose()
+        {
+            if (B is IDisposable disp)
+            {
+                disp.Dispose();
+            }
+        }
     }
 }

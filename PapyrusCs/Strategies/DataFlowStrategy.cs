@@ -1,7 +1,8 @@
 ﻿  using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
+  using System.Diagnostics;
+  using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,14 +11,22 @@ using System.Threading;
   using Maploader.Core;
   using Maploader.Extensions;
   using Maploader.Renderer;
-using Maploader.Renderer.Texture;
+  using Maploader.Renderer.Imaging;
+  using Maploader.Renderer.Texture;
 using Maploader.World;
 using PapyrusCs.Database;
 
 namespace PapyrusCs.Strategies
 {
-    public class DataFlowStrategy : IRenderStrategy
+    public class DataFlowStrategy<TImage> : IRenderStrategy where TImage : class
     {
+        private readonly IGraphicsApi<TImage> graphics;
+
+        public DataFlowStrategy(IGraphicsApi<TImage> graphics)
+        {
+            this.graphics = graphics;
+        }
+
         public int XMin { get; set; }
         public int XMax { get; set; }
         public int ZMin { get; set; }
@@ -40,7 +49,7 @@ namespace PapyrusCs.Strategies
                               
         public void RenderInitialLevel()
         {
-            var keysByXZ = AllWorldKeys.GroupBy(x => x.XZ);
+            var keysByXZ = AllWorldKeys.Where(c => c.X <= XMax && c.X >= XMin && c.Z <= ZMax && c.Z >= ZMin).GroupBy(x => x.XZ);
 
             Console.Write("Grouping subchunks... ");
             List<ChunkKeyStack> chunkKeys = new List<ChunkKeyStack>();
@@ -83,10 +92,10 @@ namespace PapyrusCs.Strategies
                     
                 }, getOptions);
 
-            var createChunkBlock = new TransformBlock<IEnumerable<ChunkData>, IEnumerable<Chunk>>(datas =>
+            var createChunkBlock = new TransformBlock<IEnumerable<ChunkData>, IEnumerable<Chunk>>(chunkDatas =>
             {
                 var chunks = new List<Chunk>();
-                foreach (var cd in datas)
+                foreach (var cd in chunkDatas)
                 {
                     chunks.Add(World.GetChunk(cd.X, cd.Z, cd));
                 }
@@ -96,15 +105,13 @@ namespace PapyrusCs.Strategies
             }, chunkCreatorOptions);
 
 
+            int chunkRenderedCounter = 0;
+            ThreadLocal<RendererCombi<TImage>> RenderCombi = new ThreadLocal<RendererCombi<TImage>>(() =>
+                new RendererCombi<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics));
 
-            var chunkRenderedCounter = 0;
-            ThreadLocal<RendererCombi> RenderCombi = new ThreadLocal<RendererCombi>(() =>
-                new RendererCombi(TextureDictionary, TexturePath, RenderSettings));
-
-            var bitmapBlock = new TransformBlock<IEnumerable<Chunk>,BitmapInfo>(chunks =>
+            var bitmapBlock = new TransformBlock<IEnumerable<Chunk>, ImageInfo<TImage>>(chunks =>
             {
-                var b = new Bitmap(TileSize, TileSize);
-                using (var g = Graphics.FromImage(b))
+                var b = graphics.CreateEmptyImage(TileSize, TileSize);
                 {
                     var chunkList = chunks.ToList();
                     var first = chunkList.First();
@@ -116,9 +123,10 @@ namespace PapyrusCs.Strategies
                         var z = chunk.Z % ChunksPerDimension;
                         if (x < 0) x += ChunksPerDimension;
                         if (z < 0) z += ChunksPerDimension;
-                        chunkRenderer.RenderChunk(b, chunk, g, x * ChunkSize, z * ChunkSize);
-                        chunkRenderedCounter++;
+                        chunkRenderer.RenderChunk(b, chunk, x * ChunkSize, z * ChunkSize);
                     }
+
+                    Interlocked.Add(ref chunkRenderedCounter, chunkList.Count);
 
                     var dx = first.X - first.X % ChunksPerDimension;
                     var dz = first.Z - first.Z % ChunksPerDimension;
@@ -130,19 +138,21 @@ namespace PapyrusCs.Strategies
 
                     if (chunkRenderedCounter >= 100)
                     {
-                        ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunkRenderedCounter));
-                        chunkRenderedCounter = 0;
+                        var v = chunkRenderedCounter;
+                        ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(v));
+                        Interlocked.Add(ref chunkRenderedCounter, -v);
                     }
-                    return new BitmapInfo() { B = b, X = fx, Z = fz };
+
+                    return new ImageInfo<TImage>() { B = b, X = fx, Z = fz };
                 }
             }, bitmapOptions);
 
             var outputCount = 0;
-            var outputBlock = new ActionBlock<BitmapInfo>(info =>
+            var outputBlock = new ActionBlock<ImageInfo<TImage>>(info =>
             {
                 SaveBitmap(InitialZoomLevel, info.X, info.Z, info.B);
                 outputCount++;
-                info.B.Dispose();
+                info.Dispose();
             }, saveOptions);
 
             getDataBlock.LinkTo(createChunkBlock, new DataflowLinkOptions() { PropagateCompletion = true, });
@@ -152,11 +162,14 @@ namespace PapyrusCs.Strategies
             int sacCount = 0;
             foreach (var groupedToTile in groupedToTiles)
             {
+                if (getDataBlock.Post(groupedToTile))
+                    continue;
+                
                 getDataBlock?.SendAsync(groupedToTile).Wait();
                 sacCount++;
                 if (sacCount % 100 == 0)
                 {
-                    Console.WriteLine($"{getDataBlock.OutputCount} {createChunkBlock.OutputCount} {bitmapBlock.OutputCount} {outputBlock.InputCount}");
+                    Console.WriteLine($"POST {getDataBlock.OutputCount} {createChunkBlock.OutputCount} {bitmapBlock.OutputCount} {outputBlock.InputCount}");
                 }
             }
 
@@ -169,14 +182,14 @@ namespace PapyrusCs.Strategies
             }
         }
 
-        private void SaveBitmap(int zoom, int x, int z, Bitmap b)
+        private void SaveBitmap(int zoom, int x, int z, TImage b)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
             var filepath = Path.Combine(path, $"{z}.png");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            b.Save(filepath);
+            graphics.SaveImage(b, filepath);
         }
 
         protected Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy => Parallel.ForEach;
@@ -228,51 +241,37 @@ namespace PapyrusCs.Strategies
 
                             if (b1 != null || b2 != null || b3 != null || b4 != null)
                             {
-                                bool didDraw = false;
-                                using (var bfinal = new Bitmap(TileSize, TileSize))
-                                using (var gfinal = Graphics.FromImage(bfinal))
+                                var bfinal = graphics.CreateEmptyImage(TileSize, TileSize);
                                 {
                                     var halfTileSize = TileSize / 2;
 
                                     if (b1 != null)
                                     {
-                                        gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
-                                        didDraw = true;
+                                        graphics.DrawImage(bfinal, b1, 0, 0, halfTileSize, halfTileSize);
                                     }
 
                                     if (b2 != null)
                                     {
-                                        gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
-                                        didDraw = true;
-
+                                        graphics.DrawImage(bfinal, b2, halfTileSize, 0, halfTileSize, halfTileSize);
                                     }
 
                                     if (b3 != null)
                                     {
-                                        gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
-                                        didDraw = true;
-
+                                        graphics.DrawImage(bfinal, b3, 0, halfTileSize, halfTileSize, halfTileSize);
                                     }
 
                                     if (b4 != null)
                                     {
-                                        gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
-                                        didDraw = true;
-
+                                        graphics.DrawImage(bfinal, b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
                                     }
 
-                                    if (didDraw)
-                                    {
-                                        SaveBitmap(destZoom, x / 2, z / 2, bfinal);
-                                    }
+                                    SaveBitmap(destZoom, x / 2, z / 2, bfinal);
                                 }
                             }
                         }
                         Interlocked.Add(ref linesRendered, 2);
 
                         ZoomLevelRenderd?.Invoke(this, new ZoomRenderedEventArgs(linesRendered, sourceDiameter, destZoom));
-
-
                     });
 
                 sourceLevelZmin /= 2;
@@ -286,13 +285,13 @@ namespace PapyrusCs.Strategies
 
         }
 
-        private Bitmap LoadBitmap(int zoom, int x, int z)
+        private TImage LoadBitmap(int zoom, int x, int z)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
             var filepath = Path.Combine(path, $"{z}.png");
             if (File.Exists(filepath))
             {
-                return new Bitmap(filepath);
+                return graphics.LoadImage(filepath);
             }
 
             return null;

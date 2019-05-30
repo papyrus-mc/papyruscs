@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Drawing;
-using System.IO.Compression;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using Maploader.Renderer.Imaging;
 
 namespace Maploader.Renderer.Texture
 {
     public class TextureStack
     {
-        public TextureStack(string filename, TextureTranslation translation, RotateFlipType rotation)
+        public TextureStack(string filename, TextureTranslation translation, RotateFlip rotation)
         {
             Infos.Add(new TextureInfo(filename, translation, rotation));
         }
@@ -22,7 +20,7 @@ namespace Maploader.Renderer.Texture
 
         public static  implicit operator TextureStack(string filename)
         {
-            return new TextureStack(filename, null, RotateFlipType.RotateNoneFlipNone);
+            return new TextureStack(filename, null, RotateFlip.RotateNoneFlipNone);
         }
         public static TextureStack operator +(TextureStack a, TextureStack b)
         {
@@ -42,7 +40,7 @@ namespace Maploader.Renderer.Texture
             return info?.Infos.FirstOrDefault()?.Filename;
         }
 
-        public TextureStack Rotate(RotateFlipType rotation)
+        public TextureStack Rotate(RotateFlip rotation)
         {
             if (!Infos.Any())
                 return this;
@@ -52,9 +50,9 @@ namespace Maploader.Renderer.Texture
         }
         public TextureStack Translate(int x, int z, int w, int h)
         {
-            return Translate(new Rectangle(x, z, w, h));
+            return Translate(new Rect(x, z, w, h));
         }
-        public TextureStack Translate(Rectangle source)
+        public TextureStack Translate(Rect source)
         {
             if (!Infos.Any())
                 return this;
@@ -62,7 +60,7 @@ namespace Maploader.Renderer.Texture
             Infos.Last().Translation = new TextureTranslation(source, source);
             return this;
         }
-        public TextureStack Translate(Rectangle source, Rectangle dest)
+        public TextureStack Translate(Rect source, Rect dest)
         {
             if (!Infos.Any())
                 return this;

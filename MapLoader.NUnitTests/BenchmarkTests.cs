@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Maploader.Renderer;
 using Maploader.Renderer.Heightmap;
+using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using NUnit.Framework;
 using PapyrusCs.Database;
@@ -150,13 +151,13 @@ namespace MapLoader.NUnitTests
                 "terrain_texture.json"));
             var ts = new TerrainTextureJsonParser(json, "");
             var textures = ts.Textures;
-            var finder = new TextureFinder(textures, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures"));
+            var g = new SystemDrawing();
+            var finder = new TextureFinder<Bitmap>(textures,  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures"), g);
             finder.Debug = false;
 
-            var b = new Bitmap(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
-            var g = Graphics.FromImage(b);
+            var b = g.CreateEmptyImage(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
 
-            var render = new ChunkRenderer(finder, new RenderSettings(){ YMax = 40});
+            var render = new ChunkRenderer<Bitmap>(finder, g, new RenderSettings(){ YMax = 40});
 
             //Parallel.For(-chunkRadius, chunkRadius + 1,new ParallelOptions(){MaxDegreeOfParallelism = 8} , dx =>
             for (int dz = -chunkRadius; dz <= chunkRadius; dz++)
@@ -166,12 +167,11 @@ namespace MapLoader.NUnitTests
                     var c = dut.GetChunk(dx + centerOffsetX, dz + centerOffsetZ);
                     if (c != null)
                     {
-                        render.RenderChunk(b, c, g, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
+                        render.RenderChunk(b, c, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
                     }
                 }
             }
 
-            ;
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
             b.Save(path);
             Console.WriteLine(path);

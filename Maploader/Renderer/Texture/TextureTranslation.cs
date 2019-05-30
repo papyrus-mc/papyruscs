@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Maploader.Renderer.Imaging;
 
 namespace Maploader.Renderer.Texture
 {
@@ -39,14 +40,14 @@ namespace Maploader.Renderer.Texture
             return !Equals(left, right);
         }
 
-        public TextureTranslation(Rectangle dest, Rectangle source)
+        public TextureTranslation(Rect dest, Rect source)
         {
             Dest = dest;
             Source = source;
         }
         #endregion
 
-        public Rectangle Dest { get; }
-        public Rectangle Source { get; }
+        public Rect Dest { get; }
+        public Rect Source { get; }
     }
 }

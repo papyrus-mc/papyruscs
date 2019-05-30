@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace PapyrusCs.Database
 {
@@ -65,7 +66,7 @@ namespace PapyrusCs.Database
         public UInt64 XZ => (((UInt64)X) << 32) | (UInt32)Z;
         public byte SubChunkId { get; }
 
-        private int GetGroup(int coord, int chunkPerDimension)
+        public static int GetGroup(int coord, int chunkPerDimension)
         {
             if (coord >= 0)
                 return coord / chunkPerDimension;
@@ -74,8 +75,10 @@ namespace PapyrusCs.Database
 
         public UInt64 GetXZGroup(int chunkPerDimension)
         {
-            UInt64 result = ((UInt64) GetGroup(this.X, chunkPerDimension)) << 32;
-            result |= (UInt32) GetGroup(this.Z, chunkPerDimension);
+            var xgroup = GetGroup(this.X, chunkPerDimension);
+            var zgroup = GetGroup(this.Z, chunkPerDimension);
+            UInt64 result = ((UInt64) xgroup) << 32;
+            result |= (UInt64) zgroup;
 
             return result;
         }
