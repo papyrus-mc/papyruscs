@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks.Dataflow;
 using Maploader.Renderer.Imaging;
+using Maploader.World;
 
 namespace PapyrusCs.Strategies.Dataflow
 {
@@ -9,18 +11,19 @@ namespace PapyrusCs.Strategies.Dataflow
         private IGraphicsApi<TImage> graphics;
         private int processedCount;
         public string OutputPath { get; }
-        public ActionBlock<ImageInfo<TImage>> Block { get; }
+        public TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>> Block { get; }
 
         public OutputBlock(string outputPath, int initialZoomLevel, ExecutionDataflowBlockOptions options,
             IGraphicsApi<TImage> graphics)
         {
             OutputPath = outputPath;
             this.graphics = graphics;
-            Block = new ActionBlock<ImageInfo<TImage>>(info =>
+            Block = new TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>>(info =>
             {
                 SaveBitmap(initialZoomLevel, info.X, info.Z, info.Image);
                 processedCount++;
                 info.Dispose();
+                return info.Cd;
             }, options);
         }
 

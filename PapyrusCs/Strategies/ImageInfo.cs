@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Maploader.World;
 
 namespace PapyrusCs.Strategies
 {
@@ -7,6 +9,7 @@ namespace PapyrusCs.Strategies
         public TImage Image { get; set; }
         public int X { get; set; }
         public int Z { get; set; }
+        public IEnumerable<SubChunkData> Cd { get; set; }
 
         public void Dispose()
         {

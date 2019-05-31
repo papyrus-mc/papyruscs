@@ -81,36 +81,34 @@ namespace PapyrusCs.Strategies.Dataflow
               var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
               var outputBlock = new OutputBlock<TImage>(OutputPath, InitialZoomLevel, saveOptions, graphics);
 
-              var dbBLock = new ActionBlock<IEnumerable<ChunkData>>(datas =>
+              var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
               {
                   foreach (var d in datas)
                   {
-                      foreach (var s in d.SubChunks)
-                      {
-                          if (RenderedSubChunks.ContainsKey(new LevelDbWorldKey2(s.Key)))
+                          if (d.FoundInDb)
                           {
-                              var checkSum = db.Checksums.First(x => x.LevelDbKey.SequenceEqual(s.Key));
-                              checkSum.Crc32 = s.Crc32;
+                              var checkSum = db.Checksums.First(x => x.LevelDbKey.SequenceEqual(d.Key));
+                              checkSum.Crc32 = d.Crc32;
                               db.SaveChanges();
                           }
                           else
                           {
-                              var c = new Checksum() {Crc32 = s.Crc32, LevelDbKey = s.Key};
+                              var c = new Checksum() {Crc32 = d.Crc32, LevelDbKey = d.Key};
                               db.Checksums.Add(c);
                               db.SaveChanges();
                           }
-                      }
+                      
                   }
               }, saveOptions);
 
               bitmapBlock.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
 
               getDataBlock.Block.LinkTo(createChunkBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true,});
-              getDataBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() {PropagateCompletion = true});
               createChunkBlock.Block.LinkTo(bitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
               bitmapBlock.Block.LinkTo(outputBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
+              outputBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() { PropagateCompletion = true });
 
-              foreach (var groupedToTile in groupedToTiles)
+            foreach (var groupedToTile in groupedToTiles)
               {
                   if (getDataBlock.Block.Post(groupedToTile))
                       continue;

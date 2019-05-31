@@ -30,6 +30,8 @@ namespace PapyrusCs.Strategies.Dataflow
                                 renderThisChunks = true;
                                 break;
                             }
+
+                            subKey.FoundInDb = true;
                             if (crc32 != subKey.Crc32)
                             {
                                 renderThisChunks = true;

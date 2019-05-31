@@ -13,7 +13,7 @@ namespace PapyrusCs.Strategies.Dataflow
     public class BitmapRenderBlock<TImage> : ITplBlock where TImage : class
     {
         private int processedCount;
-        public TransformBlock<IEnumerable<Chunk>, ImageInfo<TImage>> Block { get; }
+        public TransformBlock<IEnumerable<ChunkAndData>, ImageInfo<TImage>> Block { get; }
 
         public BitmapRenderBlock(Dictionary<string, Texture> textureDictionary, string texturePath,
             RenderSettings renderSettings, IGraphicsApi<TImage> graphics, int chunkSize, int chunksPerDimension,
@@ -24,21 +24,21 @@ namespace PapyrusCs.Strategies.Dataflow
             ThreadLocal<RendererCombi<TImage>> renderCombi = new ThreadLocal<RendererCombi<TImage>>(() =>
                 new RendererCombi<TImage>(textureDictionary, texturePath, renderSettings, graphics));
 
-            Block = new TransformBlock<IEnumerable<Chunk>, ImageInfo<TImage>>(chunks =>
+            Block = new TransformBlock<IEnumerable<ChunkAndData>, ImageInfo<TImage>>(chunkAndData =>
             {
                 var b = graphics.CreateEmptyImage(tileSize, tileSize);
                 {
-                    var chunkList = chunks.ToList();
-                    var first = chunkList.First();
+                    var chunkList = chunkAndData.ToList();
+                    var first = chunkList.First().C;
                     var chunkRenderer = renderCombi.Value.ChunkRenderer;
 
                     foreach (var chunk in chunkList)
                     {
-                        var x = chunk.X % chunksPerDimension;
-                        var z = chunk.Z % chunksPerDimension;
+                        var x = chunk.C.X % chunksPerDimension;
+                        var z = chunk.C.Z % chunksPerDimension;
                         if (x < 0) x += chunksPerDimension;
                         if (z < 0) z += chunksPerDimension;
-                        chunkRenderer.RenderChunk(b, chunk, x * chunkSize, z * chunkSize);
+                        chunkRenderer.RenderChunk(b, chunk.C, x * chunkSize, z * chunkSize);
                     }
 
 
@@ -55,7 +55,10 @@ namespace PapyrusCs.Strategies.Dataflow
                         Interlocked.Add(ref chunkRenderedCounter, -v);
                     }
 
-                    return new ImageInfo<TImage>() {Image = b, X = fx, Z = fz};
+                    return new ImageInfo<TImage>()
+                    {
+                        Image = b, X = fx, Z = fz, Cd = chunkAndData.SelectMany(x => x.Cd)
+                    };
                 }
             }, options);
         }
