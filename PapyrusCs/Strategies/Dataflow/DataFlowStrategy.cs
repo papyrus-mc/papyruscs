@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
+using EFCore.BulkExtensions;
 using Maploader.Core;
 using Maploader.Extensions;
 using Maploader.Renderer;
@@ -83,22 +84,11 @@ namespace PapyrusCs.Strategies.Dataflow
 
               var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
               {
-                  foreach (var d in datas)
-                  {
-                          if (d.FoundInDb)
-                          {
-                              var checkSum = db.Checksums.First(x => x.LevelDbKey.SequenceEqual(d.Key));
-                              checkSum.Crc32 = d.Crc32;
-                              db.SaveChanges();
-                          }
-                          else
-                          {
-                              var c = new Checksum() {Crc32 = d.Crc32, LevelDbKey = d.Key};
-                              db.Checksums.Add(c);
-                              db.SaveChanges();
-                          }
-                      
-                  }
+                 db.BulkInsert(datas.Select(x => new Checksum()
+                 {
+                     Crc32=x.Crc32, LevelDbKey = x.Key
+
+                 }).ToList());
               }, saveOptions);
 
               bitmapBlock.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
