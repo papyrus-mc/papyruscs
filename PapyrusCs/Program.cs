@@ -170,7 +170,7 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat, c, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
+            ConfigureStrategy(strat, c, options, allSubChunks, renderedSubchunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
             strat.RenderInitialLevel();
 
             var missingTextures = strat.MissingTextures;
@@ -214,6 +214,7 @@ namespace PapyrusCs
         }
 
         private static void ConfigureStrategy(IRenderStrategy strat, DbCreator dbc, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
+            ImmutableDictionary<LevelDbWorldKey2, uint> renderedSubchunks,
             int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
             int zmin, int zmax, int xmin, int xmax)
         {
@@ -228,6 +229,7 @@ namespace PapyrusCs
                 BrillouinDivider = options.BrillouinDivider,
             };
             strat.AllWorldKeys = allSubChunks;
+            strat.RenderedSubChunks = renderedSubchunks;
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
             strat.World = world;

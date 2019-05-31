@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -44,6 +45,7 @@ namespace PapyrusCs.Strategies.Dataflow
           public int InitialDiameter { get; set; }
           public Func<PapyrusContext> DatabaseCreator { get; set; }
           public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
+          public ImmutableDictionary<LevelDbWorldKey2, uint> RenderedSubChunks { get; set; }
 
           public void RenderInitialLevel()
           {
@@ -74,14 +76,37 @@ namespace PapyrusCs.Strategies.Dataflow
 
               var db = DatabaseCreator();
 
-              var getDataBlock = new GetDataBlock(World, db, getOptions);
+              var getDataBlock = new GetDataBlock(World, RenderedSubChunks, getOptions);
               var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
               var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
               var outputBlock = new OutputBlock<TImage>(OutputPath, InitialZoomLevel, saveOptions, graphics);
 
+              var dbBLock = new ActionBlock<IEnumerable<ChunkData>>(datas =>
+              {
+                  foreach (var d in datas)
+                  {
+                      foreach (var s in d.SubChunks)
+                      {
+                          if (RenderedSubChunks.ContainsKey(new LevelDbWorldKey2(s.Key)))
+                          {
+                              var checkSum = db.Checksums.First(x => x.LevelDbKey.SequenceEqual(s.Key));
+                              checkSum.Crc32 = s.Crc32;
+                              db.SaveChanges();
+                          }
+                          else
+                          {
+                              var c = new Checksum() {Crc32 = s.Crc32, LevelDbKey = s.Key};
+                              db.Checksums.Add(c);
+                              db.SaveChanges();
+                          }
+                      }
+                  }
+              }, saveOptions);
+
               bitmapBlock.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
 
               getDataBlock.Block.LinkTo(createChunkBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true,});
+              getDataBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() {PropagateCompletion = true});
               createChunkBlock.Block.LinkTo(bitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
               bitmapBlock.Block.LinkTo(outputBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
 

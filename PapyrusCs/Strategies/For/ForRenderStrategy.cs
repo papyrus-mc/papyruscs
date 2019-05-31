@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,6 +47,7 @@ namespace PapyrusCs.Strategies.For
         public int InitialDiameter { get; set; }
         public Func<PapyrusContext> DatabaseCreator { get; set; }
         public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
+        public ImmutableDictionary<LevelDbWorldKey2, uint> RenderedSubChunks { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 

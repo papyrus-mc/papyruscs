@@ -11,7 +11,6 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public CreateDataBlock(World world, ExecutionDataflowBlockOptions options)
         {
-            this.db = db;
             Block = new TransformBlock<IEnumerable<ChunkData>, IEnumerable<Chunk>>(chunkDatas =>
             {
                 var chunks = new List<Chunk>();

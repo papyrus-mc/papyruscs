@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks.Dataflow;
 using Maploader.World;
 using PapyrusCs.Database;
@@ -7,24 +9,48 @@ namespace PapyrusCs.Strategies.Dataflow
 {
     public class GetDataBlock : ITplBlock
     {
-        private readonly PapyrusContext db;
-        public TransformBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>> Block { get; }
+        public TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>> Block { get; }
 
-        public GetDataBlock(World world, PapyrusContext db, ExecutionDataflowBlockOptions options)
+        public GetDataBlock(World world, ImmutableDictionary<LevelDbWorldKey2, uint> renderedSubChunks, ExecutionDataflowBlockOptions options)
         {
-            this.db = db;
-            Block = new TransformBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>>(
+            Block = new TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>>(
                 groupedChunkSubKeys =>
                 {
+                    var ret2 = new List<List<ChunkData>>();
                     var ret = new List<ChunkData>();
                     foreach (var chunkSubKeys in groupedChunkSubKeys)
                     {
                         var data = world.GetChunkData(chunkSubKeys);
-                        ret.Add(data);
+
+                        bool renderThisChunks = false;
+                        foreach (var subKey in data.SubChunks)
+                        {
+                            if (!renderedSubChunks.TryGetValue(new LevelDbWorldKey2(subKey.Key), out uint crc32))
+                            {
+                                renderThisChunks = true;
+                                break;
+                            }
+                            if (crc32 != subKey.Crc32)
+                            {
+                                renderThisChunks = true;
+                                break;
+                            }
+                        }
+
+                        if (renderThisChunks)
+                        {
+                            ret.Add(data);
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                        }
                     }
+                    if (ret.Count > 0)
+                        ret2.Add(ret);
 
                     ProcessedCount++;
-                    return ret;
+                    return ret2;
                 }, options);
         }
 
