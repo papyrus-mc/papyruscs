@@ -32,7 +32,9 @@ namespace PapyrusCs.Strategies
         int InitialDiameter { get; set; }
         Func<PapyrusContext> DatabaseCreator { get; set; }
         HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
-        ImmutableDictionary<LevelDbWorldKey2, uint> RenderedSubChunks { get; set; }
+        ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
+        bool IsUpdate { get; set; }
+        string FileFormat { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 

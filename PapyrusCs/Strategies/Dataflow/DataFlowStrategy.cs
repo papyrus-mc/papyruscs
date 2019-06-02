@@ -2,12 +2,12 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
-using EFCore.BulkExtensions;
 using Maploader.Core;
 using Maploader.Extensions;
 using Maploader.Renderer;
@@ -46,7 +46,9 @@ namespace PapyrusCs.Strategies.Dataflow
           public int InitialDiameter { get; set; }
           public Func<PapyrusContext> DatabaseCreator { get; set; }
           public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
-          public ImmutableDictionary<LevelDbWorldKey2, uint> RenderedSubChunks { get; set; }
+          public ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
+          public bool IsUpdate { get; set; }
+          public string FileFormat { get; set; }
 
           public void RenderInitialLevel()
           {
@@ -80,40 +82,64 @@ namespace PapyrusCs.Strategies.Dataflow
               var getDataBlock = new GetDataBlock(World, RenderedSubChunks, getOptions);
               var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
               var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
-              var outputBlock = new OutputBlock<TImage>(OutputPath, InitialZoomLevel, saveOptions, graphics);
+              var saveBitmapBlock = new SaveBitmapBlock<TImage>(OutputPath, InitialZoomLevel, IsUpdate, FileFormat, saveOptions, graphics);
 
+              var inserts = 0;
+              var updates = 0;
               var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
               {
-                 db.BulkInsert(datas.Select(x => new Checksum()
-                 {
-                     Crc32=x.Crc32, LevelDbKey = x.Key
+                  var toInsert = datas.Where(x => x.FoundInDb == false).Select(x => new Checksum {Crc32 = x.Crc32, LevelDbKey = x.Key}).ToList();
 
-                 }).ToList());
+                  if (toInsert.Count > 0)
+                  {
+                      db.BulkInsert(toInsert);
+                      inserts += toInsert.Count;
+                  }
+
+                  var toUpdate = datas.Where(x => x.FoundInDb).Select(x => new Checksum() {Id = x.ForeignDbId, Crc32 = x.Crc32, LevelDbKey = x.Key}).ToList();
+                  if (toUpdate.Count > 0)
+                  {
+                      db.BulkUpdate(toUpdate);
+                      updates += toUpdate.Count;
+                  }
+
               }, saveOptions);
 
               bitmapBlock.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
 
               getDataBlock.Block.LinkTo(createChunkBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true,});
               createChunkBlock.Block.LinkTo(bitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
-              bitmapBlock.Block.LinkTo(outputBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
-              outputBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() { PropagateCompletion = true });
+              bitmapBlock.Block.LinkTo(saveBitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
+              saveBitmapBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() {PropagateCompletion = true});
 
-            foreach (var groupedToTile in groupedToTiles)
+              int postCount = 0;
+              foreach (var groupedToTile in groupedToTiles)
               {
                   if (getDataBlock.Block.Post(groupedToTile))
+                  {
+                      postCount++;
                       continue;
+                  }
+
+                  postCount++;
                   getDataBlock.Block.SendAsync(groupedToTile).Wait();
+                  if (postCount > 1000)
+                  {
+                      postCount = 0;
+                      Console.WriteLine($"\n{inserts}, {updates}");
+                  }
               }
 
               Console.WriteLine("Post complete");
 
               getDataBlock.Block.Complete();
-              while (!outputBlock.Block.Completion.Wait(1000))
+              while (!saveBitmapBlock.Block.Completion.Wait(1000))
               {
-                  Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createChunkBlock.ProcessedCount} {bitmapBlock.ProcessedCount} {outputBlock.ProcessedCount}");
+                  Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createChunkBlock.ProcessedCount} {bitmapBlock.ProcessedCount} {saveBitmapBlock.ProcessedCount}");
               }
 
-              Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createChunkBlock.ProcessedCount} {bitmapBlock.ProcessedCount} {outputBlock.ProcessedCount}");
+              Console.WriteLine($"\n{inserts}, {updates}");
+              Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createChunkBlock.ProcessedCount} {bitmapBlock.ProcessedCount} {saveBitmapBlock.ProcessedCount}");
           }
 
 
@@ -161,15 +187,20 @@ namespace PapyrusCs.Strategies.Dataflow
                       {
                           for (int z = sourceLevelZmin; z < sourceLevelZmax; z += 2)
                           {
-                              var b1 = LoadBitmap(sourceZoom, x, z);
-                              var b2 = LoadBitmap(sourceZoom, x + 1, z);
-                              var b3 = LoadBitmap(sourceZoom, x, z + 1);
-                              var b4 = LoadBitmap(sourceZoom, x + 1, z + 1);
+                              var b1 = LoadBitmap(sourceZoom, x, z, IsUpdate);
+                              var b2 = LoadBitmap(sourceZoom, x + 1, z, IsUpdate);
+                              var b3 = LoadBitmap(sourceZoom, x, z + 1, IsUpdate);
+                              var b4 = LoadBitmap(sourceZoom, x + 1, z + 1, IsUpdate);
 
                               if (b1 != null || b2 != null || b3 != null || b4 != null)
                               {
                                   var bfinal = graphics.CreateEmptyImage(TileSize, TileSize);
                                   {
+                                      b1 = b1 ?? LoadBitmap(sourceZoom, x, z, false);
+                                      b2 = b2 ?? LoadBitmap(sourceZoom, x + 1, z, false);
+                                      b3 = b3 ?? LoadBitmap(sourceZoom, x, z + 1, false);
+                                      b4 = b4 ?? LoadBitmap(sourceZoom, x + 1, z + 1, false);
+
                                       var halfTileSize = TileSize / 2;
 
                                       if (b1 != null)
@@ -193,7 +224,7 @@ namespace PapyrusCs.Strategies.Dataflow
                                               halfTileSize);
                                       }
 
-                                      SaveBitmap(destZoom, x / 2, z / 2, bfinal);
+                                      SaveBitmap(destZoom, x / 2, z / 2, IsUpdate, bfinal);
                                   }
                               }
                           }
@@ -215,10 +246,12 @@ namespace PapyrusCs.Strategies.Dataflow
 
           }
 
-          private TImage LoadBitmap(int zoom, int x, int z)
+          private TImage LoadBitmap(int zoom, int x, int z, bool isUpdate)
           {
-              var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-              var filepath = Path.Combine(path, $"{z}.png");
+              var mapPath = isUpdate ? "mapupdate" : "map";
+
+              var path = Path.Combine(OutputPath, mapPath, $"{zoom}", $"{x}");
+              var filepath = Path.Combine(path, $"{z}.{FileFormat}");
               if (File.Exists(filepath))
               {
                   return graphics.LoadImage(filepath);
@@ -227,10 +260,12 @@ namespace PapyrusCs.Strategies.Dataflow
               return null;
           }
 
-          private void SaveBitmap(int zoom, int x, int z, TImage b)
+          private void SaveBitmap(int zoom, int x, int z, bool isUpdate, TImage b)
           {
-              var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-              var filepath = Path.Combine(path, $"{z}.png");
+              var mapPath = isUpdate ? "mapupdate" : "map";
+
+              var path = Path.Combine(OutputPath, mapPath, $"{zoom}", $"{x}");
+              var filepath = Path.Combine(path, $"{z}.{FileFormat}");
 
               if (!Directory.Exists(path))
                   Directory.CreateDirectory(path);

@@ -47,7 +47,9 @@ namespace PapyrusCs.Strategies.For
         public int InitialDiameter { get; set; }
         public Func<PapyrusContext> DatabaseCreator { get; set; }
         public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
-        public ImmutableDictionary<LevelDbWorldKey2, uint> RenderedSubChunks { get; set; }
+        public ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
+        public bool IsUpdate { get; set; }
+        public string FileFormat { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 

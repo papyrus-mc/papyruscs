@@ -5,7 +5,6 @@ namespace PapyrusCs
 {
     public class Options
     {
-
         [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
         public string MinecraftWorld { get; set; }
 
@@ -39,8 +38,14 @@ namespace PapyrusCs
         [Option("brillouin_j", Required = false, HelpText = "Sets factor j for heightmap brightness formula brillouin: brightness = 1+brillouin(height / divider): See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.", Default = 10000f)]
         public float BrillouinJ { get; set; }
 
-        [Option("brillouin_divider", Required = false, HelpText = "Sets divider for heightmap brightness formula brillouin: brightness = 1+brillouin(height / divider). See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.", Default = 20f)]
+        [Option("brillouin_divider", Required = false,
+            HelpText =
+                "Sets divider for heightmap brightness formula brillouin: brightness = 1+brillouin(height / divider). See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.",
+            Default = 20f)]
         public float BrillouinDivider { get; set; }
+
+        [Option('f', Required = false, Default = "png", HelpText = "Sets the output file format")]
+        public string FileFormat { get; set; }
 
         // Derivative options
         public bool Loaded { get; set; }

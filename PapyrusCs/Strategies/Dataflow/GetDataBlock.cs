@@ -11,48 +11,43 @@ namespace PapyrusCs.Strategies.Dataflow
     {
         public TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>> Block { get; }
 
-        public GetDataBlock(World world, ImmutableDictionary<LevelDbWorldKey2, uint> renderedSubChunks, ExecutionDataflowBlockOptions options)
+        public GetDataBlock(World world, ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubChunks, ExecutionDataflowBlockOptions options)
         {
             Block = new TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>>(
                 groupedChunkSubKeys =>
                 {
-                    var ret2 = new List<List<ChunkData>>();
-                    var ret = new List<ChunkData>();
+                    var outerList = new List<List<ChunkData>>();
+                    var chunkList = new List<ChunkData>();
+                    bool renderThisChunks = false;
                     foreach (var chunkSubKeys in groupedChunkSubKeys)
                     {
                         var data = world.GetChunkData(chunkSubKeys);
-
-                        bool renderThisChunks = false;
+                        
                         foreach (var subKey in data.SubChunks)
                         {
-                            if (!renderedSubChunks.TryGetValue(new LevelDbWorldKey2(subKey.Key), out uint crc32))
+                            if (renderedSubChunks.TryGetValue(new LevelDbWorldKey2(subKey.Key), out KeyAndCrc crc32))
+                            {
+                                subKey.FoundInDb = true;
+                                subKey.ForeignDbId = crc32.DbId;
+
+                                if (crc32.Crc32 != subKey.Crc32)
+                                {
+                                    renderThisChunks = true;
+                                }
+                            }
+                            else
                             {
                                 renderThisChunks = true;
-                                break;
-                            }
-
-                            subKey.FoundInDb = true;
-                            if (crc32 != subKey.Crc32)
-                            {
-                                renderThisChunks = true;
-                                break;
                             }
                         }
 
-                        if (renderThisChunks)
-                        {
-                            ret.Add(data);
-                        }
-                        else
-                        {
-                            Console.WriteLine();
-                        }
+                        chunkList.Add(data);
                     }
-                    if (ret.Count > 0)
-                        ret2.Add(ret);
+                    if (renderThisChunks)
+                        outerList.Add(chunkList);
 
                     ProcessedCount++;
-                    return ret2;
+                    return outerList;
                 }, options);
         }
 

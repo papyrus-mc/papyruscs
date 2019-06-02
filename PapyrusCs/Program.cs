@@ -19,15 +19,30 @@ using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
 using PapyrusCs.Strategies.For;
+using Z.EntityFramework.Extensions;
 
 namespace PapyrusCs
 {
+
+    public struct KeyAndCrc
+    {
+        public KeyAndCrc(int dbId, uint crc32)
+        {
+            DbId = dbId;
+            Crc32 = crc32;
+        }
+
+        public uint Crc32 { get; set; }
+        public int  DbId { get; set; }
+    }
     class Program
     {
         private static int _totalChunksRendered = 0;
         private static int _totalChunk = 0;
         private static Stopwatch _time;
         private static Stopwatch _time2 = new Stopwatch();
+
+
 
         static int Main(string[] args)
         {
@@ -156,21 +171,27 @@ namespace PapyrusCs
             int tileSize = chunkSize * chunksPerDimension;
 
             // db stuff
+
+
             Directory.CreateDirectory(options.OutputPath);
+            var pathToDb = Path.Combine(options.OutputPath, "chunks.db");
+            bool isUpdate = File.Exists(pathToDb);
+
             var c = new DbCreator();
-            var db = c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
-            //db.Database.Migrate();
+            var db = c.CreateDbContext(pathToDb);
             db.Database.Migrate();
+            EntityFrameworkManager.ContextFactory = context => c.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
 
             // other stuff
-            var renderedSubchunks = db.Checksums.ToImmutableDictionary(x => new LevelDbWorldKey2(x.LevelDbKey), x => x.Crc32);
+            var renderedSubchunks = db.Checksums.ToImmutableDictionary(
+                x => new LevelDbWorldKey2(x.LevelDbKey), x => new KeyAndCrc(x.Id, x.Crc32));
             Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
 
             var textures = ReadTerrainTextureJson();
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat, c, options, allSubChunks, renderedSubchunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
+            ConfigureStrategy(strat, c, options, allSubChunks, renderedSubchunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax, isUpdate, options.FileFormat);
             strat.RenderInitialLevel();
 
             var missingTextures = strat.MissingTextures;
@@ -214,9 +235,9 @@ namespace PapyrusCs
         }
 
         private static void ConfigureStrategy(IRenderStrategy strat, DbCreator dbc, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
-            ImmutableDictionary<LevelDbWorldKey2, uint> renderedSubchunks,
+            ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubchunks,
             int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
-            int zmin, int zmax, int xmin, int xmax)
+            int zmin, int zmax, int xmin, int xmax, bool isUpdate, string format)
         {
             strat.DatabaseCreator = () => dbc.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
             strat.RenderSettings = new RenderSettings()
@@ -246,6 +267,8 @@ namespace PapyrusCs
             strat.XMax = xmax;
             strat.ChunksRendered += RenderDisplay;
             strat.ZoomLevelRenderd += RenderZoom;
+            strat.IsUpdate = isUpdate;
+            strat.FileFormat = format;
         }
 
         private static void WriteMapHtml(int zoom, int tileSize, Options options)

@@ -6,22 +6,25 @@ using Maploader.World;
 
 namespace PapyrusCs.Strategies.Dataflow
 {
-    public class OutputBlock<TImage> : ITplBlock where TImage : class
+    public class SaveBitmapBlock<TImage> : ITplBlock where TImage : class
     {
-        private IGraphicsApi<TImage> graphics;
-        private int processedCount;
+        private readonly bool isUpdate;
+        private readonly string fileFormat;
+        private readonly IGraphicsApi<TImage> graphics;
         public string OutputPath { get; }
         public TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>> Block { get; }
 
-        public OutputBlock(string outputPath, int initialZoomLevel, ExecutionDataflowBlockOptions options,
+        public SaveBitmapBlock(string outputPath, int initialZoomLevel, bool isUpdate, string fileFormat, ExecutionDataflowBlockOptions options,
             IGraphicsApi<TImage> graphics)
         {
             OutputPath = outputPath;
+            this.isUpdate = isUpdate;
+            this.fileFormat = fileFormat;
             this.graphics = graphics;
             Block = new TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>>(info =>
             {
                 SaveBitmap(initialZoomLevel, info.X, info.Z, info.Image);
-                processedCount++;
+                ProcessedCount++;
                 info.Dispose();
                 return info.Cd;
             }, options);
@@ -30,8 +33,10 @@ namespace PapyrusCs.Strategies.Dataflow
 
         private void SaveBitmap(int zoom, int x, int z, TImage b)
         {
-            var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
+            var mapPath = isUpdate ? "mapupdate" : "map";
+
+            var path = Path.Combine(OutputPath, mapPath, $"{zoom}", $"{x}");
+            var filepath = Path.Combine(path, $"{z}.{fileFormat}");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -40,6 +45,6 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public int InputCount => Block.InputCount;
         public int OutputCount => 0;
-        public int ProcessedCount => processedCount;
+        public int ProcessedCount { get; private set; }
     }
 }

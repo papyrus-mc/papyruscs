@@ -57,7 +57,7 @@ namespace PapyrusCs.Strategies.Dataflow
 
                     return new ImageInfo<TImage>()
                     {
-                        Image = b, X = fx, Z = fz, Cd = chunkAndData.SelectMany(x => x.Cd)
+                        Image = b, X = fx, Z = fz, Cd = chunkList.SelectMany(x => x.Cd)
                     };
                 }
             }, options);

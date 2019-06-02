@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock\\db\" -o c:\\papyrus\\homeworld23052019_TPL2 --threads 8 --htmlfile index.html -s Dataflow",
+      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_31052019\\db\" -o c:\\papyrus\\homeworld23052019_TPL3 --threads 8 --htmlfile index.html -s Dataflow -f jpg",
       "workingDirectory": "c:\\temp"
     }
   }

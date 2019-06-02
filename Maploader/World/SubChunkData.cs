@@ -9,6 +9,7 @@ namespace Maploader.World
         public UInt32 Crc32 { get; set; }
         public byte Index { get; set; }
         public bool FoundInDb { get; set; }
+        public int ForeignDbId { get; set; }
 
         public void ClearData()
         {

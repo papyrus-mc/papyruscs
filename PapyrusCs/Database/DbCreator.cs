@@ -9,6 +9,7 @@ namespace PapyrusCs.Database
         {
             var builder = new DbContextOptionsBuilder<PapyrusContext>();
             builder.UseSqlite("Filename=\"UnicornClicker2.db\"");
+            builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             return new PapyrusContext(builder.Options);
         }
 
@@ -16,6 +17,7 @@ namespace PapyrusCs.Database
         {
             var builder = new DbContextOptionsBuilder<PapyrusContext>();
             builder.UseSqlite($"Filename=\"{filename}\"");
+            builder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             return new PapyrusContext(builder.Options);
         }
 
