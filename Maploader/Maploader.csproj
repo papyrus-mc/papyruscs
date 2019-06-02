@@ -23,12 +23,18 @@
     <PackageReference Include="CoreFNBT" Version="1.0.9" />
     <PackageReference Include="Crc32.NET" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview3.19128.7" />
+    <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview5.19224.8" />
     <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\leveldb-sharp-std\leveldb-sharp-std.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Imazen.WebP-std">
+      <HintPath>..\Imports\Imazen.WebP-std\Imazen.WebP-std.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
@@ -38,7 +44,13 @@
     <None Update="libleveldb.so.1.20">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="x64\libwebp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="LookupTable\runtimeid_table.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="x86\libwebp.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

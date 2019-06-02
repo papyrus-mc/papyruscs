@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_31052019\\db\" -o c:\\papyrus\\homeworld23052019_TPL3 --threads 8 --htmlfile index.html -s Dataflow -f jpg",
+      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_31052019\\db\" -o c:\\papyrus\\homeworld23052019_sforWebp3 --threads 8 --htmlfile index.html -s SingleFor -f webp -q 50  --limitx -50,50 --limitz -50,50",
       "workingDirectory": "c:\\temp"
     }
   }

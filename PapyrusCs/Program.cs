@@ -97,6 +97,13 @@ namespace PapyrusCs
                 return -1;
             }
 
+            options.FileFormat = options.FileFormat.ToLowerInvariant();
+            if (new string[] {"jpg", "png", "webp"}.All(x => x != options.FileFormat))
+            {
+                Console.WriteLine($"The value {options.FileFormat} is not allowed for option -f");
+                return -1;
+            }
+
             var world = new World();
             try
             {
@@ -191,7 +198,7 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat, c, options, allSubChunks, renderedSubchunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax, isUpdate, options.FileFormat);
+            ConfigureStrategy(strat, c, options, allSubChunks, renderedSubchunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax, isUpdate, options.FileFormat, options.Quality);
             strat.RenderInitialLevel();
 
             var missingTextures = strat.MissingTextures;
@@ -205,7 +212,7 @@ namespace PapyrusCs
             strat.RenderZoomLevels();
 
 
-            WriteMapHtml(zoom, tileSize, options);
+            WriteMapHtml(zoom, tileSize, options, options.FileFormat);
 
             Console.WriteLine("Total Time {0}", _time.Elapsed);
             world.Close();
@@ -237,7 +244,7 @@ namespace PapyrusCs
         private static void ConfigureStrategy(IRenderStrategy strat, DbCreator dbc, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
             ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubchunks,
             int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
-            int zmin, int zmax, int xmin, int xmax, bool isUpdate, string format)
+            int zmin, int zmax, int xmin, int xmax, bool isUpdate, string format, int optionsQuality)
         {
             strat.DatabaseCreator = () => dbc.CreateDbContext(Path.Combine(options.OutputPath, "chunks.db"));
             strat.RenderSettings = new RenderSettings()
@@ -269,9 +276,10 @@ namespace PapyrusCs
             strat.ZoomLevelRenderd += RenderZoom;
             strat.IsUpdate = isUpdate;
             strat.FileFormat = format;
+            strat.FileQuality = optionsQuality;
         }
 
-        private static void WriteMapHtml(int zoom, int tileSize, Options options)
+        private static void WriteMapHtml(int zoom, int tileSize, Options options, string fileformat)
         {
             try
             {
@@ -280,6 +288,7 @@ namespace PapyrusCs
                 mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 2).ToString());
                 mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
                 mapHtml = mapHtml.Replace("%factor%", (Math.Pow(2, zoom - 4)).ToString());
+                mapHtml = mapHtml.Replace("%fileformat%", fileformat);
                 File.WriteAllText(Path.Combine(options.OutputPath, options.MapHtml), mapHtml);
             }
             catch (Exception ex)

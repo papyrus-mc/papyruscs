@@ -1,7 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Linq;
 using System.Numerics;
 using DmitryBrant.ImageFormats;
+using Imazen.WebP;
 
 namespace Maploader.Renderer.Imaging
 {
@@ -9,6 +13,10 @@ namespace Maploader.Renderer.Imaging
     {
         public Bitmap LoadImage(string path)
         {
+            if (path.EndsWith("webp"))
+            {
+                return WebP.Value.LoadImage(path);
+            }
             if (path.EndsWith("tga"))
             {
                 return TgaReader.Load(path);
@@ -49,6 +57,8 @@ namespace Maploader.Renderer.Imaging
                 g.DrawString(str, font, brush, x, y);
             }
         }
+
+        public int DefaultQuality { get; set; }
 
         public void RotateFlip(Bitmap image, RotateFlip infoRotation)
         {
@@ -99,9 +109,45 @@ namespace Maploader.Renderer.Imaging
             dest.UnlockBits(bDest);
         }
 
+        private Lazy<WebP> WebP { get; } = new Lazy<WebP>(() => new WebP());
+
         public void SaveImage(Bitmap image, string filepath) 
         {
-            image.Save(filepath);
+            if (filepath.EndsWith("webp"))
+            {
+                WebP.Value.Save(image, filepath, DefaultQuality);
+            } else if (filepath.EndsWith("jpg")) { 
+                image.Save(filepath);
+        }else
+                image.Save(filepath);
+        }
+    }
+
+    public class WebP
+    {
+            SimpleEncoder e;
+            SimpleDecoder d;
+        public WebP()
+        {
+            Imazen.WebP.Extern.LoadLibrary.LoadWebPOrFail();
+            e = new SimpleEncoder();
+            d = new SimpleDecoder();
+        }
+
+        public void Save(Bitmap b, string filename, int defaultQuality)
+        {
+            using (var f = File.Create(filename))
+            {
+                e.Encode(b, f, defaultQuality);
+            }
+        }
+
+        public Bitmap LoadImage(string filename)
+        {
+            var f = File.ReadAllBytes(filename);
+            {
+                return d.DecodeFromBytes(f, f.Length);
+            }
         }
     }
 }

@@ -46,7 +46,7 @@
 			crs: L.CRS.Simple
 		});
 
-		var mapdata = L.tileLayer('./map/{z}/{x}/{y}.png', {
+		var mapdata = L.tileLayer('./map/{z}/{x}/{y}.%fileformat%', {
 			attribution: '<a href="https://github.com/mjungnickel18/papyruscs">PapyrusCS</a>',
 			minZoom: 0,
 			maxNativeZoom: %maxnativezoom%,

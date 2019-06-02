@@ -50,106 +50,97 @@ namespace PapyrusCs.Strategies.For
         public ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
         public bool IsUpdate { get; set; }
         public string FileFormat { get; set; }
+        public int FileQuality { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 
         public void RenderInitialLevel()
         {
+            graphics.DefaultQuality = FileQuality;
             if (XMin.IsOdd())
                 XMin--;
             if (ZMin.IsOdd())
                 ZMin--;
 
             OuterLoopStrategy(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension),
-                new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads },
+                new ParallelOptions() {MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads},
                 x =>
                 {
-                    using (var db = DatabaseCreator())
+
+                    int chunksRendered = 0;
+
+                    try
                     {
-                        int chunksRendered = 0;
+                        var finder = new TextureFinder<TImage>(TextureDictionary, TexturePath, graphics);
+                        var chunkRenderer = new ChunkRenderer<TImage>(finder, graphics, RenderSettings);
 
-                        try
+                        for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
                         {
-                            var finder = new TextureFinder<TImage>(TextureDictionary, TexturePath, graphics);
-                            var chunkRenderer = new ChunkRenderer<TImage>(finder, graphics, RenderSettings);
 
-                            for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
+                            TImage b = null;
+                            bool anydrawn = false;
+                            for (int cx = 0; cx < ChunksPerDimension; cx++)
+                            for (int cz = 0; cz < ChunksPerDimension; cz++)
                             {
 
-                                TImage b = null;
-                                bool anydrawn = false;
-                                for (int cx = 0; cx < ChunksPerDimension; cx++)
-                                for (int cz = 0; cz < ChunksPerDimension; cz++)
+                                if (AllWorldKeys != null)
                                 {
-
-                                    if (AllWorldKeys != null)
-                                    {
-                                        var key = new LevelDbWorldKey2(x + cx, z + cz);
-                                        if (!AllWorldKeys.Contains(key))
-                                            continue;
-                                    }
-
-                                    var data = World.GetOverworldChunkData(x + cx, z + cz);
-
-                                    if (data.Empty) 
+                                    var key = new LevelDbWorldKey2(x + cx, z + cz);
+                                    if (!AllWorldKeys.Contains(key))
                                         continue;
-
-                                    if (false)
-                                    {
-                                        foreach (var s in data.SubChunks)
-                                        {
-                                            db.Checksums.Add(new Checksum() {LevelDbKey = s.Key, Crc32 = s.Crc32});
-                                        }
-                                        var savingTask = db.SaveChangesAsync();
-                                        var result = savingTask.Result;
-                                    }
-
-                                    var chunk = World.GetChunk(x + cx, z + cz, data);
-
-                                    if (b == null)
-                                    {
-                                        b = graphics.CreateEmptyImage(TileSize, TileSize);
-                                    }
-
-                                    chunksRendered++;
-                                    chunkRenderer.RenderChunk(b, chunk, cx * ChunkSize, cz * ChunkSize);
-                                    anydrawn = true;
-
-                                   
                                 }
 
-                                if (anydrawn)
+                                var data = World.GetOverworldChunkData(x + cx, z + cz);
+
+                                if (data.Empty)
+                                    continue;
+
+                                var chunk = World.GetChunk(x + cx, z + cz, data);
+
+                                if (b == null)
                                 {
-                                    var fx = (x) / ChunksPerDimension;
-                                    var fz = (z) / ChunksPerDimension;
-
-                                    SaveBitmap(InitialZoomLevel, fx, fz, b);
+                                    b = graphics.CreateEmptyImage(TileSize, TileSize);
                                 }
 
+                                chunksRendered++;
+                                chunkRenderer.RenderChunk(b, chunk, cx * ChunkSize, cz * ChunkSize);
+                                anydrawn = true;
 
-                                if (chunksRendered >= 32)
-                                {
-                                    ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
-                                    chunksRendered = 0;
-                                }
+
                             }
 
-                            if (chunksRendered > 0)
+                            if (anydrawn)
+                            {
+                                var fx = (x) / ChunksPerDimension;
+                                var fz = (z) / ChunksPerDimension;
+
+                                SaveBitmap(InitialZoomLevel, fx, fz, b);
+                            }
+
+
+                            if (chunksRendered >= 32)
                             {
                                 ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
-                            }
-
-                            foreach (var str in chunkRenderer.MissingTextures)
-                            {
-                                MissingTextures.Add(str);
+                                chunksRendered = 0;
                             }
                         }
-                        catch (Exception ex)
+
+                        if (chunksRendered > 0)
                         {
-                            Console.WriteLine(ex);
-                            Exceptions.Add(ex);
+                            ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
+                        }
+
+                        foreach (var str in chunkRenderer.MissingTextures)
+                        {
+                            MissingTextures.Add(str);
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        Exceptions.Add(ex);
+                    }
+
                 });
             Console.WriteLine("\nDone rendering initial level\n");
         }
@@ -166,6 +157,7 @@ namespace PapyrusCs.Strategies.For
             var sourceLevelZmin = ZMin / ChunksPerDimension;
             var sourceLevelZmax = ZMax / ChunksPerDimension;
 
+            graphics.DefaultQuality = FileQuality;
 
             while (sourceZoomLevel > 0)
             {
@@ -252,7 +244,7 @@ namespace PapyrusCs.Strategies.For
         private void SaveBitmap(int zoom, int x, int z, TImage b)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
+            var filepath = Path.Combine(path, $"{z}.{FileFormat}");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
@@ -262,7 +254,7 @@ namespace PapyrusCs.Strategies.For
         private TImage LoadBitmap(int zoom, int x, int z)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
+            var filepath = Path.Combine(path, $"{z}.{FileFormat}");
             if (File.Exists(filepath))
             {
                 return graphics.LoadImage(filepath);

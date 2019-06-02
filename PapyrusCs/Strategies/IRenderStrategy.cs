@@ -35,6 +35,7 @@ namespace PapyrusCs.Strategies
         ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
         bool IsUpdate { get; set; }
         string FileFormat { get; set; }
+        int FileQuality { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 

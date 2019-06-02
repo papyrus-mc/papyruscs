@@ -49,9 +49,11 @@ namespace PapyrusCs.Strategies.Dataflow
           public ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
           public bool IsUpdate { get; set; }
           public string FileFormat { get; set; }
+          public int FileQuality { get; set; }
 
           public void RenderInitialLevel()
           {
+              graphics.DefaultQuality = FileQuality;
               var keysByXZ = AllWorldKeys.Where(c => c.X <= XMax && c.X >= XMin && c.Z <= ZMax && c.Z >= ZMin).GroupBy(x => x.XZ);
 
               Console.Write("Grouping subchunks... ");
@@ -70,9 +72,10 @@ namespace PapyrusCs.Strategies.Dataflow
               var bitmapOptions = new ExecutionDataflowBlockOptions()
                   {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = 16};
               var saveOptions = new ExecutionDataflowBlockOptions()
-                  {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
-
-              var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension)).ToList();
+                  {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 4};
+              var dbOptions = new ExecutionDataflowBlockOptions()
+                  { BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1 };
+            var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension)).ToList();
               Console.WriteLine($"Grouped by {ChunksPerDimension} to {groupedToTiles.Count} tiles");
               var average = groupedToTiles.Average(x => x.Count());
               Console.WriteLine($"Average of {average} chunks per tile");
@@ -103,7 +106,7 @@ namespace PapyrusCs.Strategies.Dataflow
                       updates += toUpdate.Count;
                   }
 
-              }, saveOptions);
+              }, dbOptions);
 
               bitmapBlock.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
 

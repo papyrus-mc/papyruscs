@@ -18,5 +18,6 @@ namespace Maploader.Renderer.Imaging
         void DrawImage(TImage dest, TImage src, Rect translationDest, Rect translationSource);
         void DrawImage(TImage dest, TImage src, int x, int y, int w, int h);
         void DrawString(TImage dest, string str, Font font, Brush brush, int x, int y);
+        int DefaultQuality { get; set; }
     }
 }

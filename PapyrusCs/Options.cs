@@ -1,4 +1,5 @@
-﻿using CommandLine;
+﻿using System.Runtime.InteropServices;
+using CommandLine;
 using Maploader.Renderer;
 
 namespace PapyrusCs
@@ -46,6 +47,9 @@ namespace PapyrusCs
 
         [Option('f', Required = false, Default = "png", HelpText = "Sets the output file format")]
         public string FileFormat { get; set; }
+
+        [Option('q', Required = false, Default = -1, HelpText = "Sets quality for jpg or web format (0-100, -1 for lossless webp)")]
+        public int Quality { get; set; }
 
         // Derivative options
         public bool Loaded { get; set; }
