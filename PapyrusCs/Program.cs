@@ -1,40 +1,22 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading;
 using CommandLine;
 using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
-using Microsoft.EntityFrameworkCore;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
 using PapyrusCs.Strategies.For;
-using Z.EntityFramework.Extensions;
 
 namespace PapyrusCs
 {
-
-    public struct KeyAndCrc
-    {
-        public KeyAndCrc(int dbId, uint crc32)
-        {
-            DbId = dbId;
-            Crc32 = crc32;
-        }
-
-        public uint Crc32 { get; set; }
-        public int  DbId { get; set; }
-    }
     class Program
     {
         private static int _totalChunksRendered = 0;
@@ -149,7 +131,7 @@ namespace PapyrusCs
             }
 
             Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-            var keys = world.OverworldKeys.ToList();
+            var keys = world.GetDimension(2).ToList();
             allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
                 .Where(k => constraintX(k) && constraintZ(k))
                 .ToHashSet();
@@ -179,9 +161,6 @@ namespace PapyrusCs
             Directory.CreateDirectory(options.OutputPath);
 
             // db stuff
-
-          
-
             var textures = ReadTerrainTextureJson();
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
@@ -204,11 +183,15 @@ namespace PapyrusCs
             Console.WriteLine("Time is {0}", _time.Elapsed);
             strat.RenderZoomLevels();
 
+            strat.Finish();
 
             WriteMapHtml(zoom, tileSize, options, options.FileFormat);
 
             Console.WriteLine("Total Time {0}", _time.Elapsed);
             world.Close();
+
+
+            Console.WriteLine("Map generation finished!");
             return 0;
         }
 

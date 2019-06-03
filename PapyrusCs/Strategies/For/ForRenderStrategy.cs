@@ -45,7 +45,10 @@ namespace PapyrusCs.Strategies.For
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
         public void Init()
         {
-            throw new NotImplementedException();
+        }
+
+        public void Finish()
+        {
         }
 
         public int InitialDiameter { get; set; }

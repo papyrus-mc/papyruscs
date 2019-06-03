@@ -14,11 +14,10 @@ namespace PapyrusCs.Strategies.Dataflow
         public string OutputPath { get; }
         public TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>> Block { get; }
 
-        public SaveBitmapBlock(string outputPath, int initialZoomLevel, bool isUpdate, string fileFormat, ExecutionDataflowBlockOptions options,
+        public SaveBitmapBlock(string outputPath, int initialZoomLevel, string fileFormat, ExecutionDataflowBlockOptions options,
             IGraphicsApi<TImage> graphics)
         {
             OutputPath = outputPath;
-            this.isUpdate = isUpdate;
             this.fileFormat = fileFormat;
             this.graphics = graphics;
             Block = new TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>>(info =>
@@ -33,9 +32,7 @@ namespace PapyrusCs.Strategies.Dataflow
 
         private void SaveBitmap(int zoom, int x, int z, TImage b)
         {
-            var mapPath = isUpdate ? "mapupdate" : "map";
-
-            var path = Path.Combine(OutputPath, mapPath, $"{zoom}", $"{x}");
+            var path = Path.Combine(OutputPath, $"{zoom}", $"{x}");
             var filepath = Path.Combine(path, $"{z}.{fileFormat}");
 
             if (!Directory.Exists(path))

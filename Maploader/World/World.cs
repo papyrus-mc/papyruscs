@@ -127,6 +127,24 @@ namespace Maploader.World
             }
         }
 
+        public IEnumerable<byte[]> GetDimension(int index)
+        {
+            foreach (var element in db)
+            {
+                var key = element.Key;
+                if (key.Length != 14)
+                    continue;
+                if (key[12] != 47)
+                    continue;
+                if (key[8] != index)
+                {
+                    continue;
+                }
+
+                if (key != null)
+                    yield return key;
+            }
+        }
 
         public IEnumerable<Coordinate2D> ChunkKeys
         {
