@@ -43,6 +43,10 @@ namespace PapyrusCs.Strategies.For
         public List<Exception> Exceptions { get; } = new List<Exception>();
         public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
+        public void Init()
+        {
+            throw new NotImplementedException();
+        }
 
         public int InitialDiameter { get; set; }
         public Func<PapyrusContext> DatabaseCreator { get; set; }

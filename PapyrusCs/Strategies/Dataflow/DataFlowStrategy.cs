@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -14,15 +13,20 @@ using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using Microsoft.EntityFrameworkCore;
 using PapyrusCs.Database;
+using Z.EntityFramework.Extensions;
 
 namespace PapyrusCs.Strategies.Dataflow
   {
       public class DataFlowStrategy<TImage> : IRenderStrategy where TImage : class
       {
           private readonly IGraphicsApi<TImage> graphics;
+          private PapyrusContext db;
+          private ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubchunks;
+          private bool IsUpdate;
 
-          public DataFlowStrategy(IGraphicsApi<TImage> graphics)
+        public DataFlowStrategy(IGraphicsApi<TImage> graphics)
           {
               this.graphics = graphics;
           }
@@ -44,10 +48,7 @@ namespace PapyrusCs.Strategies.Dataflow
           public List<Exception> Exceptions { get; }
           public RenderSettings RenderSettings { get; set; }
           public int InitialDiameter { get; set; }
-          public Func<PapyrusContext> DatabaseCreator { get; set; }
           public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
-          public ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
-          public bool IsUpdate { get; set; }
           public string FileFormat { get; set; }
           public int FileQuality { get; set; }
 
@@ -80,9 +81,7 @@ namespace PapyrusCs.Strategies.Dataflow
               var average = groupedToTiles.Average(x => x.Count());
               Console.WriteLine($"Average of {average} chunks per tile");
 
-              var db = DatabaseCreator();
-
-              var getDataBlock = new GetDataBlock(World, RenderedSubChunks, getOptions);
+              var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions);
               var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
               var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
               var saveBitmapBlock = new SaveBitmapBlock<TImage>(OutputPath, InitialZoomLevel, IsUpdate, FileFormat, saveOptions, graphics);
@@ -278,5 +277,19 @@ namespace PapyrusCs.Strategies.Dataflow
 
           public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
           public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
-      }
+
+          public void Init()
+          {
+            var pathToDb = Path.Combine(OutputPath, "chunks.db");
+            IsUpdate = File.Exists(pathToDb);
+            var c = new DbCreator();
+            db = c.CreateDbContext(pathToDb);
+            db.Database.Migrate();
+            EntityFrameworkManager.ContextFactory = context => c.CreateDbContext(Path.Combine(OutputPath, "chunks.db"));
+
+            renderedSubchunks = db.Checksums.ToImmutableDictionary(
+                x => new LevelDbWorldKey2(x.LevelDbKey), x => new KeyAndCrc(x.Id, x.Crc32));
+            Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
+        }
+    }
   }

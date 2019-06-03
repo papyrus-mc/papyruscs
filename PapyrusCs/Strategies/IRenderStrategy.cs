@@ -30,10 +30,7 @@ namespace PapyrusCs.Strategies
         List<Exception> Exceptions { get; }
         RenderSettings RenderSettings { get; set; }
         int InitialDiameter { get; set; }
-        Func<PapyrusContext> DatabaseCreator { get; set; }
         HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
-        ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
-        bool IsUpdate { get; set; }
         string FileFormat { get; set; }
         int FileQuality { get; set; }
         void RenderInitialLevel();
@@ -41,5 +38,6 @@ namespace PapyrusCs.Strategies
 
         event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
         event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
+        void Init();
     }
 }
