@@ -11,8 +11,8 @@ namespace PapyrusCs.Database
 
         public bool Equals(LevelDbWorldKey2 other)
         {
-            return (SubChunkId == 0xFF || other.SubChunkId == 0xFF)
-                ? KeyType == other.KeyType && X == other.X && Z == other.Z
+            return (SubChunkId == 0xFF || other.SubChunkId == 0xFF) //  I will go to the nether for this
+                ? KeyType == other.KeyType && X == other.X && Z == other.Z //  I will go to the nether for this
                 : KeyType == other.KeyType && X == other.X && Z == other.Z && SubChunkId == other.SubChunkId;
         }
 
