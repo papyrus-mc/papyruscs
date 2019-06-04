@@ -110,9 +110,13 @@ namespace Maploader.World
         }
 
 
-        public IEnumerable<byte[]> OverworldKeys
+        public IEnumerable<byte[]> OverworldKeys => GetDimension(0);
+        public IEnumerable<byte[]> NetherKeys => GetDimension(1);
+        public IEnumerable<byte[]> EndKeys => GetDimension(2);
+
+        public IEnumerable<byte[]> GetDimension(int index)
         {
-            get
+            if (index == 0)
             {
                 foreach (var element in db)
                 {
@@ -125,24 +129,23 @@ namespace Maploader.World
                         yield return key;
                 }
             }
-        }
-
-        public IEnumerable<byte[]> GetDimension(int index)
-        {
-            foreach (var element in db)
+            else
             {
-                var key = element.Key;
-                if (key.Length != 14)
-                    continue;
-                if (key[12] != 47)
-                    continue;
-                if (key[8] != index)
+                foreach (var element in db)
                 {
-                    continue;
-                }
+                    var key = element.Key;
+                    if (key.Length != 14)
+                        continue;
+                    if (key[12] != 47)
+                        continue;
+                    if (key[8] != index)
+                    {
+                        continue;
+                    }
 
-                if (key != null)
-                    yield return key;
+                    if (key != null)
+                        yield return key;
+                }
             }
         }
 

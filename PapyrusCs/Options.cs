@@ -51,6 +51,13 @@ namespace PapyrusCs
         [Option('q', Required = false, Default = -1, HelpText = "Sets quality for jpg or web format (0-100, -1 for lossless webp)")]
         public int Quality { get; set; }
 
+        [Option('d', "dim", Required = false, Default = 0, HelpText = "Selects the dimension. 0: Overworld, 1: Nether, 2: End")]
+        public int Dimension { get; set; }
+
+        [Option("trimceiling", Required = false, Default = false, HelpText = "Removes the ceiling starting from y-max. Automatically activated for nether")]
+        public bool TrimCeiling { get; set; }
+
+
         // Derivative options
         public bool Loaded { get; set; }
         public int? LimitXLow { get; set; }

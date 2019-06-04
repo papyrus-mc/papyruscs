@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
 using System.Numerics;
 using DmitryBrant.ImageFormats;
-using Imazen.WebP;
 
 namespace Maploader.Renderer.Imaging
 {
@@ -23,7 +21,7 @@ namespace Maploader.Renderer.Imaging
             }
             else
             {
-                return (Bitmap) Image.FromFile(path);
+                return (Bitmap)Image.FromFile(path);
             }
         }
 
@@ -36,7 +34,7 @@ namespace Maploader.Renderer.Imaging
         {
             using (var g = Graphics.FromImage(dest))
             {
-                g.DrawImage(src, 
+                g.DrawImage(src,
                     new Rectangle(translationDest.X, translationDest.Y, translationDest.W, translationDest.H),
                     new Rectangle(translationSource.X, translationSource.Y, translationSource.W, translationSource.H), GraphicsUnit.Pixel);
             }
@@ -62,7 +60,7 @@ namespace Maploader.Renderer.Imaging
 
         public void RotateFlip(Bitmap image, RotateFlip infoRotation)
         {
-            image.RotateFlip((RotateFlipType) infoRotation);
+            image.RotateFlip((RotateFlipType)infoRotation);
         }
 
         private static Vector3 v255 = Vector3.One * 255;
@@ -111,42 +109,21 @@ namespace Maploader.Renderer.Imaging
 
         private Lazy<WebP> WebP { get; } = new Lazy<WebP>(() => new WebP());
 
-        public void SaveImage(Bitmap image, string filepath) 
+        public void SaveImage(Bitmap image, string filepath)
         {
             if (filepath.EndsWith("webp"))
             {
                 WebP.Value.Save(image, filepath, DefaultQuality);
-            } else if (filepath.EndsWith("jpg")) { 
-                image.Save(filepath);
-        }else
-                image.Save(filepath);
-        }
-    }
-
-    public class WebP
-    {
-            SimpleEncoder e;
-            SimpleDecoder d;
-        public WebP()
-        {
-            Imazen.WebP.Extern.LoadLibrary.LoadWebPOrFail();
-            e = new SimpleEncoder();
-            d = new SimpleDecoder();
-        }
-
-        public void Save(Bitmap b, string filename, int defaultQuality)
-        {
-            using (var f = File.Create(filename))
-            {
-                e.Encode(b, f, defaultQuality);
             }
-        }
-
-        public Bitmap LoadImage(string filename)
-        {
-            var f = File.ReadAllBytes(filename);
+            else if (filepath.EndsWith("jpg") && (DefaultQuality != -1))
             {
-                return d.DecodeFromBytes(f, f.Length);
+                var encoder = ImageCodecInfo.GetImageEncoders().First(c => c.FormatID == ImageFormat.Jpeg.Guid);
+                var encP = new EncoderParameters() { Param = new[] { new EncoderParameter(Encoder.Quality, DefaultQuality) } };
+                image.Save(filepath, encoder, encP);
+            }
+            else
+            {
+                image.Save(filepath);
             }
         }
     }

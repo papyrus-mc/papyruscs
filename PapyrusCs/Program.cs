@@ -130,6 +130,15 @@ namespace PapyrusCs
                 constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
             }
 
+            if (options.Dimension == 1) // Nether 
+            { 
+                options.TrimCeiling = true;
+                if (options.LimitY == -1)
+                {
+                    options.LimitY = 120;
+                }
+            }
+            
             Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
             var keys = world.GetDimension(1).ToList();
             allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
@@ -165,7 +174,7 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax, options.FileFormat, options.Quality);
+            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
 
             strat.Init();
 
@@ -219,7 +228,7 @@ namespace PapyrusCs
 
         private static void ConfigureStrategy(IRenderStrategy strat, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
             int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
-            int zmin, int zmax, int xmin, int xmax, string format, int optionsQuality)
+            int zmin, int zmax, int xmin, int xmax)
         {
             strat.RenderSettings = new RenderSettings()
             {
@@ -229,6 +238,7 @@ namespace PapyrusCs
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider,
+                TrimCeiling = options.TrimCeiling,
             };
             strat.AllWorldKeys = allSubChunks;
             strat.InitialDiameter = extendedDia;
@@ -247,8 +257,8 @@ namespace PapyrusCs
             strat.XMax = xmax;
             strat.ChunksRendered += RenderDisplay;
             strat.ZoomLevelRenderd += RenderZoom;
-            strat.FileFormat = format;
-            strat.FileQuality = optionsQuality;
+            strat.FileFormat = options.FileFormat;
+            strat.FileQuality = options.Quality;
         }
 
         private static void WriteMapHtml(int zoom, int tileSize, Options options, string fileformat)
