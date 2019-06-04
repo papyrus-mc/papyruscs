@@ -28,7 +28,7 @@ namespace PapyrusCs.Database
                 var hashCode = KeyType.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int) X;
                 hashCode = (hashCode * 397) ^ (int) Z;
-                //hashCode = (hashCode * 397) ^ SubChunkId.GetHashCode();
+                //hashCode = (hashCode * 397) ^ SubChunkId.GetHashCode(); //  I will go to the nether for this
                 return hashCode;
             }
         }
