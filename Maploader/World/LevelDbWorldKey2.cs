@@ -48,8 +48,19 @@ namespace PapyrusCs.Database
             Key = key;
             X = (key[0] | (key[1] << 8) | (key[2] << 16) | (key[3] << 24));
             Z = (key[4] | (key[5] << 8) | (key[6] << 16) | (key[7] << 24));
-            KeyType = key[8];
-            SubChunkId = key[9];
+            if (key.Length == 10)
+            {
+                KeyType = key[8];
+                SubChunkId = key[9];
+            } else if (key.Length == 14)
+            {
+                KeyType = key[12];
+                SubChunkId = key[13];
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(key));
+            }
         }
 
         public LevelDbWorldKey2(int x, int z)

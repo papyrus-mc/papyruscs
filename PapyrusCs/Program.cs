@@ -131,12 +131,12 @@ namespace PapyrusCs
             }
 
             Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-            var keys = world.GetDimension(2).ToList();
+            var keys = world.GetDimension(1).ToList();
             allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
                 .Where(k => constraintX(k) && constraintZ(k))
                 .ToHashSet();
 
-            _totalChunk = allSubChunks.Count(x => x.SubChunkId == 0);
+            _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
             Console.WriteLine($"Total Chunk count {_totalChunk}");
             Console.WriteLine();
 

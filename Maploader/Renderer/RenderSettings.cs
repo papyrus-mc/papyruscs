@@ -11,5 +11,6 @@ namespace Maploader.Renderer
         public float BrillouinJ { get; set; } = 10000;
         public RenderMode RenderMode { get; set; }
         public float BrillouinDivider { get; set; }
+        public bool TrimCeiling { get; set; } = true;
     }
 }

@@ -43,11 +43,31 @@ namespace Maploader.Renderer
             {
                 var blocksToRender = new Stack<BlockCoord>();
 
-                IEnumerable<KeyValuePair<uint, BlockCoord>> blockColumns = blocks.OrderByDescending(x => x.Value.Y);
+                List<KeyValuePair<uint, BlockCoord>> blockColumns = blocks.OrderByDescending(x => x.Value.Y).ToList();
                 if (renderSettings.YMax > 0)
-                    blockColumns = blockColumns.Where(x => x.Value.Y <= renderSettings.YMax);
+                    blockColumns = blockColumns.Where(x => x.Value.Y <= renderSettings.YMax).ToList();
 
-                foreach (var blockColumn in blockColumns) // Look for transparent blocks
+                if (renderSettings.TrimCeiling)
+                {
+                    int start = -1;
+                    for (int i = 1; i < blockColumns.Count(); i++)
+                    {
+                        if (Math.Abs(blockColumns[i].Value.Y - blockColumns[i - 1].Value.Y) > 4)
+                        {
+                            start = i;
+                            break;
+                        }
+                    }
+
+                    if (start != -1)
+                    {
+                        blockColumns.RemoveRange(0, start);
+                    }
+
+                }
+
+
+                foreach (var blockColumn in blockColumns) // Look for transparent blocks in single y column
                 {
                     var block = blockColumn.Value;
 
