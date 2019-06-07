@@ -74,133 +74,135 @@ namespace MapLoader.NUnitTests
         [Test]
         public void ChunkKeyTest()
         {
-            var key = new LevelDbWorldKey2(new byte[]{2,0,0,0,2,0,0,0,47,0});
+            var key = new LevelDbWorldKey2(new byte[] {2, 0, 0, 0, 2, 0, 0, 0, 47, 0});
             Assert.That(key.X, Is.EqualTo(2));
             Assert.That(key.Z, Is.EqualTo(2));
 
             var group = key.GetXZGroup(2);
-            Assert.That(group, Is.EqualTo(((UInt64)1<<32) + 1));
+            Assert.That(group, Is.EqualTo(((UInt64) 1 << 32) + 1));
 
         }
 
-    }
 
-    [TestFixture]
-    class BenchmarkTests
-    {
-        [Test]
-        [Ignore("debugging")]
-        public void Open()
+        [TestFixture]
+        class BenchmarkTests
         {
-            Console.WriteLine("hello world");
-            var dut = new Maploader.World.World();
-            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
-
-           
-            foreach (var d in dut.Keys.Where(x => x.Length >= 9 & x[8] == 45 ))
+            [Test]
+            [Ignore("debugging")]
+            public void Open()
             {
-                //Console.WriteLine(string.Join(" ", d.Select(e => $"{e:d3}")));
-                //Console.WriteLine(dut.GetData(d).Length);
+                Console.WriteLine("hello world");
+                var dut = new Maploader.World.World();
+                dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
+
+
+                foreach (var d in dut.Keys.Where(x => x.Length >= 9 & x[8] == 45))
+                {
+                    //Console.WriteLine(string.Join(" ", d.Select(e => $"{e:d3}")));
+                    //Console.WriteLine(dut.GetData(d).Length);
+                }
+
+                //dut.Close();
+
+                Assert.Pass();
             }
 
-            //dut.Close();
-
-            Assert.Pass();
-        }
-
-        [Test]
-        public void HashCodeByteArray()
-        {
-            var a = new byte[] {1, 2, 3, 4};
-            var b = new byte[] {1, 2, 3, 4};
-
-            Console.WriteLine(a.GetHashCode());
-            Console.WriteLine(b.GetHashCode());
-        }
-
-        [Test]
-        [Ignore("debugging")]
-        public void TestRender()
-        {
-            var dut = new Maploader.World.World();
-            dut.Open(@"C:\papyruscs\homeworld\db");
-            int chunkRadius = 2;
-            int centerOffsetX = 12; //65;
-            int centerOffsetZ = -55; //65;
-            string filename = "testrender.png";
-
-            RenderMap(chunkRadius, dut, centerOffsetX, centerOffsetZ, filename);
-        }
-
-        [Test]
-        public void BenchmarkRender()
-        {
-            var dut = new Maploader.World.World();
-            dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
-            int chunkRadius = 1;
-            int centerOffsetX = 1; //65;
-            int centerOffsetZ = 1; //65;
-            string filename = "benchmark.png";
-
-            RenderMap(chunkRadius, dut, centerOffsetX, centerOffsetZ, filename);
-        }
-
-        private static void RenderMap(int chunkRadius, Maploader.World.World dut, int centerOffsetX, int centerOffsetZ, string filename)
-        {
-            var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures",
-                "terrain_texture.json"));
-            var ts = new TerrainTextureJsonParser(json, "");
-            var textures = ts.Textures;
-            var g = new SystemDrawing();
-            var finder = new TextureFinder<Bitmap>(textures,  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures"), g);
-            finder.Debug = false;
-
-            var b = g.CreateEmptyImage(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
-
-            var render = new ChunkRenderer<Bitmap>(finder, g, new RenderSettings(){ YMax = 40});
-
-            //Parallel.For(-chunkRadius, chunkRadius + 1,new ParallelOptions(){MaxDegreeOfParallelism = 8} , dx =>
-            for (int dz = -chunkRadius; dz <= chunkRadius; dz++)
+            [Test]
+            public void HashCodeByteArray()
             {
-                for (int dx = -chunkRadius; dx <= chunkRadius; dx++)
+                var a = new byte[] {1, 2, 3, 4};
+                var b = new byte[] {1, 2, 3, 4};
+
+                Console.WriteLine(a.GetHashCode());
+                Console.WriteLine(b.GetHashCode());
+            }
+
+            [Test]
+            [Ignore("debugging")]
+            public void TestRender()
+            {
+                var dut = new Maploader.World.World();
+                dut.Open(@"C:\papyruscs\homeworld\db");
+                int chunkRadius = 2;
+                int centerOffsetX = 12; //65;
+                int centerOffsetZ = -55; //65;
+                string filename = "testrender.png";
+
+                RenderMap(chunkRadius, dut, centerOffsetX, centerOffsetZ, filename);
+            }
+
+            [Test]
+            public void BenchmarkRender()
+            {
+                var dut = new Maploader.World.World();
+                dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
+                int chunkRadius = 1;
+                int centerOffsetX = 1; //65;
+                int centerOffsetZ = 1; //65;
+                string filename = "benchmark.png";
+
+                RenderMap(chunkRadius, dut, centerOffsetX, centerOffsetZ, filename);
+            }
+
+            private static void RenderMap(int chunkRadius, Maploader.World.World dut, int centerOffsetX,
+                int centerOffsetZ, string filename)
+            {
+                var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures",
+                    "terrain_texture.json"));
+                var ts = new TerrainTextureJsonParser(json, "");
+                var textures = ts.Textures;
+                var g = new SystemDrawing();
+                var finder = new TextureFinder<Bitmap>(textures,
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures"), g);
+                finder.Debug = false;
+
+                var b = g.CreateEmptyImage(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
+
+                var render = new ChunkRenderer<Bitmap>(finder, g, new RenderSettings() {YMax = 40});
+
+                //Parallel.For(-chunkRadius, chunkRadius + 1,new ParallelOptions(){MaxDegreeOfParallelism = 8} , dx =>
+                for (int dz = -chunkRadius; dz <= chunkRadius; dz++)
                 {
-                    var c = dut.GetChunk(dx + centerOffsetX, dz + centerOffsetZ);
-                    if (c != null)
+                    for (int dx = -chunkRadius; dx <= chunkRadius; dx++)
                     {
-                        render.RenderChunk(b, c, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
+                        var c = dut.GetChunk(dx + centerOffsetX, dz + centerOffsetZ);
+                        if (c != null)
+                        {
+                            render.RenderChunk(b, c, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
+                        }
                     }
                 }
+
+                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
+                b.Save(path);
+                Console.WriteLine(path);
+                dut.Close();
             }
 
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, filename);
-            b.Save(path);
-            Console.WriteLine(path);
-            dut.Close();
-        }
-
-        [Test]
-        public void Uint64Test()
-        {
-            int x = 1;
-            int z = 1;
-            unchecked
+            [Test]
+            public void Uint64Test()
             {
-                var k = (UInt64) (
-                    ((UInt64) (x) << 32) |
-                    ((UInt64) (z) & 0xFFFFFFFF)
-                );
+                int x = 1;
+                int z = 1;
+                unchecked
+                {
+                    var k = (UInt64) (
+                        ((UInt64) (x) << 32) |
+                        ((UInt64) (z) & 0xFFFFFFFF)
+                    );
 
-                Console.WriteLine("{0:x8}", k);
-                Assert.AreEqual(k, 0x100000001);
+                    Console.WriteLine("{0:x8}", k);
+                    Assert.AreEqual(k, 0x100000001);
+                }
+
             }
 
-        }
+            [Test]
+            public void BrillouinFkt()
+            {
+                var dut = new Brillouin(10000);
 
-        [Test]
-        public void BrillouinFkt()
-        {
-            var dut = new Brillouin(10000);
-
+            }
         }
     }
 }
