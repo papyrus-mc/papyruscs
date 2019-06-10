@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -16,7 +15,6 @@ using Maploader.Renderer.Texture;
 using Maploader.World;
 using Microsoft.EntityFrameworkCore;
 using PapyrusCs.Database;
-using Z.EntityFramework.Extensions;
 
 namespace PapyrusCs.Strategies.Dataflow
 {
@@ -52,10 +50,16 @@ namespace PapyrusCs.Strategies.Dataflow
         public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
         public string FileFormat { get; set; }
         public int FileQuality { get; set; }
+        public int Dimension { get; set; }
+
+        public int NewInitialZoomLevel { get; set; }
+        public int NewLastZoomLevel { get; set; }
 
         public void RenderInitialLevel()
         {
             graphics.DefaultQuality = FileQuality;
+          
+
             var keysByXZ = AllWorldKeys.Where(c => c.X <= XMax && c.X >= XMin && c.Z <= ZMax && c.Z >= ZMin)
                 .GroupBy(x => x.XZ);
 
@@ -88,9 +92,10 @@ namespace PapyrusCs.Strategies.Dataflow
             var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
             var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics,
                 ChunkSize, ChunksPerDimension, bitmapOptions);
-            var saveBitmapBlock = new SaveBitmapBlock<TImage>(IsUpdate ? pathToMapUpdate : pathToMap, InitialZoomLevel, FileFormat,
+            var saveBitmapBlock = new SaveBitmapBlock<TImage>(IsUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat,
                 saveOptions, graphics);
 
+            // Todo, put in own class
             var inserts = 0;
             var updates = 0;
             var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
@@ -161,7 +166,7 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public void RenderZoomLevels()
         {
-            var sourceZoomLevel = this.InitialZoomLevel;
+            var sourceZoomLevel = this.NewInitialZoomLevel;
             var sourceDiameter = this.InitialDiameter;
 
             var sourceLevelXmin = XMin / ChunksPerDimension;
@@ -170,7 +175,7 @@ namespace PapyrusCs.Strategies.Dataflow
             var sourceLevelZmax = ZMax / ChunksPerDimension;
 
 
-            while (sourceZoomLevel > 0)
+            while (sourceZoomLevel > NewLastZoomLevel)
             {
                 var destDiameter = sourceDiameter / 2;
                 var sourceZoom = sourceZoomLevel;
@@ -300,10 +305,14 @@ namespace PapyrusCs.Strategies.Dataflow
             pathToDb = Path.Combine(OutputPath, "chunks.sqlite");
             pathToDbUpdate = Path.Combine(OutputPath, "chunks-update.sqlite");
             pathToDbBackup = Path.Combine(OutputPath, "chunks-backup.sqlite");
-            pathToMapUpdate = Path.Combine(OutputPath, $"mapupdate-{today:yy-MM-dd}");
-            pathToMap = Path.Combine(OutputPath, "map");
+
+            pathToMapUpdate = Path.Combine(OutputPath, $"dim{Dimension}update-{today:yy-MM-dd}");
+            pathToMap = Path.Combine(OutputPath, $"dim{Dimension}");
 
             IsUpdate = File.Exists(pathToDb);
+
+            NewInitialZoomLevel = 20;
+            NewLastZoomLevel = NewInitialZoomLevel - InitialZoomLevel;
 
             if (IsUpdate)
             {
@@ -313,15 +322,37 @@ namespace PapyrusCs.Strategies.Dataflow
                 {
                     Console.WriteLine($"Deleting {pathToDbUpdate} old update database file");
                     File.Delete(pathToDbUpdate);
+                    File.Delete(pathToDbUpdate + "-wal");
+                    File.Delete(pathToDbUpdate + "-shm");
                 }
 
                 File.Copy(pathToDb, pathToDbUpdate);
             }
 
             var c = new DbCreator();
-            db = c.CreateDbContext(pathToDbUpdate);
+            db = c.CreateDbContext(pathToDbUpdate, true);
             db.Database.Migrate();
-            EntityFrameworkManager.ContextFactory = context => c.CreateDbContext(pathToDbUpdate);
+
+            var settings = db.Settings.FirstOrDefault(x => x.Dimension == Dimension);
+            if (settings != null)
+            {
+                this.FileFormat = settings.Format;
+                this.FileQuality = settings.Quality;
+                Console.WriteLine("Overriding settings with: Format {0}, Quality {1}", FileFormat, FileQuality);
+            }
+            else
+            {
+                settings = new Settings()
+                {
+                    Dimension = Dimension,
+                    Quality = FileQuality,
+                    Format = FileFormat,
+                    MaxZoom = this.NewInitialZoomLevel,
+                    MinZoom = this.NewLastZoomLevel,
+                };
+                db.Add(settings);
+                db.SaveChanges();
+            }
 
             renderedSubchunks = db.Checksums.ToImmutableDictionary(
                 x => new LevelDbWorldKey2(x.LevelDbKey), x => new KeyAndCrc(x.Id, x.Crc32));
@@ -370,6 +401,11 @@ namespace PapyrusCs.Strategies.Dataflow
                     File.Copy(f, newPath, true);
                 }
             }
+        }
+
+        public Settings[] GetSettings()
+        {
+            return db.Settings.ToArray();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace PapyrusCs.Database
         public PapyrusContext(DbContextOptions<PapyrusContext> builderOptions) : base(builderOptions) {}
 
         public DbSet<Checksum> Checksums { get; set; }
+        public DbSet<Settings> Settings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

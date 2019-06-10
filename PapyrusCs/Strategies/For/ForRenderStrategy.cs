@@ -51,6 +51,11 @@ namespace PapyrusCs.Strategies.For
         {
         }
 
+        public Settings[] GetSettings()
+        {
+            throw new NotImplementedException();
+        }
+
         public int InitialDiameter { get; set; }
         public Func<PapyrusContext> DatabaseCreator { get; set; }
         public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
@@ -58,6 +63,7 @@ namespace PapyrusCs.Strategies.For
         public bool IsUpdate { get; set; }
         public string FileFormat { get; set; }
         public int FileQuality { get; set; }
+        public int Dimension { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 

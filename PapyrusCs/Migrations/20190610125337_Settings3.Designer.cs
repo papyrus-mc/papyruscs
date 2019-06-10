@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PapyrusCs.Database;
 
 namespace PapyrusCs.Migrations
 {
     [DbContext(typeof(PapyrusContext))]
-    partial class PapyrusContextModelSnapshot : ModelSnapshot
+    [Migration("20190610125337_Settings3")]
+    partial class Settings3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,11 +43,11 @@ namespace PapyrusCs.Migrations
 
                     b.Property<string>("Format");
 
-                    b.Property<int>("MaxZoom");
-
                     b.Property<int>("MinZoom");
 
                     b.Property<int>("Quality");
+
+                    b.Property<int>("Zoom");
 
                     b.HasKey("Id");
 

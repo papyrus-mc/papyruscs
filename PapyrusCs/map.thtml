@@ -46,17 +46,10 @@
 			crs: L.CRS.Simple
 		});
 
-		var mapdata = L.tileLayer('./map/{z}/{x}/{y}.%fileformat%', {
-			attribution: '<a href="https://github.com/mjungnickel18/papyruscs">PapyrusCS</a>',
-			minZoom: 0,
-			maxNativeZoom: %maxnativezoom%,
-			maxZoom: %maxzoom%,
-			noWrap: true,
-			tileSize: %tilesize%
+	
+		%layers%
 
-		}).addTo(map);
-
-		map.setView([0, 0], 0);
+		map.setView([0, 0], %globalminzoom%);
 
 		function display_coordinates(event) {
 			//console.log("Coordinates: " + event.latlng.toString());

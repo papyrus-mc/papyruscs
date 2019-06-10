@@ -24,7 +24,6 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
     <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview5.19224.8" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.10.0-preview5.19224.8" />
-    <PackageReference Include="Z.EntityFramework.Extensions.EFCore" Version="2.3.6" />
   </ItemGroup>
 
   <ItemGroup>

@@ -33,6 +33,7 @@ namespace PapyrusCs.Strategies
         HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
         string FileFormat { get; set; }
         int FileQuality { get; set; }
+        int Dimension { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 
@@ -40,5 +41,6 @@ namespace PapyrusCs.Strategies
         event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
         void Init();
         void Finish();
+        Settings[] GetSettings();
     }
 }

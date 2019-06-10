@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,8 @@ namespace Tests
     }
 
 
-    public class Tests
+    public class 
+    Tests
     {
         public (IEnumerable<string>, IEnumerable<string>) GetKeysAndProperties(DbContext context, Type type)
         {
@@ -57,11 +59,51 @@ namespace Tests
 
 
         [Test]
-        public void TestFastMember()
+        public void TestBulkInsert()
         {
-            var c = FastMember.ObjectAccessor.Create(new MyMiniC());
+            DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
+            opt.UseSqlite("Filename=testparameter.sqlite");
+            
+            var context = new MyContext(opt.Options);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            var duts = Enumerable.Range(0, 100000).Select(x => new MyMiniC() {Crc42 = (uint) x});
+
+            var sp = Stopwatch.StartNew();
+            context.BulkInsert(duts);
+            Console.WriteLine(sp.Elapsed);
+        }
 
 
+
+        [Test]
+        public void TestBulkInsertAndUpdate()
+        {
+            DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
+            opt.UseSqlite("Filename=testparameter2.sqlite");
+
+            var context = new MyContext(opt.Options);
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+
+            var duts = Enumerable.Range(0, 100000).Select(x => new MyMiniC() { Crc42 = (uint)x });
+
+            var sp = Stopwatch.StartNew();
+            context.BulkInsert(duts);
+            Console.WriteLine(sp.Elapsed);
+
+            var newduts = context.MyMinis;
+            Assert.That(newduts.Count(), Is.EqualTo(100000));
+           
+            foreach (var myMiniC in newduts)
+            {
+                myMiniC.Crc42 += 10000;
+            }
+
+            sp = Stopwatch.StartNew();
+            context.BulkUpdate(newduts);
+            Console.WriteLine(sp.Elapsed);
         }
 
         [TestCase(3, 5, 15, 5, 0)]
@@ -74,7 +116,7 @@ namespace Tests
 
             var context = new MyContext(opt.Options);
 
-            var (dbParameters, batchSize, remainder) = DbContextExtensions.GetParametersAndBatchSize(context, columns, rows);
+            var (dbParameters, batchSize, remainder) = DbContextExtensions.GetInsertParametersAndBatchSize(context, columns, rows);
 
             Assert.That(dbParameters.Length, Is.EqualTo(expectedParameterCount));
             Assert.That(batchSize, Is.EqualTo(expectedBatchSize));
@@ -84,12 +126,24 @@ namespace Tests
         }
 
         [Test]
-        public void TestSql()
+        public void TestInsertSql()
         {
             var dut = DbContextExtensions.GetSqlInsertString("lala", new string[] {"a", "b", "c"}, 5);
             Assert.That(dut.Contains("@p0"));
             Assert.That(dut.Contains("@p14"));
             Assert.That(dut.Count(x => x == '@'), Is.EqualTo(15));
+            Console.WriteLine(dut);
+        }
+
+        [Test]
+        public void TestUpdateSql()
+        {
+            
+            var dut = DbContextExtensions.GetSqlUpdateString("lala", new []{"id"},  new [] { "a", "b", "c" }, 1);
+            Assert.That(dut.Contains("@p0"));
+            Assert.That(dut.Contains("@p2"));
+            Assert.That(dut.Contains("@k0"));
+            Assert.That(dut.Count(x => x == '@'), Is.EqualTo(4));
             Console.WriteLine(dut);
         }
 
@@ -146,17 +200,6 @@ namespace Tests
             }
 
         }
-
-        public (string, object[] parameters) CreateInsert(string table, IEnumerable<Tuple<string, object>> properties)
-        {
-            string baseString = "INSERT INTO '{0}' ({1}) VALUES ({2})";
-
-            var parNames = string.Join(",", properties.Select(x => $"'{x.Item1}'"));
-            //var parValues = 
-
-            return (null, null);
-        }
-
 
         
     }

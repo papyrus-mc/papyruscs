@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using CommandLine;
 using Maploader.Renderer;
@@ -140,7 +142,7 @@ namespace PapyrusCs
             }
             
             Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-            var keys = world.GetDimension(1).ToList();
+            var keys = world.GetDimension(options.Dimension).ToList();
             allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
                 .Where(k => constraintX(k) && constraintZ(k))
                 .ToHashSet();
@@ -174,7 +176,7 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
+            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax, options.Dimension);
 
             strat.Init();
 
@@ -192,10 +194,10 @@ namespace PapyrusCs
             Console.WriteLine("Time is {0}", _time.Elapsed);
             strat.RenderZoomLevels();
 
+
+            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings());
+
             strat.Finish();
-
-            WriteMapHtml(zoom, tileSize, options, options.FileFormat);
-
             Console.WriteLine("Total Time {0}", _time.Elapsed);
             world.Close();
 
@@ -228,7 +230,7 @@ namespace PapyrusCs
 
         private static void ConfigureStrategy(IRenderStrategy strat, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
             int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
-            int zmin, int zmax, int xmin, int xmax)
+            int zmin, int zmax, int xmin, int xmax, int dimension)
         {
             strat.RenderSettings = new RenderSettings()
             {
@@ -259,19 +261,58 @@ namespace PapyrusCs
             strat.ZoomLevelRenderd += RenderZoom;
             strat.FileFormat = options.FileFormat;
             strat.FileQuality = options.Quality;
+            strat.Dimension = dimension;
         }
 
-        private static void WriteMapHtml(int zoom, int tileSize, Options options, string fileformat)
+        private static void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings)
         {
             try
             {
-                var mapHtml = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
-                mapHtml = mapHtml.Replace("%maxnativezoom%", zoom.ToString());
-                mapHtml = mapHtml.Replace("%maxzoom%", (zoom + 2).ToString());
-                mapHtml = mapHtml.Replace("%tilesize%", (tileSize).ToString());
-                mapHtml = mapHtml.Replace("%factor%", (Math.Pow(2, zoom - 4)).ToString());
-                mapHtml = mapHtml.Replace("%fileformat%", fileformat);
-                File.WriteAllText(Path.Combine(options.OutputPath, options.MapHtml), mapHtml);
+                var mapHtmlContext = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
+
+                var layertemplate = "var mapdata%dim% = L.tileLayer('./%path%/{z}/{x}/{y}.%fileformat%', { \n" +
+                    "attribution: '<a href=\"https://github.com/mjungnickel18/papyruscs\">PapyrusCS</a>',\n" +
+                    "minZoom: %minzoom%,\n"+
+                    "maxNativeZoom: %maxnativezoom%,\n"+
+                    "maxZoom: %maxzoom%,\n"+
+                    "noWrap: true,\n"+
+                    "tileSize: %tilesize%,\n"+
+                "});";
+
+                StringBuilder sb = new StringBuilder();
+                foreach (var setting in settings)
+                {
+                    var newlayer = layertemplate;
+
+                    newlayer = newlayer.Replace("%maxnativezoom%", setting.MaxZoom.ToString());
+                    newlayer = newlayer.Replace("%maxzoom%", (setting.MaxZoom + 2).ToString());
+                    newlayer = newlayer.Replace("%minzoom%", (setting.MinZoom).ToString());
+                    newlayer = newlayer.Replace("%tilesize%", (tileSize).ToString());
+                    newlayer = newlayer.Replace("%fileformat%", setting.Format);
+                    newlayer = newlayer.Replace("%path%", $"dim{setting.Dimension}");
+                    newlayer = newlayer.Replace("%dim%", setting.Dimension.ToString());
+
+                    sb.AppendLine(newlayer);
+                }
+
+                sb.AppendLine("var baseMaps = {");
+                foreach (var s in settings)
+                {
+                    sb.AppendFormat("\"Dimension{0}\": mapdata{0},", s.Dimension);
+                }
+                sb.AppendLine("}");
+
+                sb.AppendLine($"L.control.layers(baseMaps).addTo(map);");
+
+                var maxMinZoom = settings.Select(x => x.MinZoom).Max();
+                
+
+                mapHtmlContext = mapHtmlContext.Replace("%layers%", sb.ToString());
+                mapHtmlContext = mapHtmlContext.Replace("%globalminzoom%", maxMinZoom.ToString());
+                mapHtmlContext = mapHtmlContext.Replace("%factor%", (Math.Pow(2, settings.First().MaxZoom - 4)).ToString(CultureInfo.InvariantCulture));
+
+
+                File.WriteAllText(Path.Combine(outputPath, mapHtmlFile), mapHtmlContext);
             }
             catch (Exception ex)
             {
@@ -330,7 +371,7 @@ namespace PapyrusCs
             if (!_time2.IsRunning)
                 _time2.Start();
             Interlocked.Add(ref _totalChunksRendered, e.RenderedChunks);
-            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered) / _time2.Elapsed.TotalSeconds:0.0} dbc/s");
+            Console.Write($"\r{_totalChunksRendered} of {_totalChunk} Chunks render @ {(_totalChunksRendered) / _time2.Elapsed.TotalSeconds:0.0} cps     ");
         }
 
 
