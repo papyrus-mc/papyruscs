@@ -75,11 +75,11 @@ namespace PapyrusCs.Strategies.Dataflow
             var getOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 64, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var chunkCreatorOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 8};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads/2)};
             var bitmapOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = 16};
+                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
             var saveOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 4};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads/4)};
             var dbOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension))

@@ -15,7 +15,7 @@ namespace PapyrusCs
         [Option("htmlfile", Required = false, HelpText = "Sets name of html map file", Default = "map.html")]
         public string MapHtml { get; set; }
 
-        [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid are SingleFor and ParallelFor (Multithreaded)", Default = Strategy.ParallelFor)]
+        [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid are Dataflow, SingleFor and ParallelFor (Multithreaded)", Default = Strategy.Dataflow)]
         public Strategy Strategy { get; set; }
 
         [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = false)]

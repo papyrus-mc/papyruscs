@@ -53,7 +53,8 @@ namespace PapyrusCs.Strategies.For
 
         public Settings[] GetSettings()
         {
-            throw new NotImplementedException();
+            return new Settings[]
+                {new Settings() {Dimension = Dimension, Format = FileFormat, MaxZoom = InitialDiameter, MinZoom = 0, Quality = FileQuality}};
         }
 
         public int InitialDiameter { get; set; }
