@@ -23,7 +23,7 @@ namespace PapyrusCs.Strategies.Dataflow
         private readonly IGraphicsApi<TImage> graphics;
         private PapyrusContext db;
         private ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubchunks;
-        private bool IsUpdate;
+        private bool isUpdate;
 
         public DataFlowStrategy(IGraphicsApi<TImage> graphics)
         {
@@ -92,7 +92,7 @@ namespace PapyrusCs.Strategies.Dataflow
             var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
             var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics,
                 ChunkSize, ChunksPerDimension, bitmapOptions);
-            var saveBitmapBlock = new SaveBitmapBlock<TImage>(IsUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat,
+            var saveBitmapBlock = new SaveBitmapBlock<TImage>(isUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat,
                 saveOptions, graphics);
 
             // Todo, put in own class
@@ -205,10 +205,10 @@ namespace PapyrusCs.Strategies.Dataflow
                     {
                         for (int z = sourceLevelZmin; z < sourceLevelZmax; z += 2)
                         {
-                            var b1 = LoadBitmap(sourceZoom, x, z, IsUpdate);
-                            var b2 = LoadBitmap(sourceZoom, x + 1, z, IsUpdate);
-                            var b3 = LoadBitmap(sourceZoom, x, z + 1, IsUpdate);
-                            var b4 = LoadBitmap(sourceZoom, x + 1, z + 1, IsUpdate);
+                            var b1 = LoadBitmap(sourceZoom, x, z, isUpdate);
+                            var b2 = LoadBitmap(sourceZoom, x + 1, z, isUpdate);
+                            var b3 = LoadBitmap(sourceZoom, x, z + 1, isUpdate);
+                            var b4 = LoadBitmap(sourceZoom, x + 1, z + 1, isUpdate);
 
                             if (b1 != null || b2 != null || b3 != null || b4 != null)
                             {
@@ -242,7 +242,7 @@ namespace PapyrusCs.Strategies.Dataflow
                                             halfTileSize);
                                     }
 
-                                    SaveBitmap(destZoom, x / 2, z / 2, IsUpdate, bfinal);
+                                    SaveBitmap(destZoom, x / 2, z / 2, isUpdate, bfinal);
                                 }
                             }
                         }
@@ -301,20 +301,19 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public void Init()
         {
-            var today = DateTime.Today;
             pathToDb = Path.Combine(OutputPath, "chunks.sqlite");
             pathToDbUpdate = Path.Combine(OutputPath, "chunks-update.sqlite");
             pathToDbBackup = Path.Combine(OutputPath, "chunks-backup.sqlite");
 
-            pathToMapUpdate = Path.Combine(OutputPath, $"dim{Dimension}update-{today:yy-MM-dd}");
+            pathToMapUpdate = Path.Combine(OutputPath, $"dim{Dimension}-lastupdate");
             pathToMap = Path.Combine(OutputPath, $"dim{Dimension}");
 
-            IsUpdate = File.Exists(pathToDb);
+            isUpdate = File.Exists(pathToDb);
 
             NewInitialZoomLevel = 20;
             NewLastZoomLevel = NewInitialZoomLevel - InitialZoomLevel;
 
-            if (IsUpdate)
+            if (isUpdate)
             {
                 Console.WriteLine("Found chunks.sqlite, this must be an update of the map");
 
@@ -339,6 +338,11 @@ namespace PapyrusCs.Strategies.Dataflow
                 this.FileFormat = settings.Format;
                 this.FileQuality = settings.Quality;
                 Console.WriteLine("Overriding settings with: Format {0}, Quality {1}", FileFormat, FileQuality);
+
+                settings.MaxZoom = NewInitialZoomLevel;
+                settings.MinZoom = NewLastZoomLevel;
+                Console.WriteLine("Setting Zoom levels to {0} down to {1}", NewInitialZoomLevel, NewLastZoomLevel);
+                db.SaveChanges();
             }
             else
             {
