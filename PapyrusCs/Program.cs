@@ -268,16 +268,20 @@ namespace PapyrusCs
         {
             try
             {
+                var layernames = new string[] { "Overworld", "Nether", "End" };
                 var mapHtmlContext = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
 
                 var layertemplate = "var mapdata%dim% = L.tileLayer('./%path%/{z}/{x}/{y}.%fileformat%', { \n" +
                     "attribution: '<a href=\"https://github.com/mjungnickel18/papyruscs\">PapyrusCS</a>',\n" +
-                    "minZoom: %minzoom%,\n"+
+                    "minNativeZoom: %minnativezoom%,\n" +
+                    "minZoom: %minzoom%,\n" +
                     "maxNativeZoom: %maxnativezoom%,\n"+
                     "maxZoom: %maxzoom%,\n"+
                     "noWrap: true,\n"+
                     "tileSize: %tilesize%,\n"+
                 "});";
+
+                var minZoom = settings.Select(x => x.MinZoom).Min();
 
                 StringBuilder sb = new StringBuilder();
                 foreach (var setting in settings)
@@ -286,7 +290,8 @@ namespace PapyrusCs
 
                     newlayer = newlayer.Replace("%maxnativezoom%", setting.MaxZoom.ToString());
                     newlayer = newlayer.Replace("%maxzoom%", (setting.MaxZoom + 2).ToString());
-                    newlayer = newlayer.Replace("%minzoom%", (setting.MinZoom).ToString());
+                    newlayer = newlayer.Replace("%minnativezoom%", (setting.MinZoom).ToString());
+                    newlayer = newlayer.Replace("%minzoom%", (minZoom).ToString());
                     newlayer = newlayer.Replace("%tilesize%", (tileSize).ToString());
                     newlayer = newlayer.Replace("%fileformat%", setting.Format);
                     newlayer = newlayer.Replace("%path%", $"dim{setting.Dimension}");
@@ -298,17 +303,19 @@ namespace PapyrusCs
                 sb.AppendLine("var baseMaps = {");
                 foreach (var s in settings)
                 {
-                    sb.AppendFormat("\"Dimension{0}\": mapdata{0},", s.Dimension);
+                    var dimName = layernames.Length > s.Dimension ? layernames[s.Dimension] : $"Dimension{s.Dimension}";
+                    sb.AppendFormat("\"{0}\": mapdata{1},", dimName, s.Dimension);
                 }
                 sb.AppendLine("}");
 
                 sb.AppendLine($"L.control.layers(baseMaps).addTo(map);");
 
-                var maxMinZoom = settings.Select(x => x.MinZoom).Max();
+                sb.AppendFormat("mapdata{0}.addTo(map);", settings.Min(x => x.Dimension));
+
                 
 
                 mapHtmlContext = mapHtmlContext.Replace("%layers%", sb.ToString());
-                mapHtmlContext = mapHtmlContext.Replace("%globalminzoom%", maxMinZoom.ToString());
+                mapHtmlContext = mapHtmlContext.Replace("%globalminzoom%", settings.First(x => x.Dimension == settings.Min(y=>y.Dimension)).MinZoom.ToString());
                 mapHtmlContext = mapHtmlContext.Replace("%factor%", (Math.Pow(2, settings.First().MaxZoom - 4)).ToString(CultureInfo.InvariantCulture));
 
 

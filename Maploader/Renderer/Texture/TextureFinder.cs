@@ -268,6 +268,8 @@ namespace Maploader.Renderer.Texture
                 case "red_sandstone_stairs":
                     return GetTexture("smooth_red_sandstone", 0);
 
+                case "purpur_stairs":
+                    return GetTexture("purpur_block_top", 0);
 
                 case "cauldron":
                     return GetTexture("cauldron_inner", data)
