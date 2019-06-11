@@ -52,6 +52,8 @@ namespace PapyrusCs.Strategies.Dataflow
         public int FileQuality { get; set; }
         public int Dimension { get; set; }
 
+        public bool IsUpdate => isUpdate;
+
         public int NewInitialZoomLevel { get; set; }
         public int NewLastZoomLevel { get; set; }
 
@@ -305,8 +307,8 @@ namespace PapyrusCs.Strategies.Dataflow
             pathToDbUpdate = Path.Combine(OutputPath, "chunks-update.sqlite");
             pathToDbBackup = Path.Combine(OutputPath, "chunks-backup.sqlite");
 
-            pathToMapUpdate = Path.Combine(OutputPath, $"dim{Dimension}-lastupdate");
-            pathToMap = Path.Combine(OutputPath, $"dim{Dimension}");
+            pathToMapUpdate = Path.Combine(OutputPath, "update", $"dim{Dimension}");
+            pathToMap = Path.Combine(OutputPath, "map", $"dim{Dimension}");
 
             isUpdate = File.Exists(pathToDb);
 

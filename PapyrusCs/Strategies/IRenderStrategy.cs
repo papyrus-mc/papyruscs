@@ -34,6 +34,7 @@ namespace PapyrusCs.Strategies
         string FileFormat { get; set; }
         int FileQuality { get; set; }
         int Dimension { get; set; }
+        bool IsUpdate { get; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 

@@ -195,7 +195,7 @@ namespace PapyrusCs
             strat.RenderZoomLevels();
 
 
-            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings());
+            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate);
 
             strat.Finish();
             Console.WriteLine("Total Time {0}", _time.Elapsed);
@@ -264,7 +264,8 @@ namespace PapyrusCs
             strat.Dimension = dimension;
         }
 
-        private static void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings)
+        private static void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings,
+            bool isUpdate)
         {
             try
             {
@@ -312,14 +313,17 @@ namespace PapyrusCs
 
                 sb.AppendFormat("mapdata{0}.addTo(map);", settings.Min(x => x.Dimension));
 
-                
 
                 mapHtmlContext = mapHtmlContext.Replace("%layers%", sb.ToString());
                 mapHtmlContext = mapHtmlContext.Replace("%globalminzoom%", settings.First(x => x.Dimension == settings.Min(y=>y.Dimension)).MinZoom.ToString());
                 mapHtmlContext = mapHtmlContext.Replace("%factor%", (Math.Pow(2, settings.First().MaxZoom - 4)).ToString(CultureInfo.InvariantCulture));
 
 
-                File.WriteAllText(Path.Combine(outputPath, mapHtmlFile), mapHtmlContext);
+                File.WriteAllText(Path.Combine(outputPath, "map", mapHtmlFile), mapHtmlContext);
+                if (isUpdate)
+                {
+                    File.WriteAllText(Path.Combine(outputPath, "update", mapHtmlFile), mapHtmlContext);
+                }
             }
             catch (Exception ex)
             {

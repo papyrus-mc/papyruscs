@@ -474,6 +474,10 @@ namespace Maploader.Renderer.Texture
                 case "dark_oak_fence_gate":
                     return RenderFenceGate(data, "dark_oak_planks");
 
+                case "nether_brick_fence":
+                    return GetTexture("nether_brick", 0, new TextureTranslation(
+                        new Rect(5, 5, 6, 6),
+                        new Rect(0, 0, 16, 16)));
                 case "fence":
                     return GetTexture("planks", data, new TextureTranslation(
                         new Rect(5, 5, 6, 6),
