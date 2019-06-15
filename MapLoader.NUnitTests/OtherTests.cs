@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Maploader.Renderer;
 using Maploader.Renderer.Heightmap;
 using Maploader.Renderer.Imaging;
@@ -201,7 +202,11 @@ namespace MapLoader.NUnitTests
             public void BrillouinFkt()
             {
                 var dut = new Brillouin(10000);
+            }
 
+            [Test]
+            public void LoaderTest()
+            {
             }
         }
     }
