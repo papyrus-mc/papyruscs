@@ -35,6 +35,7 @@ namespace PapyrusCs.Strategies
         int FileQuality { get; set; }
         int Dimension { get; set; }
         bool IsUpdate { get; }
+        bool DeleteExistingUpdateFolder { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 

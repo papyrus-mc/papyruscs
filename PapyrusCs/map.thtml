@@ -58,7 +58,7 @@
 			var myDiv = document.getElementById("coords");
 			var factor = %factor%;
 
-			myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * factor) + " Y: " + (-1 - Math.floor(event.latlng.lat * factor));
+			myDiv.innerHTML = "X: " + Math.floor(event.latlng.lng * factor) + " Z: " + (-1 - Math.floor(event.latlng.lat * factor));
 		}
 
 		map.on("mousemove", display_coordinates);

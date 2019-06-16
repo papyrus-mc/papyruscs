@@ -176,7 +176,7 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax, options.Dimension);
+            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
 
             strat.Init();
 
@@ -228,9 +228,11 @@ namespace PapyrusCs
             return strat;
         }
 
-        private static void ConfigureStrategy(IRenderStrategy strat, Options options, HashSet<LevelDbWorldKey2> allSubChunks,
-            int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize, int chunksPerDimension, int chunkSize,
-            int zmin, int zmax, int xmin, int xmax, int dimension)
+        private static void ConfigureStrategy(IRenderStrategy strat, Options options,
+            HashSet<LevelDbWorldKey2> allSubChunks,
+            int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize,
+            int chunksPerDimension, int chunkSize,
+            int zmin, int zmax, int xmin, int xmax)
         {
             strat.RenderSettings = new RenderSettings()
             {
@@ -261,7 +263,8 @@ namespace PapyrusCs
             strat.ZoomLevelRenderd += RenderZoom;
             strat.FileFormat = options.FileFormat;
             strat.FileQuality = options.Quality;
-            strat.Dimension = dimension;
+            strat.Dimension = options.Dimension;
+            strat.DeleteExistingUpdateFolder = options.DeleteExistingUpdateFolder;
         }
 
         private static void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings,

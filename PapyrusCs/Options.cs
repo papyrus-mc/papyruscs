@@ -57,6 +57,9 @@ namespace PapyrusCs
         [Option("trimceiling", Required = false, Default = false, HelpText = "Removes the ceiling starting from y-max. Automatically activated for nether")]
         public bool TrimCeiling { get; set; }
 
+        [Option("deleteexistingupdatefolder", Required = false, Default = false, HelpText = "Delete an existing update/dimX folder right before creating a possible new update")]
+        public bool DeleteExistingUpdateFolder { get; set; }
+
 
         // Derivative options
         public bool Loaded { get; set; }
