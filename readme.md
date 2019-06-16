@@ -2,6 +2,75 @@ Chat: [![Discord](https://img.shields.io/discord/569841820092203011.svg?logo=dis
 Windows: [![Build status](https://ci.appveyor.com/api/projects/status/tfspbbi72bx73qg8?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs) <br>
 Linux: [![Build status](https://ci.appveyor.com/api/projects/status/xo9ew31l49hayjcm?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs-ytqjm) <br>
 
+## Contribute xor support
+If you want to help improving Papyrus please consider forking the repository.
+
+Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
+
+## Version 0.3
+### What's new:
+#### New folder structure:
+The new folder structure is:
+```
+outputdir
+|-map
+|   |-dim0
+|   |-dim1
+|   |-dim2
+|   |-map.html
+|-update
+|   |-dim0
+|   |-dim1
+|   |-dim2
+|   |-map.html
+|-chunks.sqlite
+|-chunks-backup.sqlite
+```
+#### Incremental Rendering:
+
+With strategy Dataflow (default) PapyrusCs creates a sqlite database with chunk CRCs to check if a update rendering is necessary.
+PapyrusCs creates an update folder, which contains only the files that were updated (it will be copied to the map folder as well)
+So you just have to upload the content of the update folder after an update of the map.
+
+With the option 
+```
+--deleteexistingupdatefolder
+```
+the current dimension update folder to be rendered (dim0/1/2) will be deleted before the next update will be rendered.
+This is useful if you don't want to upload previous updated files again. Of course you can delete this folder by hand yourself.
+
+#### Dimensions
+PapyrusCs supports dimensions now: Overworld, Nether, The End\
+To render another dimension, add the --dim <dimension> parameter (default --dim 0):\
+```
+--dim 0 (=Overworld)
+--dim 1 (=Nether)
+--dim 2 (=The End)
+```
+To render all dimensions in one map with layers [See papyrus bedrock server](http://papyrus.gwsa.de/), you have to call PapyrusCs three times. Example:\
+```
+PapyrusCs -w <yourworld> -o <youroutputfolder> -dim 0
+PapyrusCs -w <yourworld> -o <youroutputfolder> -dim 1
+PapyrusCs -w <yourworld> -o <youroutputfolder> -dim 2
+```  
+This will generate all dimensions as maps.\
+
+#### Outputformat
+Multiple formats are now supported: jpg, png, webp\
+You now can select the output format with -f jpg or -f png or -f webp\
+For jpg and webp, you can select the quality:\
+
+jpg: 0-100 (100 best)\
+webp: 0-100 (100 best but lossy. Value -1 is lossless and usually smaller than 100, -1 is also default)\
+
+You can set that value with the parameter -q
+
+Example
+```
+-f webp -q -1
+-f png
+-f jpg -q 20
+```
 
 ## papyrus.cs
 Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2.
@@ -47,53 +116,50 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 ```papyruscs --world "My World/db" --output "C:\papyrus"```
 
 ```
-  -w, --world            Required. Sets the path the Minecraft Bedrock Edition
-                         Map
 
-  -o, --output           (Default: .) Sets the output path for the generated
-                         map tiles
+  -w, --world                     Required. Sets the path the Minecraft Bedrock Edition Map
 
-  --htmlfile             (Default: map.html) Sets name of html map file
+  -o, --output                    (Default: generatedmap) Sets the output path for the generated map tiles
 
-  -s, --strategy         (Default: ParallelFor) Sets the render strategy. Valid
-                         are SingleFor and ParallelFor (Multithreaded)
+  --htmlfile                      (Default: map.html) Sets name of html map file
 
-  --coords               (Default: true) Render text coordinates in each chunk
+  -s, --strategy                  (Default: Dataflow) Sets the render strategy. Valid are Dataflow, SingleFor and ParallelFor (Multithreaded)
 
-  --limitx               Limits the chunk rendering in the x dimension
-                         (inclusive). Provide two values with comma separated,
-                         eg: -10,10
+  --coords                        (Default: false) Render text coordinates in each chunk
 
-  --limitz               Limits the chunk rendering in the z dimension
-                         (inclusive). Provide two values with comma separated,
-                         eg: -10,10
+  --limitx                        Limits the chunk rendering in the x dimension (inclusive). Provide two values with comma separated, eg:
+                                  -10,10
 
-  -y, --limity           (Default: -1) Limits the chunk rendering in the y
-                         dimension (inclusive). For y provide just one positive
-                         value, eg: 10. -1 means: all
+  --limitz                        Limits the chunk rendering in the z dimension (inclusive). Provide two values with comma separated, eg:
+                                  -10,10
 
-  --threads              (Default: 16) Set maximum of used threads
+  -y, --limity                    (Default: -1) Limits the chunk rendering in the y dimension (inclusive). For y provide just one positive
+                                  value, eg: 10. -1 means: all
 
-  -r, --rendermode       (Default: Heightmap) RenderMode: Basic - Render
-                         without brightness adjustment. Heightmap - Render with
-                         brightness adjustment based on brillouin function and
-                         height of block
+  --threads                       (Default: 16) Set maximum of used threads
 
-  --brillouin_j          (Default: 10000) Sets factor j for heightmap
-                         brightness formula brillouin: brightness =
-                         1+brillouin(height / divider): See
-                         https://de.wikipedia.org/wiki/Brillouin-Funktion for a
-                         diagram of the function.
+  -r, --rendermode                (Default: Heightmap) RenderMode: Basic - Render without brightness adjustment. Heightmap - Render with
+                                  brightness adjustment based on brillouin function and height of block
 
-  --brillouin_divider    (Default: 20) Sets divider for heightmap brightness
-                         formula brillouin: brightness = 1+brillouin(height /
-                         divider). See
-                         https://de.wikipedia.org/wiki/Brillouin-Funktion for a
-                         diagram of the function.
+  --brillouin_j                   (Default: 10000) Sets factor j for heightmap brightness formula brillouin: brightness = 1+brillouin(height /
+                                  divider): See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
 
-  --help                 Display this help screen.
+  --brillouin_divider             (Default: 20) Sets divider for heightmap brightness formula brillouin: brightness = 1+brillouin(height /
+                                  divider). See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
 
-  --version              Display version information.
+  -f                              (Default: png) Sets the output file format
+
+  -q                              (Default: -1) Sets quality for jpg or web format (0-100, -1 for lossless webp)
+
+  -d, --dim                       (Default: 0) Selects the dimension. 0: Overworld, 1: Nether, 2: End
+
+  --trimceiling                   (Default: false) Removes the ceiling starting from y-max. Automatically activated for nether
+
+  --deleteexistingupdatefolder    (Default: false) Delete an existing update/dimX folder right before creating a possible new update
+
+  --help                          Display this help screen.
+
+  --version                       Display version information.
 ```
 
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
@@ -113,11 +179,6 @@ To compile for Linux run:
 
 The source for the modified versions is included in this repository.
 All needed depencies are already included in this repository or automatically downloaded via NuGet.
-
-## Contribute xor support
-If you want to help improving Papyrus please consider forking the repository.
-
-Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
 ## Special thanks to...
 ... [clarkx86](https://github.com/clarkx86) for his team work and idea giving and his port in node.js.
