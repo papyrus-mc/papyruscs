@@ -10,7 +10,7 @@ namespace Maploader.Renderer.Imaging
         SimpleDecoder d;
         public WebP()
         {
-            Imazen.WebP.Extern.LoadLibrary.LoadWebPOrFail();
+            //Imazen.WebP.Extern.LoadLibrary.LoadWebPOrFail();
             e = new SimpleEncoder();
             d = new SimpleDecoder();
         }
