@@ -93,6 +93,9 @@
       // will aim for, so that we can calculate zoom levels correctly later.
       const openLayersInternalTileSize = Math.pow(2, 8); // 256
 
+      // The actual size of the tiles that we're using in Papyrus.
+      const tileSize = 512;
+
       // The maximum positive extents of the whole map. The units for this
       // value are "number of tiles at the most zoomed out level generated
       // by Papyrus". That is, if Papyrus generates a minimum zoom level
@@ -106,21 +109,16 @@
       // as maximumExtentSize.
       const minimumExtentSize = -10000;
 
-      // Additional zoom levels beyond the maximum that we want to allow. OpenLayers
-      // will just scale the best images it has once zooming in at this level, so
-      // things will be blurry.
-      const additionalZoomLevels = 2;
-
       // Computes the resolutions array to use for OpenLayers. For each OpenLayers
       // zoom level (0 through 43), this computes the ratio such that a single tile
       // at OpenLayers zoom level 0 is a single tile at the minimum Papyrus zoom level.
       const papyrusMinimumZoomScale = Math.pow(2, config.globalMinZoom);
-      const convertedFromTilesToPixelsUsingInternalTileSize =
-        papyrusMinimumZoomScale / openLayersInternalTileSize;
+      const convertedFromTilesToPixelsUsingTileSize =
+        papyrusMinimumZoomScale / tileSize;
       const resolutions = new Array(43);
       for (let z = 0; z < 43; ++z) {
         resolutions[z] =
-          convertedFromTilesToPixelsUsingInternalTileSize / Math.pow(2, z);
+          convertedFromTilesToPixelsUsingTileSize / Math.pow(2, z);
       }
 
       // When we calculate resolutions above, we've effectively saying that zoom level 0 is
@@ -136,7 +134,12 @@
       const projection = new ol.proj.Projection({
         code: "ZOOMIFY",
         units: "pixels",
-        extent: [0, 0, 1, 1]
+        extent: [
+          0,
+          0,
+          openLayersInternalTileSize / tileSize,
+          openLayersInternalTileSize / tileSize
+        ]
       });
 
       // Construct the tile grid using the desired maximum and minimum extents listed above,
@@ -149,7 +152,8 @@
           maximumExtentSize
         ],
         origin: [0, 0],
-        resolutions: resolutions
+        resolutions: resolutions,
+        tileSize: [tileSize, tileSize]
       });
 
       let map;
@@ -216,7 +220,7 @@
           const form = document.createElement("form");
           cardBody.appendChild(form);
 
-          const currentSelectedLayer = Object.keys(layers).sort()[0];
+          let currentSelectedLayer = Object.keys(layers).sort()[0];
           let rememberedCenters = {};
           let rememberedZoom = {};
 
@@ -263,11 +267,7 @@
 
                   rememberedZoom[currentSelectedLayer] = view.getZoom();
                   view.setMinZoom(layer.minNativeZoom - config.globalMinZoom);
-                  view.setMaxZoom(
-                    layer.maxNativeZoom -
-                      config.globalMinZoom +
-                      additionalZoomLevels
-                  );
+                  view.setMaxZoom(layer.maxNativeZoom - config.globalMinZoom);
                   if (rememberedZoom[layerKey] === undefined) {
                     // rezoom the map to minimum zoom
                     view.setZoom(layer.minNativeZoom - config.globalMinZoom);
