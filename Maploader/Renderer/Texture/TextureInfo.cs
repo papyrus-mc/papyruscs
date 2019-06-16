@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using Maploader.Renderer.Imaging;
 
 namespace Maploader.Renderer.Texture
 {
@@ -44,7 +45,7 @@ namespace Maploader.Renderer.Texture
 
      
         #endregion
-        public TextureInfo(string filename, TextureTranslation translation, RotateFlipType rotation)
+        public TextureInfo(string filename, TextureTranslation translation, RotateFlip rotation)
         {
             Filename = filename;
             Translation = translation;
@@ -53,7 +54,7 @@ namespace Maploader.Renderer.Texture
 
         public string Filename { get;}
         public TextureTranslation Translation { get; set; }
-        public RotateFlipType Rotation { get; set; }
+        public RotateFlip Rotation { get; set; }
 
 
     }

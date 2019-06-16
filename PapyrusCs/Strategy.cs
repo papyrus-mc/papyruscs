@@ -4,5 +4,6 @@
     {
         SingleFor,
         ParallelFor,
+        Dataflow
     }
 }

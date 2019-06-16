@@ -1,26 +1,29 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
+using System.Collections.Immutable;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using Maploader.Core;
 using Maploader.Extensions;
 using Maploader.Renderer;
+using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using PapyrusCs.Database;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusCs.Strategies.For
 {
-    public abstract class ForRenderStrategy : IRenderStrategy
+    public abstract class ForRenderStrategy<TImage> : IRenderStrategy where TImage : class
     {
-        protected abstract Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy
+        protected abstract Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy { get; }
+
+        private readonly IGraphicsApi<TImage> graphics;
+
+        protected ForRenderStrategy(IGraphicsApi<TImage> graphics)
         {
-            get;
+            this.graphics = graphics;
         }
 
         public int XMin { get; set; }
@@ -40,70 +43,93 @@ namespace PapyrusCs.Strategies
         public List<Exception> Exceptions { get; } = new List<Exception>();
         public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
+        public void Init()
+        {
+        }
+
+        public void Finish()
+        {
+        }
+
+        public Settings[] GetSettings()
+        {
+            return new Settings[]
+                {new Settings() {Dimension = Dimension, Format = FileFormat, MaxZoom = InitialDiameter, MinZoom = 0, Quality = FileQuality}};
+        }
 
         public int InitialDiameter { get; set; }
+        public Func<PapyrusContext> DatabaseCreator { get; set; }
+        public HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
+        public ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> RenderedSubChunks { get; set; }
+        public bool IsUpdate { get; set; }
+        public bool DeleteExistingUpdateFolder { get; set; }
+        public string FileFormat { get; set; }
+        public int FileQuality { get; set; }
+        public int Dimension { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 
         public void RenderInitialLevel()
         {
+            graphics.DefaultQuality = FileQuality;
             if (XMin.IsOdd())
                 XMin--;
             if (ZMin.IsOdd())
                 ZMin--;
 
             OuterLoopStrategy(BetterEnumerable.SteppedRange(XMin, XMax + 1, ChunksPerDimension),
-                new ParallelOptions() { MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads },
+                new ParallelOptions() {MaxDegreeOfParallelism = RenderSettings.MaxNumberOfThreads},
                 x =>
                 {
+
                     int chunksRendered = 0;
 
                     try
                     {
-                        var finder = new TextureFinder(TextureDictionary, TexturePath);
-                        var chunkRenderer = new ChunkRenderer(finder, RenderSettings);
+                        var finder = new TextureFinder<TImage>(TextureDictionary, TexturePath, graphics);
+                        var chunkRenderer = new ChunkRenderer<TImage>(finder, graphics, RenderSettings);
 
                         for (int z = ZMin; z < ZMax + 1; z += ChunksPerDimension)
                         {
 
-                            Bitmap b = null;
-                            Graphics g = null;
+                            TImage b = null;
                             bool anydrawn = false;
                             for (int cx = 0; cx < ChunksPerDimension; cx++)
-                                for (int cz = 0; cz < ChunksPerDimension; cz++)
+                            for (int cz = 0; cz < ChunksPerDimension; cz++)
+                            {
+
+                                if (AllWorldKeys != null)
                                 {
-
-                                    if (RenderSettings.Keys != null)
-                                    {
-                                        UInt64 key = Coordinate2D.CreateHashKey(x + cx, z + cz);
-                                        if (!RenderSettings.Keys.Contains(key))
-                                            continue;
-                                    }
-
-                                    var chunk = World.GetChunk(x + cx, z + cz);
-                                    if (chunk == null)
+                                    var key = new LevelDbWorldKey2(x + cx, z + cz);
+                                    if (!AllWorldKeys.Contains(key))
                                         continue;
-
-                                    if (b == null)
-                                    {
-                                        b = new Bitmap(TileSize, TileSize);
-                                        g = Graphics.FromImage(b);
-                                    }
-
-                                    chunksRendered++;
-
-                                    chunkRenderer.RenderChunk(b, chunk, g, cx * ChunkSize, cz * ChunkSize);
-                                    anydrawn = true;
                                 }
 
-                            if (anydrawn && b != null)
+                                var data = World.GetOverworldChunkData(x + cx, z + cz);
+
+                                if (data.Empty)
+                                    continue;
+
+                                var chunk = World.GetChunk(x + cx, z + cz, data);
+
+                                if (b == null)
+                                {
+                                    b = graphics.CreateEmptyImage(TileSize, TileSize);
+                                }
+
+                                chunksRendered++;
+                                chunkRenderer.RenderChunk(b, chunk, cx * ChunkSize, cz * ChunkSize);
+                                anydrawn = true;
+
+
+                            }
+
+                            if (anydrawn)
                             {
                                 var fx = (x) / ChunksPerDimension;
                                 var fz = (z) / ChunksPerDimension;
 
                                 SaveBitmap(InitialZoomLevel, fx, fz, b);
-                                g.Dispose();
-                                b.Dispose();
                             }
 
 
@@ -118,6 +144,7 @@ namespace PapyrusCs.Strategies
                         {
                             ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(chunksRendered));
                         }
+
                         foreach (var str in chunkRenderer.MissingTextures)
                         {
                             MissingTextures.Add(str);
@@ -128,6 +155,7 @@ namespace PapyrusCs.Strategies
                         Console.WriteLine(ex);
                         Exceptions.Add(ex);
                     }
+
                 });
             Console.WriteLine("\nDone rendering initial level\n");
         }
@@ -144,6 +172,7 @@ namespace PapyrusCs.Strategies
             var sourceLevelZmin = ZMin / ChunksPerDimension;
             var sourceLevelZmax = ZMax / ChunksPerDimension;
 
+            graphics.DefaultQuality = FileQuality;
 
             while (sourceZoomLevel > 0)
             {
@@ -181,43 +210,31 @@ namespace PapyrusCs.Strategies
 
                         if (b1 !=null || b2 != null || b3 != null || b4 != null)
                         {
-                            bool didDraw = false;
-                            using (var bfinal = new Bitmap(TileSize, TileSize))
-                            using (var gfinal = Graphics.FromImage(bfinal))
+                            var bfinal = graphics.CreateEmptyImage(TileSize, TileSize);
                             {
                                 var halfTileSize = TileSize / 2;
 
                                 if (b1 != null)
                                 {
-                                    gfinal.DrawImage(b1, 0, 0, halfTileSize, halfTileSize);
-                                    didDraw = true;
+                                    graphics.DrawImage(bfinal, b1, 0, 0, halfTileSize, halfTileSize);
                                 }
 
                                 if (b2 != null)
                                 {
-                                    gfinal.DrawImage(b2, halfTileSize, 0, halfTileSize, halfTileSize);
-                                    didDraw = true;
-
+                                    graphics.DrawImage(bfinal, b2, halfTileSize, 0, halfTileSize, halfTileSize);
                                 }
 
                                 if (b3 != null)
                                 {
-                                    gfinal.DrawImage(b3, 0, halfTileSize, halfTileSize, halfTileSize);
-                                    didDraw = true;
-
+                                    graphics.DrawImage(bfinal, b3, 0, halfTileSize, halfTileSize, halfTileSize);
                                 }
 
                                 if (b4 != null)
                                 {
-                                    gfinal.DrawImage(b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
-                                    didDraw = true;
-
+                                    graphics.DrawImage(bfinal, b4, halfTileSize, halfTileSize, halfTileSize, halfTileSize);
                                 }
 
-                                if (didDraw)
-                                {
-                                    SaveBitmap(destZoom, x / 2, z / 2, bfinal);
-                                }
+                                SaveBitmap(destZoom, x / 2, z / 2, bfinal);
                             }
                         }
                     }
@@ -239,23 +256,23 @@ namespace PapyrusCs.Strategies
 
         }
 
-        private void SaveBitmap(int zoom, int x, int z, Bitmap b)
+        private void SaveBitmap(int zoom, int x, int z, TImage b)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
+            var filepath = Path.Combine(path, $"{z}.{FileFormat}");
 
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            b.Save(filepath);
+            graphics.SaveImage(b, filepath);
         }
 
-        private Bitmap LoadBitmap(int zoom, int x, int z)
+        private TImage LoadBitmap(int zoom, int x, int z)
         {
             var path = Path.Combine(OutputPath, "map", $"{zoom}", $"{x}");
-            var filepath = Path.Combine(path, $"{z}.png");
+            var filepath = Path.Combine(path, $"{z}.{FileFormat}");
             if (File.Exists(filepath))
             {
-                return new Bitmap(filepath);
+                return graphics.LoadImage(filepath);
             }
 
             return null;

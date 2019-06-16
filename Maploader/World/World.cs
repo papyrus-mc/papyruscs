@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using fNbt;
 using leveldb_sharp_std;
@@ -20,6 +21,46 @@ namespace Maploader.World
             db = new DB(options, pathDb);
         }
 
+
+        public ChunkData GetOverworldChunkData(int x, int z)
+        {
+            if (db == null)
+                throw new InvalidOperationException("Open Db first");
+
+            var ret = new ChunkData();
+            var key = CreateKey(x, z);
+
+            for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
+            {
+                key[9] = subChunkIdx;
+
+                var data = db.Get(key);
+                if (data != null)
+                {
+                    var subChunkData = new SubChunkData()
+                    {
+                        Index = subChunkIdx,
+                        Data = data,
+                        Key = key,
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data)
+                    };
+                    ret.SubChunks.Add(subChunkData);
+                }
+            }
+
+            return ret;
+        }
+
+        public Chunk GetChunk(int x, int z, ChunkData data)
+        {
+            Chunk c = new Chunk(x, z);
+            foreach (var subChunkRaw in data.SubChunks)
+            {
+                CopySubChunkToChunk(c, subChunkRaw.Index, subChunkRaw.Data);
+            }
+
+            return c;
+        }
 
         public Chunk GetChunk(int x, int z)
         {
@@ -50,6 +91,7 @@ namespace Maploader.World
             {
                 CopySubChunkToChunk(c, subChunkRaw);
             }
+
             return c;
 
         }
@@ -63,6 +105,46 @@ namespace Maploader.World
                 foreach (var data in db)
                 {
                     yield return data.Key;
+                }
+            }
+        }
+
+
+        public IEnumerable<byte[]> OverworldKeys => GetDimension(0);
+        public IEnumerable<byte[]> NetherKeys => GetDimension(1);
+        public IEnumerable<byte[]> EndKeys => GetDimension(2);
+
+        public IEnumerable<byte[]> GetDimension(int index)
+        {
+            if (index == 0)
+            {
+                foreach (var element in db)
+                {
+                    var key = element.Key;
+                    if (key.Length != 10)
+                        continue;
+                    if (key[8] != 47)
+                        continue;
+                    if (key != null)
+                        yield return key;
+                }
+            }
+            else
+            {
+                foreach (var element in db)
+                {
+                    var key = element.Key;
+                    if (key.Length != 14)
+                        continue;
+                    if (key[12] != 47)
+                        continue;
+                    if (key[8] != index)
+                    {
+                        continue;
+                    }
+
+                    if (key != null)
+                        yield return key;
                 }
             }
         }
@@ -83,10 +165,15 @@ namespace Maploader.World
 
         private void CopySubChunkToChunk(Chunk chunk, KeyValuePair<byte, byte[]> subChunkRawData)
         {
-            byte subChunkId = subChunkRawData.Key;
+            CopySubChunkToChunk(chunk, subChunkRawData.Key, subChunkRawData.Value);
+        }
+
+        private void CopySubChunkToChunk(Chunk chunk, byte yIndex, byte[] data)
+        {
+            byte subChunkId = yIndex;
             int yOffset = subChunkId * 16;
 
-            using (MemoryStream ms = new MemoryStream(subChunkRawData.Value))
+            using (MemoryStream ms = new MemoryStream(data))
             using (var bs = new BinaryReader(ms, Encoding.Default))
             {
 
@@ -103,9 +190,9 @@ namespace Maploader.World
                             int dataPos = 1 + 4096 + (position / 2);
 
                             if (position % 2 == 0)
-                                blockData = (subChunkRawData.Value[dataPos] >> 4) & 0xF;
+                                blockData = (data[dataPos] >> 4) & 0xF;
                             else
-                                blockData = (subChunkRawData.Value[dataPos] >> 0) & 0xF;
+                                blockData = (data[dataPos] >> 0) & 0xF;
 
                             int x = (position >> 8) & 0xF;
                             int y = position & 0xF;
@@ -275,6 +362,41 @@ namespace Maploader.World
         public byte[] GetData(byte[] key)
         {
             return db[key];
+        }
+
+        public ChunkData GetChunkData(GroupedChunkSubKeys groupedChunkSubKeys)
+        {
+            if (db == null)
+                throw new InvalidOperationException("Open Db first");
+
+            var firstSubChunk = groupedChunkSubKeys.Subchunks.First();
+
+            var ret = new ChunkData
+            {
+                X = firstSubChunk.Value.X,
+                Z = firstSubChunk.Value.Z
+            };
+
+
+            foreach (var kvp in groupedChunkSubKeys.Subchunks)
+            {
+                var key = kvp.Value;
+
+                var data = db.Get(key.Key);
+                if (data != null)
+                {
+                    var subChunkData = new SubChunkData()
+                    {
+                        Index = kvp.Key,
+                        Data = data,
+                        Key = kvp.Value.Key,
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                    };
+                    ret.SubChunks.Add(subChunkData);
+                }
+            }
+
+            return ret;
         }
     }
 }

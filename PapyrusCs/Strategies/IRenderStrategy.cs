@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using PapyrusCs.Database;
 
 namespace PapyrusCs.Strategies
 {
@@ -26,10 +30,19 @@ namespace PapyrusCs.Strategies
         List<Exception> Exceptions { get; }
         RenderSettings RenderSettings { get; set; }
         int InitialDiameter { get; set; }
+        HashSet<LevelDbWorldKey2> AllWorldKeys { get; set; }
+        string FileFormat { get; set; }
+        int FileQuality { get; set; }
+        int Dimension { get; set; }
+        bool IsUpdate { get; }
+        bool DeleteExistingUpdateFolder { get; set; }
         void RenderInitialLevel();
         void RenderZoomLevels();
 
         event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
         event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
+        void Init();
+        void Finish();
+        Settings[] GetSettings();
     }
 }
