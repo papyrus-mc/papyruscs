@@ -275,7 +275,15 @@ namespace PapyrusCs.Strategies.Dataflow
             var filepath = Path.Combine(path, $"{z}.{FileFormat}");
             if (File.Exists(filepath))
             {
-                return graphics.LoadImage(filepath);
+                try
+                {
+                    return graphics.LoadImage(filepath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error Loading tile at {filepath}, because {ex}");
+                    return null;
+                }
             }
 
             return null;
