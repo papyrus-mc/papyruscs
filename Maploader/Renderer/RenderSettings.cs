@@ -9,8 +9,9 @@ namespace Maploader.Renderer
         public int MaxNumberOfThreads { get; set; } = 16;
         public int YMax { get; set; } = -1;
         public float BrillouinJ { get; set; } = 10000;
+        public float BrillouinDivider { get; set; } = 20;
+        public int BrillouinOffset { get; set; } = 64;
         public RenderMode RenderMode { get; set; }
-        public float BrillouinDivider { get; set; }
         public bool TrimCeiling { get; set; } = true;
     }
 }

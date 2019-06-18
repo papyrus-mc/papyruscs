@@ -218,7 +218,7 @@ namespace PapyrusCs
                     strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
                     break;
                 case Strategy.Dataflow:
-                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing());
+                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing(), options.ForceOverwrite);
                     break;
                 default:
                     strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
@@ -242,6 +242,7 @@ namespace PapyrusCs
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider,
+                BrillouinOffset = options.BrillouinOffset,
                 TrimCeiling = options.TrimCeiling,
             };
             strat.AllWorldKeys = allSubChunks;
