@@ -7,6 +7,11 @@ If you want to help improving Papyrus please consider forking the repository.
 
 Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
+## Version 0.3.2
+Texture fixes\
+--brillouin_offset x parameter for worlds with low/high ground level\
+--forceoverwrite parameter to force reender everything\
+
 ## Version 0.3
 ### What's new:
 #### New folder structure:
@@ -123,39 +128,53 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 
   --htmlfile                      (Default: map.html) Sets name of html map file
 
-  -s, --strategy                  (Default: Dataflow) Sets the render strategy. Valid are Dataflow, SingleFor and ParallelFor (Multithreaded)
+  -s, --strategy                  (Default: Dataflow) Sets the render strategy. Valid are Dataflow, SingleFor and
+                                  ParallelFor (Multithreaded)
 
   --coords                        (Default: false) Render text coordinates in each chunk
 
-  --limitx                        Limits the chunk rendering in the x dimension (inclusive). Provide two values with comma separated, eg:
-                                  -10,10
+  --limitx                        Limits the chunk rendering in the x dimension (inclusive). Provide two values with
+                                  comma separated, eg: -10,10
 
-  --limitz                        Limits the chunk rendering in the z dimension (inclusive). Provide two values with comma separated, eg:
-                                  -10,10
+  --limitz                        Limits the chunk rendering in the z dimension (inclusive). Provide two values with
+                                  comma separated, eg: -10,10
 
-  -y, --limity                    (Default: -1) Limits the chunk rendering in the y dimension (inclusive). For y provide just one positive
-                                  value, eg: 10. -1 means: all
+  -y, --limity                    (Default: -1) Limits the chunk rendering in the y dimension (inclusive). For y
+                                  provide just one positive value, eg: 10. -1 means: all
 
   --threads                       (Default: 16) Set maximum of used threads
 
-  -r, --rendermode                (Default: Heightmap) RenderMode: Basic - Render without brightness adjustment. Heightmap - Render with
-                                  brightness adjustment based on brillouin function and height of block
+  -r, --rendermode                (Default: Heightmap) RenderMode: Basic - Render without brightness adjustment.
+                                  Heightmap - Render with brightness adjustment based on brillouin function and height
+                                  of block
 
-  --brillouin_j                   (Default: 10000) Sets factor j for heightmap brightness formula brillouin: brightness = 1+brillouin(height /
-                                  divider): See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
+  --brillouin_j                   (Default: 10000) Sets factor j for heightmap brightness formula brillouin:
+                                  brightness = 1+brillouin((height-offset) / divider): See
+                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
 
-  --brillouin_divider             (Default: 20) Sets divider for heightmap brightness formula brillouin: brightness = 1+brillouin(height /
-                                  divider). See https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
+  --brillouin_divider             (Default: 20) Sets divider for heightmap brightness formula brillouin: brightness =
+                                  1+brillouin((height-offset) / divider). See
+                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
+
+  --brillouin_offset              (Default: 64) Sets the offset for heightmap brightness formula brillouin: brightness
+                                  = 1+brillouin((height-offset) / divider). See
+                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the function.
 
   -f                              (Default: png) Sets the output file format
 
   -q                              (Default: -1) Sets quality for jpg or web format (0-100, -1 for lossless webp)
 
+  --forceoverwrite                (Default: false) Forces PapyrusCs to render every chunk again
+
   -d, --dim                       (Default: 0) Selects the dimension. 0: Overworld, 1: Nether, 2: End
 
-  --trimceiling                   (Default: false) Removes the ceiling starting from y-max. Automatically activated for nether
+  --trimceiling                   (Default: false) Removes the ceiling starting from y-max. Automatically activated
+                                  for nether
 
-  --deleteexistingupdatefolder    (Default: false) Delete an existing update/dimX folder right before creating a possible new update
+  --notrimceiling                 (Default: false) Disables auto ceiling removal for Nether
+
+  --deleteexistingupdatefolder    (Default: false) Delete an existing update/dimX folder right before creating a
+                                  possible new update
 
   --help                          Display this help screen.
 
