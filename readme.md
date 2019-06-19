@@ -176,6 +176,9 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
   --deleteexistingupdatefolder    (Default: false) Delete an existing update/dimX folder right before creating a
                                   possible new update
 
+  --use_leaflet_legacy            (Default: false) Use the legacy leaflet.js map renderer instead of the new
+                                  OpenLayers version
+                                  
   --help                          Display this help screen.
 
   --version                       Display version information.
