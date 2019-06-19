@@ -72,6 +72,9 @@ namespace PapyrusCs
         [Option("deleteexistingupdatefolder", Required = false, Default = false, HelpText = "Delete an existing update/dimX folder right before creating a possible new update")]
         public bool DeleteExistingUpdateFolder { get; set; }
 
+        [Option("use_leaflet_legacy", Required = false, Default = false, HelpText = "Use the legacy leaflet.js map renderer instead of the new OpenLayers version")]
+        public bool UseLeafletLegacy { get; set; }
+
 
         // Derivative options
         public bool Loaded { get; set; }
