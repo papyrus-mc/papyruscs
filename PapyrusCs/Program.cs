@@ -196,7 +196,7 @@ namespace PapyrusCs
             strat.RenderZoomLevels();
 
 
-            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate);
+            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate, options.UseLeafletLegacy);
 
             strat.Finish();
             Console.WriteLine("Total Time {0}", _time.Elapsed);
@@ -288,12 +288,12 @@ namespace PapyrusCs
         }
 
         private static void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings,
-            bool isUpdate)
+            bool isUpdate, bool useLegacyLeaflet)
         {
             try
             {
                 var layernames = new string[] { "Overworld", "Nether", "End" };
-                var mapHtmlContext = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
+                var mapHtmlContext = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, useLegacyLeaflet ? "map.leaflet.thtml" : "map.thtml"));
 
                 var layersdef = settings.ToDictionary(
                     setting => "dim" + setting.Dimension, 

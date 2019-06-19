@@ -31,6 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="map.leaflet.thtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="map.thtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
