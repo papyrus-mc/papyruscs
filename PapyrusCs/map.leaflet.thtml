@@ -109,7 +109,7 @@
 
       function display_coordinates(event) {
         var myDiv = document.getElementById("coords");
-        var factor = global.factor;
+        var factor = config.factor;
 
         myDiv.innerHTML =
           "X: " +
