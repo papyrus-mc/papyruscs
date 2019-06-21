@@ -66,6 +66,7 @@ namespace PapyrusCs.Strategies.For
         public string FileFormat { get; set; }
         public int FileQuality { get; set; }
         public int Dimension { get; set; }
+        public string Profile { get; set; }
 
         public RenderSettings RenderSettings { get; set; }
 

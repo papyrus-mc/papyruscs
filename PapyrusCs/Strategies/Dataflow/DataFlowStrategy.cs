@@ -51,6 +51,7 @@ namespace PapyrusCs.Strategies.Dataflow
         public string FileFormat { get; set; }
         public int FileQuality { get; set; }
         public int Dimension { get; set; }
+        public string Profile { get; set; }
 
         public bool IsUpdate => isUpdate;
         public bool DeleteExistingUpdateFolder { get; set; }
@@ -104,7 +105,7 @@ namespace PapyrusCs.Strategies.Dataflow
             var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
             {
                 var toInsert = datas.Where(x => x.FoundInDb == false)
-                    .Select(x => new Checksum {Crc32 = x.Crc32, LevelDbKey = x.Key}).ToList();
+                    .Select(x => new Checksum {Crc32 = x.Crc32, LevelDbKey = x.Key, Profile = Profile}).ToList();
 
                 if (toInsert.Count > 0)
                 {
@@ -113,7 +114,7 @@ namespace PapyrusCs.Strategies.Dataflow
                 }
 
                 var toUpdate = datas.Where(x => x.FoundInDb).Select(x => new Checksum()
-                    {Id = x.ForeignDbId, Crc32 = x.Crc32, LevelDbKey = x.Key}).ToList();
+                    {Id = x.ForeignDbId, Crc32 = x.Crc32, LevelDbKey = x.Key, Profile = Profile }).ToList();
                 if (toUpdate.Count > 0)
                 {
                     db.BulkUpdate(toUpdate);
@@ -308,8 +309,8 @@ namespace PapyrusCs.Strategies.Dataflow
             pathToDbUpdate = Path.Combine(OutputPath, "chunks-update.sqlite");
             pathToDbBackup = Path.Combine(OutputPath, "chunks-backup.sqlite");
 
-            pathToMapUpdate = Path.Combine(OutputPath, "update", $"dim{Dimension}");
-            pathToMap = Path.Combine(OutputPath, "map", $"dim{Dimension}");
+            pathToMapUpdate = Path.Combine(OutputPath, "update", "dim" + Dimension + (string.IsNullOrEmpty(Profile) ? "" : $"_{Profile}"));
+            pathToMap = Path.Combine(OutputPath, "map", "dim" + Dimension + (string.IsNullOrEmpty(Profile) ? "" : $"_{Profile}"));
 
             isUpdate = File.Exists(pathToDb);
 
@@ -358,7 +359,7 @@ namespace PapyrusCs.Strategies.Dataflow
             db = c.CreateDbContext(pathToDbUpdate, true);
             db.Database.Migrate();
 
-            var settings = db.Settings.FirstOrDefault(x => x.Dimension == Dimension);
+            var settings = db.Settings.FirstOrDefault(x => x.Dimension == Dimension && x.Profile == Profile);
             if (settings != null)
             {
                 this.FileFormat = settings.Format;
@@ -375,6 +376,7 @@ namespace PapyrusCs.Strategies.Dataflow
                 settings = new Settings()
                 {
                     Dimension = Dimension,
+                    Profile = Profile,
                     Quality = FileQuality,
                     Format = FileFormat,
                     MaxZoom = this.NewInitialZoomLevel,
@@ -384,7 +386,7 @@ namespace PapyrusCs.Strategies.Dataflow
                 db.SaveChanges();
             }
 
-            renderedSubchunks = db.Checksums.ToImmutableDictionary(
+            renderedSubchunks = db.Checksums.Where(x => x.Profile == Profile).ToImmutableDictionary(
                 x => new LevelDbWorldKey2(x.LevelDbKey), x => new KeyAndCrc(x.Id, x.Crc32));
             Console.WriteLine($"Found {renderedSubchunks.Count} subchunks which are already rendered");
         }

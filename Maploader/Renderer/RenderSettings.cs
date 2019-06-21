@@ -12,5 +12,6 @@ namespace Maploader.Renderer
         public RenderMode RenderMode { get; set; }
         public float BrillouinDivider { get; set; }
         public bool TrimCeiling { get; set; } = true;
+        public string Profile { get; set; }
     }
 }
