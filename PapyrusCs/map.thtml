@@ -194,6 +194,12 @@
 
       const initialLayer = layers[Object.keys(layers).sort()[0]];
 
+      if (Object.keys(layers).sort()[0] == "dim0_stronghold") {
+        document.getElementById("map").style.background = "#fff";
+      } else {
+        document.getElementById("map").style.background = "#202020";
+      }
+                
       const view = new ol.View({
         projection: projection,
         center: [0, 0],
@@ -248,6 +254,12 @@
               radioContainer.appendChild(radioLabel);
 
               const selectLayer = function(e) {
+                if (layerKey == "dim0_stronghold") {
+                  document.getElementById("map").style.background = "#fff";
+                } else {
+                  document.getElementById("map").style.background = "#202020";
+                }
+        
                 if (currentSelectedLayer != layerKey) {
                   const runtimeLayers = map.getLayers();
                   runtimeLayers.forEach(function(runtimeLayer) {
@@ -255,25 +267,28 @@
                       runtimeLayer.metaLayerKey == layerKey
                     );
                   });
+                  
+                  const oldFocusGroup = currentSelectedLayer.substr(0, 4);
+                  const newFocusGroup = layerKey.substr(0, 4);
 
-                  rememberedCenters[currentSelectedLayer] = view.getCenter();
-                  if (rememberedCenters[layerKey] === undefined) {
+                  rememberedCenters[oldFocusGroup] = view.getCenter();
+                  if (rememberedCenters[newFocusGroup] === undefined) {
                     // refocus the map to 0, 0
                     view.setCenter([0, 0]);
                   } else {
                     // set back to where we were
-                    view.setCenter(rememberedCenters[layerKey]);
+                    view.setCenter(rememberedCenters[newFocusGroup]);
                   }
 
-                  rememberedZoom[currentSelectedLayer] = view.getZoom();
+                  rememberedZoom[oldFocusGroup] = view.getZoom();
                   view.setMinZoom(layer.minNativeZoom - config.globalMinZoom);
                   view.setMaxZoom(layer.maxNativeZoom - config.globalMinZoom);
-                  if (rememberedZoom[layerKey] === undefined) {
+                  if (rememberedZoom[newFocusGroup] === undefined) {
                     // rezoom the map to minimum zoom
                     view.setZoom(layer.minNativeZoom - config.globalMinZoom);
                   } else {
                     // set back to where we were
-                    view.setZoom(rememberedZoom[layerKey]);
+                    view.setZoom(rememberedZoom[newFocusGroup]);
                   }
 
                   const radios = $("input[name='layers']");

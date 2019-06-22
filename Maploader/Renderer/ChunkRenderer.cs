@@ -72,44 +72,56 @@ namespace Maploader.Renderer
                 {
                     case "underground":
                         {
-                            var hasGoneThroughSolid = false;
-                            var hasPassedThroughSolid = false;
-
-                            // todo: we have to check for sky by keeping track of the last Y value and watching
-                            // for gaps, as sky isn't a block in and of itself
+                            var lastYValue = 300;
+                            var isRendering = false;
+                            var state = "goingthroughtoplevelsky";
 
                             foreach (var blockColumn in blocksFromSkyToBedrock)
                             {
                                 var block = blockColumn.Value;
 
-                                if (!hasPassedThroughSolid || !hasGoneThroughSolid)
+                                if (!isRendering)
                                 {
-                                    if (block.Block.Id.Contains("water"))
+                                    var skyBlocksSkipped = lastYValue - block.Y - 1;
+
+                                    switch (state)
                                     {
-                                        continue;
+                                        case "goingthroughtoplevelsky":
+                                            if (textureFinder.TransparentBlocks.ContainsKey(block.Block.Id) || block.Block.Id.Contains("water") || block.Block.Id.Contains("kelp"))
+                                            {
+                                                continue;
+                                            }
+
+                                            lastYValue = block.Y;
+
+                                            if (skyBlocksSkipped > 0)
+                                            {
+                                                state = "goingthroughground";
+                                            }
+                                            break;
+                                        case "goingthroughground":
+                                            lastYValue = block.Y;
+
+                                            if (textureFinder.TransparentBlocks.ContainsKey(block.Block.Id) || block.Block.Id.Contains("water") || block.Block.Id.Contains("kelp"))
+                                            {
+                                                isRendering = true;
+                                            }
+
+                                            if (skyBlocksSkipped > 0)
+                                            {
+                                                isRendering = true;
+                                            }
+                                            break;
                                     }
                                 }
-
-                                if (!hasPassedThroughSolid)
+                                
+                                if (isRendering)
                                 {
-                                    if (!textureFinder.TransparentBlocks.ContainsKey(block.Block.Id) || block.Block.Id.Contains("water") || block.Block.Id.Contains("kelp"))
+                                    blocksToRender.Push(block);
+                                    if (!textureFinder.TransparentBlocks.ContainsKey(block.Block.Id))
                                     {
-                                        hasGoneThroughSolid = true;
-                                        continue;
+                                        break;
                                     }
-                                }
-
-                                if (!hasGoneThroughSolid)
-                                {
-                                    continue;
-                                }
-
-                                hasPassedThroughSolid = true;
-
-                                blocksToRender.Push(block);
-                                if (!textureFinder.TransparentBlocks.ContainsKey(block.Block.Id))
-                                {
-                                    break;
                                 }
                             }
                         }
@@ -150,6 +162,75 @@ namespace Maploader.Renderer
                     case "ore":
                         {
                             SearchForOres(blocksToRender, blocksFromSkyToBedrock);
+                        }
+                        break;
+                    case "stronghold":
+                        {
+                            var lastYValue = 300;
+                            var isRendering = false;
+                            var state = "goingthroughtoplevelsky";
+
+                            foreach (var blockColumn in blocksFromSkyToBedrock)
+                            {
+                                var block = blockColumn.Value;
+
+                                if (!isRendering)
+                                {
+                                    var skyBlocksSkipped = lastYValue - block.Y - 1;
+
+                                    switch (state)
+                                    {
+                                        case "goingthroughtoplevelsky":
+                                            if (textureFinder.TransparentBlocks.ContainsKey(block.Block.Id) || block.Block.Id.Contains("water") || block.Block.Id.Contains("kelp"))
+                                            {
+                                                continue;
+                                            }
+
+                                            lastYValue = block.Y;
+
+                                            if (skyBlocksSkipped > 0)
+                                            {
+                                                state = "goingthroughground";
+                                            }
+                                            break;
+                                        case "goingthroughground":
+                                            lastYValue = block.Y;
+
+                                            if (textureFinder.TransparentBlocks.ContainsKey(block.Block.Id) || block.Block.Id.Contains("water") || block.Block.Id.Contains("kelp"))
+                                            {
+                                                isRendering = true;
+                                            }
+
+                                            if (skyBlocksSkipped > 0)
+                                            {
+                                                isRendering = true;
+                                            }
+                                            break;
+                                    }
+                                }
+
+                                if (isRendering)
+                                {
+                                    if (block.Block.Id.Contains("cobblestone") ||
+                                        block.Block.Id.Contains("brick") ||
+                                        block.Block.Id.Contains("end") ||
+                                        block.Block.Id.Contains("iron_bars") ||
+                                        block.Block.Id.Contains("spawn") ||
+                                        block.Block.Id.Contains("egg") ||
+                                        block.Block.Id.Contains("bookshelf") ||
+                                        block.Block.Id.Contains("cobweb") ||
+                                        block.Block.Id.Contains("oak_planks") ||
+                                        block.Block.Id.Contains("chest") ||
+                                        block.Block.Id.Contains("door"))
+                                    {
+                                        blocksToRender.Push(block);
+                                        if (!textureFinder.TransparentBlocks.ContainsKey(block.Block.Id))
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                         }
                         break;
                     default:
@@ -242,6 +323,20 @@ namespace Maploader.Renderer
 
                 if (foundOre)
                 {
+                    break;
+                }
+            }
+        }
+
+        private static void SearchForEndBlocks(Stack<BlockCoord> blocksToRender, List<KeyValuePair<uint, BlockCoord>> blocksFromSkyToBedrock)
+        {
+            foreach (var blockColumn in blocksFromSkyToBedrock)
+            {
+                var block = blockColumn.Value;
+
+                if (block.Block.Id.Contains("end"))
+                {
+                    blocksToRender.Push(block);
                     break;
                 }
             }

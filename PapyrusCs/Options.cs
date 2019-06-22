@@ -54,7 +54,7 @@ namespace PapyrusCs
         [Option('d', "dim", Required = false, Default = 0, HelpText = "Selects the dimension. 0: Overworld, 1: Nether, 2: End")]
         public int Dimension { get; set; }
 
-        [Option('p', "profile", Required = false, Default = "", HelpText = "Optional profile: 'underground', 'aquatic', 'ore'")]
+        [Option('p', "profile", Required = false, Default = "", HelpText = "Optional profile: 'underground', 'aquatic', 'ore', 'stronghold'")]
         public string Profile { get; set; }
 
         [Option("trimceiling", Required = false, Default = false, HelpText = "Removes the ceiling starting from y-max. Automatically activated for nether")]

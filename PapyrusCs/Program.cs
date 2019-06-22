@@ -300,6 +300,7 @@ namespace PapyrusCs
                     { "dim0_underground", "Underground" },
                     { "dim0_aquatic", "Aquatic" },
                     { "dim0_ore", "Ores" },
+                    { "dim0_stronghold", "Strongholds" },
                     { "dim1", "Nether" },
                     { "dim2", "The End" },
                 };
