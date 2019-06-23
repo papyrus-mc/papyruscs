@@ -234,6 +234,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("planks", 0); // data = direction
                 case "brick_stairs":
                     return GetTexture("brick", 0);
+                case "dark_prismarine_stairs":
+                    return GetTexture("dark_prismarine", 0); // data = direction
                 case "prismarine_stairs":
                     return GetTexture("prismarine", 0); // data = direction
                 case "spruce_stairs":
