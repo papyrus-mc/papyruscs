@@ -133,15 +133,17 @@ namespace PapyrusCs
                 constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
             }
 
-            if (options.Dimension == 1) // Nether 
-            { 
+            if (options.Dimension == 1 && options.NoAutoTrimCeiling == false)
+            {
+                // Nether
                 options.TrimCeiling = true;
                 if (options.LimitY == -1)
                 {
                     options.LimitY = 120;
                 }
             }
-            
+
+
             Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
             var keys = world.GetDimension(options.Dimension).ToList();
             allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
@@ -219,7 +221,7 @@ namespace PapyrusCs
                     strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
                     break;
                 case Strategy.Dataflow:
-                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing());
+                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing(), options.ForceOverwrite);
                     break;
                 default:
                     strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
@@ -243,6 +245,7 @@ namespace PapyrusCs
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider,
+                BrillouinOffset = options.BrillouinOffset,
                 TrimCeiling = options.TrimCeiling,
                 Profile = options.Profile,
             };

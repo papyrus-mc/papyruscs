@@ -9,10 +9,12 @@ namespace PapyrusCs.Strategies.Dataflow
 {
     public class GetDataBlock : ITplBlock
     {
+        private bool forceOverwrite;
         public TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>> Block { get; }
 
-        public GetDataBlock(World world, ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubChunks, ExecutionDataflowBlockOptions options)
+        public GetDataBlock(World world, ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubChunks, ExecutionDataflowBlockOptions options, bool forceOverwrite)
         {
+            this.forceOverwrite = forceOverwrite;
             Block = new TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>>(
                 groupedChunkSubKeys =>
                 {
@@ -30,7 +32,7 @@ namespace PapyrusCs.Strategies.Dataflow
                                 subKey.FoundInDb = true;
                                 subKey.ForeignDbId = crc32.DbId;
 
-                                if (crc32.Crc32 != subKey.Crc32)
+                                if (forceOverwrite || (crc32.Crc32 != subKey.Crc32))
                                 {
                                     renderThisChunks = true;
                                 }

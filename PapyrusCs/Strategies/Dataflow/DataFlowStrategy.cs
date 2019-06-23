@@ -25,9 +25,10 @@ namespace PapyrusCs.Strategies.Dataflow
         private ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubchunks;
         private bool isUpdate;
 
-        public DataFlowStrategy(IGraphicsApi<TImage> graphics)
+        public DataFlowStrategy(IGraphicsApi<TImage> graphics, bool forceOverwrite)
         {
             this.graphics = graphics;
+            this.forceOverwrite = forceOverwrite;
         }
 
         public int XMin { get; set; }
@@ -92,7 +93,7 @@ namespace PapyrusCs.Strategies.Dataflow
             var average = groupedToTiles.Average(x => x.Count());
             Console.WriteLine($"Average of {average} chunks per tile");
 
-            var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions);
+            var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, forceOverwrite);
             var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
             var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics,
                 ChunkSize, ChunksPerDimension, bitmapOptions);
@@ -276,7 +277,15 @@ namespace PapyrusCs.Strategies.Dataflow
             var filepath = Path.Combine(path, $"{z}.{FileFormat}");
             if (File.Exists(filepath))
             {
-                return graphics.LoadImage(filepath);
+                try
+                {
+                    return graphics.LoadImage(filepath);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error Loading tile at {filepath}, because {ex}");
+                    return null;
+                }
             }
 
             return null;
@@ -302,6 +311,7 @@ namespace PapyrusCs.Strategies.Dataflow
         private string pathToDbBackup;
         private string pathToMapUpdate;
         private string pathToMap;
+        private readonly bool forceOverwrite;
 
         public void Init()
         {

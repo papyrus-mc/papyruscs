@@ -7,21 +7,43 @@ using DmitryBrant.ImageFormats;
 
 namespace Maploader.Renderer.Imaging
 {
+    public class LoadImageException : Exception
+    {
+        private readonly string message; 
+        public LoadImageException(string path, Exception inner) : base()
+        {
+            message = $"Unable to load {path}, because {inner}";
+        }
+
+        public override string ToString()
+        {
+            return message;
+        }
+    }
     public class SystemDrawing : IGraphicsApi<Bitmap>
     {
         public Bitmap LoadImage(string path)
         {
-            if (path.EndsWith("webp"))
+            try
             {
-                return WebP.Value.LoadImage(path);
+                if (path.EndsWith("webp"))
+                {
+                    return WebP.Value.LoadImage(path);
+                }
+
+                if (path.EndsWith("tga"))
+                {
+                    return TgaReader.Load(path);
+                }
+                else
+                {
+                    return (Bitmap) Image.FromFile(path);
+                }
             }
-            if (path.EndsWith("tga"))
+            catch (Exception ex)
             {
-                return TgaReader.Load(path);
-            }
-            else
-            {
-                return (Bitmap)Image.FromFile(path);
+                Console.WriteLine($"Error loading {path}, because {ex}");
+                throw new LoadImageException(path, ex);
             }
         }
 
