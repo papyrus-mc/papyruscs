@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_12062019b/db\"  --dim 0 threads 8 --htmlfile index.html -o c:\\temp\\lalaland",
+      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_12062019b/db\"  --dim 0 --profile underground threads 8 --htmlfile index.html -o c:\\temp\\lalaland",
       "workingDirectory": "c:\\temp"
     }
   }
