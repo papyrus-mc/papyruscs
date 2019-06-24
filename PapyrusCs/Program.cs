@@ -170,7 +170,7 @@ namespace PapyrusCs
             }
 
             const int chunkSize = 256;
-            int chunksPerDimension = 2;
+            int chunksPerDimension = 4;
             int tileSize = chunkSize * chunksPerDimension;
             Directory.CreateDirectory(options.OutputPath);
 
