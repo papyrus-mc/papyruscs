@@ -32,16 +32,61 @@ namespace PapyrusCs
         static int Main(string[] args)
         {
             _time = Stopwatch.StartNew();
+            
 
-            var options = new Options();
-
-            Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
+            if (args.Length == 0 || !(new string[]{"map", "test"}.Contains(args[0])))
             {
-                options = o;
-                options.Loaded = true;
+                args = new[] {"map"}.Union(args).ToArray();
+            }
 
-            });
+            return CommandLine.Parser.Default.ParseArguments<Options, TestOptions>(args)
+                .MapResult(
+                    (Options opts) => { opts.Loaded = true;
+                        return RunMapCommand(opts);
+                    },
+                    (TestOptions opts) => RunTestOptions(opts),
+                    errs => 1);
+        }
 
+        private static int RunTestOptions(TestOptions opts)
+        {
+            if (opts.TestDbRead)
+            {
+                var world = new World();
+                try
+                {
+                    Console.WriteLine("Opening world...");
+                    world.Open(opts.MinecraftWorld);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
+                    Console.WriteLine("The reason was:");
+                    Console.WriteLine(ex.Message);
+                    return -1;
+                }
+
+                int i = 0; 
+                foreach (var key in world.Keys)
+                {
+                    i++;
+                    var value = world.GetData(key);
+                    if (i % 10000 == 0)
+                    {
+                        Console.WriteLine($"Reading key {i}");
+                    }
+                }
+
+                Console.WriteLine($"Reading key {i}");
+
+                Console.WriteLine(_time.Elapsed);
+            }
+
+            return 0;
+        }
+
+        private static int RunMapCommand(Options options)
+        {
             if (!options.Loaded)
             {
                 return -1;
@@ -61,7 +106,8 @@ namespace PapyrusCs
             }
             catch (Exception)
             {
-                Console.WriteLine($"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
+                Console.WriteLine(
+                    $"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
             }
 
@@ -78,7 +124,8 @@ namespace PapyrusCs
             }
             catch (Exception)
             {
-                Console.WriteLine($"The value '{options.LimitZ}' for the LimitZ parameter is not valid. Try something like -10,10");
+                Console.WriteLine(
+                    $"The value '{options.LimitZ}' for the LimitZ parameter is not valid. Try something like -10,10");
                 return -1;
             }
 
@@ -179,12 +226,13 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat,  options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension, chunkSize, zmin, zmax, xmin, xmax);
+            ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension,
+                chunkSize, zmin, zmax, xmin, xmax);
 
             strat.Init();
 
             // other stuff
-            
+
             strat.RenderInitialLevel();
 
             var missingTextures = strat.MissingTextures;
@@ -198,7 +246,8 @@ namespace PapyrusCs
             strat.RenderZoomLevels();
 
 
-            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate, options.UseLeafletLegacy);
+            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
+                options.UseLeafletLegacy);
 
             strat.Finish();
             Console.WriteLine("Total Time {0}", _time.Elapsed);
