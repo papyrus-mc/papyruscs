@@ -4,6 +4,17 @@ using Maploader.Renderer;
 
 namespace PapyrusCs
 {
+    [Verb("test")]
+    public class TestOptions
+    {
+        [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
+        public string MinecraftWorld { get; set; }
+
+        [Option("db", Required = false, HelpText = "Tests Db Read")]
+        public bool TestDbRead { get; set; }
+    }
+
+    [Verb("map")]
     public class Options
     {
         [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
