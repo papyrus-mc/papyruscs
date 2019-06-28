@@ -27,7 +27,7 @@ namespace PapyrusCs.Strategies.Dataflow
                         
                         foreach (var subKey in data.SubChunks)
                         {
-                            if (renderedSubChunks.TryGetValue(new LevelDbWorldKey2(subKey.Key), out KeyAndCrc crc32))
+                            if (renderedSubChunks.Count > 0 && renderedSubChunks.TryGetValue(new LevelDbWorldKey2(subKey.Key), out KeyAndCrc crc32))
                             {
                                 subKey.FoundInDb = true;
                                 subKey.ForeignDbId = crc32.DbId;

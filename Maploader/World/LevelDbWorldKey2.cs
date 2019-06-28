@@ -76,7 +76,7 @@ namespace PapyrusCs.Database
         public Int32 X { get; }
         public Int32 Z { get; }
         public UInt64 XZ => (((UInt64) X) << 32) | (UInt32) Z;
-        public byte SubChunkId { get; }
+        public byte SubChunkId { get; set; }
 
 
         public UInt64 GetXZGroup(int chunkPerDimension)

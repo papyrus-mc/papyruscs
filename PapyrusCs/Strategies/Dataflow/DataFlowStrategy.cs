@@ -78,15 +78,15 @@ namespace PapyrusCs.Strategies.Dataflow
             Console.WriteLine(chunkKeys.Count);
 
             var getOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 64, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
+                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var chunkCreatorOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads/2)};
+                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
             var bitmapOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
             var saveOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
+                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
             var dbOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
+                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension))
                 .ToList();
             Console.WriteLine($"Grouped by {ChunksPerDimension} to {groupedToTiles.Count} tiles");
@@ -95,10 +95,8 @@ namespace PapyrusCs.Strategies.Dataflow
 
             var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, forceOverwrite);
             var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
-            var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics,
-                ChunkSize, ChunksPerDimension, bitmapOptions);
-            var saveBitmapBlock = new SaveBitmapBlock<TImage>(isUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat,
-                saveOptions, graphics);
+            var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
+            var saveBitmapBlock = new SaveBitmapBlock<TImage>(isUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat, saveOptions, graphics);
 
             // Todo, put in own class
             var inserts = 0;

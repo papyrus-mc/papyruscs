@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_23062019\\db\"  --dim 2  threads 8 --htmlfile index.html -o C:\\papyrus\\homeworld_ts4 --f webp --deleteexistingupdatefolder",
+      "commandLineArgs": "test -w \"C:\\papyruscs\\world_bedrock_23062019\\db\" --decode --threads 1",
       "workingDirectory": "c:\\temp"
     }
   }

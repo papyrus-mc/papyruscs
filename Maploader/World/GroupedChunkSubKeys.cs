@@ -21,6 +21,22 @@ namespace Maploader.World
             }
         }
 
+        public GroupedChunkSubKeys(LevelDbWorldKey2 mainKey)
+        {
+            var keys = Enumerable.Range(0, 16).Select(x =>
+            {
+               var newkey = new LevelDbWorldKey2(mainKey.Key);
+               newkey.Key[9] = (byte)x;
+               newkey.SubChunkId = (byte) x;
+               return newkey;
+            });
+      
+            foreach (var sc in keys)
+            {
+                Subchunks.Add(sc.SubChunkId, sc);
+            }
+        }
+
         public override string ToString()
         {
             return $"{Subchunks.First().Value.X}, {Subchunks.First().Value.Z}";

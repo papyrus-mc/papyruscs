@@ -12,6 +12,15 @@ namespace PapyrusCs
 
         [Option("db", Required = false, HelpText = "Tests Db Read")]
         public bool TestDbRead { get; set; }
+
+        [Option("decode", Required = false, HelpText = "Tests Chunk Decode")]
+        public bool Decode { get; set; }
+
+        [Option("smallflow", Required = false, HelpText = "Tests Smallflow Decode")]
+        public bool Smallflow { get; set; }
+
+        [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 1)]
+        public int Threads { get; set; }
     }
 
     [Verb("map")]

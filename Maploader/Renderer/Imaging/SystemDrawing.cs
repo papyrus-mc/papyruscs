@@ -133,7 +133,10 @@ namespace Maploader.Renderer.Imaging
 
         public void SaveImage(Bitmap image, string filepath)
         {
-            if (filepath.EndsWith("webp"))
+            if (filepath.EndsWith("none"))
+            {
+
+            } else if (filepath.EndsWith("webp"))
             {
                 WebP.Value.Save(image, filepath, DefaultQuality);
             }

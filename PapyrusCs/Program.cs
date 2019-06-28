@@ -7,7 +7,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using CommandLine;
+using Maploader.Extensions;
 using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
@@ -17,6 +20,7 @@ using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
 using PapyrusCs.Strategies.For;
+using SixLabors.ImageSharp.ColorSpaces;
 
 namespace PapyrusCs
 {
@@ -31,7 +35,7 @@ namespace PapyrusCs
 
         static int Main(string[] args)
         {
-            _time = Stopwatch.StartNew();
+           
             
 
             if (args.Length == 0 || !(new string[]{"map", "test"}.Contains(args[0])))
@@ -52,37 +56,170 @@ namespace PapyrusCs
         {
             if (opts.TestDbRead)
             {
-                var world = new World();
-                try
-                {
-                    Console.WriteLine("Opening world...");
-                    world.Open(opts.MinecraftWorld);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
-                    Console.WriteLine("The reason was:");
-                    Console.WriteLine(ex.Message);
-                    return -1;
-                }
-
-                int i = 0; 
-                foreach (var key in world.Keys)
-                {
-                    i++;
-                    var value = world.GetData(key);
-                    if (i % 10000 == 0)
-                    {
-                        Console.WriteLine($"Reading key {i}");
-                    }
-                }
-
-                Console.WriteLine($"Reading key {i}");
-
-                Console.WriteLine(_time.Elapsed);
+                TestDbRead(opts);
+            } else if (opts.Decode)
+            {
+                TestDecode(opts);
+            }
+            else if (opts.Smallflow)
+            {
+                TestSmallFlow(opts);
             }
 
             return 0;
+        }
+
+        private static void TestDbRead(TestOptions opts)
+        {
+            var world = new World();
+            try
+            {
+                Console.WriteLine("Testing DB READ. Opening world...");
+                world.Open(opts.MinecraftWorld);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
+                Console.WriteLine("The reason was:");
+                Console.WriteLine(ex.Message);
+                {
+                    return;
+                }
+            }
+
+            int i = 0;
+            int nextout = 2000;
+            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).Where(x => x.SubChunkId == 0).ToList();
+            Console.WriteLine(keys.Count());
+
+            _time = Stopwatch.StartNew();
+            Parallel.ForEach(keys, new ParallelOptions() {MaxDegreeOfParallelism = opts.Threads}, key =>
+            {
+                Interlocked.Increment(ref i);
+                //var value = world.GetChunk(key.GetIntLe(0), key.GetIntLe(4));
+
+                var k = key.Key;
+                for (int y = 0; y < 16; y++)
+                {
+                    k[9] = (byte) y;
+                    world.GetData(k);
+                }
+
+                if (i > nextout)
+                {
+                    Interlocked.Add(ref nextout, 2000);
+                    Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
+                }
+            });
+
+            Console.WriteLine($"Reading key {i}");
+
+            Console.WriteLine(_time.Elapsed);
+        }
+
+        private static void TestDecode(TestOptions opts)
+        {
+            var world = new World();
+            try
+            {
+                Console.WriteLine("Testing Decode. Opening world...");
+                world.Open(opts.MinecraftWorld);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
+                Console.WriteLine("The reason was:");
+                Console.WriteLine(ex.Message);
+                {
+                    return;
+                }
+            }
+
+            int i = 0;
+            int nextout = 2000;
+            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).SelectMany(y => new []{y.First()}).ToList();
+            Console.WriteLine(keys.Count());
+
+            _time = Stopwatch.StartNew();
+            Parallel.ForEach(keys, new ParallelOptions() { MaxDegreeOfParallelism = opts.Threads }, key =>
+            {
+                Interlocked.Increment(ref i);
+                //var value = world.GetChunk(key.GetIntLe(0), key.GetIntLe(4));
+
+                var k = key.Key;
+                //var gcsk = new GroupedChunkSubKeys(key);
+                //var cd = world.GetChunkData(gcsk);
+                var chunk = world.GetChunk(key.X, key.Z);
+                //var chunk = world.GetChunk(gcsk.Subchunks.First().Value.X, gcsk.Subchunks.First().Value.Z);
+                //var chunk = world.GetChunk(key.First().X, key.First().Z);
+
+                if (i > nextout)
+                {
+                    Interlocked.Add(ref nextout, 2000);
+                    Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
+                }
+            });
+
+            Console.WriteLine($"Reading key {i}");
+
+            Console.WriteLine(_time.Elapsed);
+        }
+
+        private static void TestSmallFlow(TestOptions opts)
+        {
+            var world = new World();
+            try
+            {
+                Console.WriteLine("Testing SmallFlow. Opening world...");
+                world.Open(opts.MinecraftWorld);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
+                Console.WriteLine("The reason was:");
+                Console.WriteLine(ex.Message);
+                {
+                    return;
+                }
+            }
+
+            int i = 0;
+            int nextout = 2000;
+            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).ToList();
+            Console.WriteLine(keys.Count());
+
+            _time = Stopwatch.StartNew();
+
+            var tb = new TransformBlock<IGrouping<ulong, LevelDbWorldKey2>, ChunkData>(key2 =>
+            {
+                var chunk = world.GetChunkData(new GroupedChunkSubKeys(key2));
+                return chunk;
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
+
+            var chunkCreator = new ActionBlock<ChunkData>(data =>
+            {
+                var ck = world.GetChunk(data.X, data.Z, data);
+                Interlocked.Increment(ref i);
+                if (i > nextout)
+                {
+                    Interlocked.Add(ref nextout, 2000);
+                    Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
+                    Console.WriteLine(ck.Blocks.Count());
+                }
+
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1});
+
+            tb.LinkTo(chunkCreator, new DataflowLinkOptions() {PropagateCompletion = true});
+
+            foreach (var k in keys)
+            {
+                tb.Post(k);
+            }
+
+            chunkCreator.Completion.Wait();
+
+            Console.WriteLine($"Reading key {i}");
+            Console.WriteLine(_time.Elapsed);
         }
 
         private static int RunMapCommand(Options options)
@@ -130,7 +267,7 @@ namespace PapyrusCs
             }
 
             options.FileFormat = options.FileFormat.ToLowerInvariant();
-            if (new string[] {"jpg", "png", "webp"}.All(x => x != options.FileFormat))
+            if (new string[] {"jpg", "png", "webp", "none"}.All(x => x != options.FileFormat))
             {
                 Console.WriteLine($"The value {options.FileFormat} is not allowed for option -f");
                 return -1;
@@ -217,8 +354,9 @@ namespace PapyrusCs
             }
 
             const int chunkSize = 256;
-            int chunksPerDimension = 4;
+            int chunksPerDimension = 8;
             int tileSize = chunkSize * chunksPerDimension;
+            Console.WriteLine($"Tilesie is {tileSize}x{tileSize}");
             Directory.CreateDirectory(options.OutputPath);
 
             // db stuff
