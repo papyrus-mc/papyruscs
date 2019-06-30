@@ -15,6 +15,8 @@ using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using Microsoft.Extensions.ObjectPool;
+using MoreLinq.Extensions;
 using Newtonsoft.Json;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
@@ -137,7 +139,7 @@ namespace PapyrusCs
 
             int i = 0;
             int nextout = 2000;
-            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).SelectMany(y => new []{y.First()}).ToList();
+            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).Select(x=>x.Key).ToList();
             Console.WriteLine(keys.Count());
 
             _time = Stopwatch.StartNew();
@@ -146,12 +148,22 @@ namespace PapyrusCs
                 Interlocked.Increment(ref i);
                 //var value = world.GetChunk(key.GetIntLe(0), key.GetIntLe(4));
 
-                var k = key.Key;
+                var k = key;
                 //var gcsk = new GroupedChunkSubKeys(key);
                 //var cd = world.GetChunkData(gcsk);
-                var chunk = world.GetChunk(key.X, key.Z);
+                //var chunk = world.GetChunk(key.X, key.Z);
                 //var chunk = world.GetChunk(gcsk.Subchunks.First().Value.X, gcsk.Subchunks.First().Value.Z);
                 //var chunk = world.GetChunk(key.First().X, key.First().Z);
+#if true
+                var X = (int)((ulong)key >> 32);
+                var Z = (int)((ulong)key & 0xffffffff);
+                var cd = world.GetChunkData(X, Z);
+                var c = world.GetChunk(cd.X, cd.Z, cd);
+#else
+                var X = (int) ((ulong) key >> 32);
+                var Z = (int) ((ulong) key & 0xffffffff);
+                var c = world.GetChunk(X,Z);
+#endif
 
                 if (i > nextout)
                 {
@@ -185,37 +197,75 @@ namespace PapyrusCs
 
             int i = 0;
             int nextout = 2000;
-            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).ToList();
+            var keys = new HashSet<ulong>();
+            foreach (var x in world.OverworldKeys)
+            {
+               var key = new LevelDbWorldKey2(x);
+               if (!keys.Contains(key.XZ))
+                   keys.Add(key.XZ);
+            }
+            //var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).Select(x => x.Key).ToList();
             Console.WriteLine(keys.Count());
 
             _time = Stopwatch.StartNew();
 
-            var tb = new TransformBlock<IGrouping<ulong, LevelDbWorldKey2>, ChunkData>(key2 =>
-            {
-                var chunk = world.GetChunkData(new GroupedChunkSubKeys(key2));
-                return chunk;
-            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1 });
+            //ObjectPool<ChunkData> op = new DefaultObjectPool<ChunkData>(new DefaultPooledObjectPolicy<ChunkData>());
 
-            var chunkCreator = new ActionBlock<ChunkData>(data =>
+            var tb = new TransformBlock<IEnumerable<ulong>, IReadOnlyCollection<ChunkData>>(key2 =>
             {
-                var ck = world.GetChunk(data.X, data.Z, data);
-                Interlocked.Increment(ref i);
+                var ret = new List<ChunkData>();
+                foreach (var u in key2)
+                {
+                    var X = (int)((ulong)u >> 32);
+                    var Z = (int)((ulong)u & 0xffffffff);
+                    var cd = world.GetChunkData(X, Z);
+                    ret.Add(cd);
+                }
+
+                return ret;
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, BoundedCapacity = 16});
+
+            var chunkCreator = new ActionBlock<IReadOnlyCollection<ChunkData>>(data =>
+            {
+                var sp = Stopwatch.StartNew();
+                Chunk ck = null;
+                foreach (var d in data)
+                {
+                    ck = world.GetChunk(d.X, d.Z, d);
+                }
+
+                Interlocked.Add(ref i, data.Count);
                 if (i > nextout)
                 {
                     Interlocked.Add(ref nextout, 2000);
                     Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
-                    Console.WriteLine(ck.Blocks.Count());
+                    if (ck != null)
+                    {
+                        Console.WriteLine(ck.Blocks.Count());
+                    }
                 }
 
-            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1});
+                Console.WriteLine(sp.Elapsed);
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 4, BoundedCapacity = 16});
 
             tb.LinkTo(chunkCreator, new DataflowLinkOptions() {PropagateCompletion = true});
 
-            foreach (var k in keys)
+            int i2 = 0;
+            foreach (var k in keys.Batch(256))
             {
-                tb.Post(k);
+                i2 += 256;
+                if (!tb.Post(k))
+                {
+                    tb.SendAsync(k).Wait();
+                }
+
+                if (i2 > 25 * 100)
+                {
+                    break;
+                }
             }
 
+            tb.Complete();
             chunkCreator.Completion.Wait();
 
             Console.WriteLine($"Reading key {i}");
@@ -330,9 +380,8 @@ namespace PapyrusCs
 
             Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
             var keys = world.GetDimension(options.Dimension).ToList();
-            allSubChunks = keys.Select(x => new LevelDbWorldKey2(x))
-                .Where(k => constraintX(k) && constraintZ(k))
-                .ToHashSet();
+            allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
+                    .Where(k => constraintX(k) && constraintZ(k)));
 
             _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
             Console.WriteLine($"Total Chunk count {_totalChunk}");

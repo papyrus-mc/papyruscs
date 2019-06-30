@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "test -w \"C:\\papyruscs\\world_bedrock_23062019\\db\" --decode --threads 1",
+      "commandLineArgs": "test -w \"C:\\papyruscs\\world_bedrock_23062019\\db\" --smallflow --threads 1",
       "workingDirectory": "c:\\temp"
     }
   }

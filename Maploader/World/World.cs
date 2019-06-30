@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using fNbt;
 using leveldb_sharp_std;
+using PapyrusCs.Database;
 
 namespace Maploader.World
 {
@@ -390,6 +391,78 @@ namespace Maploader.World
                         Index = kvp.Key,
                         Data = data,
                         Key = kvp.Value.Key,
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                    };
+                    ret.SubChunks.Add(subChunkData);
+                }
+            }
+
+            return ret;
+        }
+
+        public object GetChunkData(LevelDbWorldKey2 groupedChunkSubKeys)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ChunkData GetChunkData(IGrouping<ulong, LevelDbWorldKey2> groupedChunkSubKeys)
+        {
+            if (db == null)
+                throw new InvalidOperationException("Open Db first");
+
+            var ret = new ChunkData
+            {
+                X = (int) ((ulong) groupedChunkSubKeys.Key >> 32),
+                Z = (int)((ulong)groupedChunkSubKeys.Key & 0xffffffff)
+            };
+
+
+            foreach (var kvp in groupedChunkSubKeys)
+            {
+                var key = kvp;
+
+                var data = db.Get(key.Key);
+                if (data != null)
+                {
+                    var subChunkData = new SubChunkData()
+                    {
+                        Index = key.SubChunkId,
+                        Data = data,
+                        Key = key.Key,
+                       // Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                    };
+                    ret.SubChunks.Add(subChunkData);
+                }
+            }
+
+            return ret;
+        }
+
+        public ChunkData GetChunkData(int x, int z)
+        {
+            if (db == null)
+                throw new InvalidOperationException("Open Db first");
+
+            var ret = new ChunkData
+            {
+                X = x,
+                Z = z,
+            };
+
+
+            foreach (var kvp in Enumerable.Range(0,15))
+            {
+                var key = CreateKey(x, z);
+                key[9] = (byte)kvp;
+
+                var data = db.Get(key);
+                if (data != null)
+                {
+                    var subChunkData = new SubChunkData()
+                    {
+                        Index = (byte)kvp,
+                        Data = data,
+                        Key = key,
                         Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
                     };
                     ret.SubChunks.Add(subChunkData);

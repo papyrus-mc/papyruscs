@@ -23,6 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="3.0.0-preview5.19227.9" />
+    <PackageReference Include="morelinq" Version="3.1.1" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
     <PackageReference Include="System.Drawing.Common" Version="4.6.0-preview5.19224.8" />
     <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.10.0-preview5.19224.8" />
