@@ -5,8 +5,14 @@ namespace Maploader.World
 {
     public class Chunk
     {
-        public int X { get; }
-        public int Z { get; }
+        public int X { get; set; }
+        public int Z { get; set; }
+
+        public Chunk()
+        {
+            X = 0;
+            Z = 0;
+        }
 
         public Chunk(int x, int z)
         {
@@ -19,10 +25,17 @@ namespace Maploader.World
             return $"Chunk {X},{Z}";
         }
 
+        public void Reset()
+        {
+            foreach (var b in Blocks)
+            {
+                b.Value.Block.Reset();
+            }
+        }
+
         public Dictionary<UInt32, BlockCoord> Blocks { get; } = new Dictionary<UInt32,  BlockCoord>();
 
-
-        public void SetBlockId(int x, int y, int z, BlockData data, bool noException = false)
+        public void SetBlockId(int x, int y, int z, ref BlockData data, bool noException = false)
         {
 
             if (data.Id == "minecraft:air")
@@ -63,10 +76,7 @@ namespace Maploader.World
             }
             else
             {
-                if (!noException)
-                {
-                    throw new ArgumentException($"Key {x},{y},{z} already exists");
-                }
+                Blocks[coord].Block = data;
             }
         }
 

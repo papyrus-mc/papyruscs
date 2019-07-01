@@ -8,6 +8,7 @@ using Maploader.Renderer;
 using Maploader.Renderer.Heightmap;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
+using Microsoft.Extensions.ObjectPool;
 using NUnit.Framework;
 using PapyrusCs.Database;
 
@@ -81,6 +82,33 @@ namespace MapLoader.NUnitTests
 
             var group = key.GetXZGroup(2);
             Assert.That(group, Is.EqualTo(((UInt64) 1 << 32) + 1));
+        }
+
+        class TClass
+        {
+            private static int _GNUmber = 1;
+
+            public TClass()
+            {
+                this.Number = _GNUmber++;
+            }
+
+            public int Number { get; set; }
+        }
+
+        [Test]
+        public void PoolTest()
+        {
+
+            var p = new DefaultObjectPool<TClass>(new DefaultPooledObjectPolicy<TClass>());
+
+            var a = p.Get();
+            var b = p.Get();
+            Console.WriteLine(a.Number);
+            Console.WriteLine(b.Number);
+            p.Return(a);
+            var c = p.Get();
+            Console.WriteLine(c.Number);
 
         }
 

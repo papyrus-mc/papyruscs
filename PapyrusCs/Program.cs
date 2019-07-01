@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using CommandLine;
+using Maploader.Core;
 using Maploader.Extensions;
 using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
@@ -122,6 +123,8 @@ namespace PapyrusCs
         private static void TestDecode(TestOptions opts)
         {
             var world = new World();
+
+            world.ChunkPool = new ChunkPool();
             try
             {
                 Console.WriteLine("Testing Decode. Opening world...");
@@ -180,6 +183,7 @@ namespace PapyrusCs
         private static void TestSmallFlow(TestOptions opts)
         {
             var world = new World();
+            world.ChunkPool = new ChunkPool();
             try
             {
                 Console.WriteLine("Testing SmallFlow. Opening world...");
@@ -232,6 +236,7 @@ namespace PapyrusCs
                 foreach (var d in data)
                 {
                     ck = world.GetChunk(d.X, d.Z, d);
+                    world.ChunkPool.Return(ck);
                 }
 
                 Interlocked.Add(ref i, data.Count);
@@ -259,7 +264,7 @@ namespace PapyrusCs
                     tb.SendAsync(k).Wait();
                 }
 
-                if (i2 > 25 * 100)
+                if (i2 > 500 * 100)
                 {
                     break;
                 }
