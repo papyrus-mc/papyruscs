@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using fNbt;
 using leveldb_sharp_std;
+using Maploader.Core;
 using PapyrusCs.Database;
 
 namespace Maploader.World
@@ -54,7 +56,22 @@ namespace Maploader.World
 
         public Chunk GetChunk(int x, int z, ChunkData data)
         {
-            Chunk c = new Chunk(x, z);
+            Chunk c;
+            if (ChunkPool != null)
+            {
+                c = ChunkPool.Get();
+                if (c == null)
+                {
+                    Debugger.Break();
+                }
+                c.X = x;
+                c.Z = z;
+            }
+            else
+            {
+               c = new Chunk(x, z);
+            }
+
             foreach (var subChunkRaw in data.SubChunks)
             {
                 CopySubChunkToChunk(c, subChunkRaw.Index, subChunkRaw.Data);
@@ -164,6 +181,8 @@ namespace Maploader.World
 
         }
 
+        public ChunkPool ChunkPool { get; set; }
+
         private void CopySubChunkToChunk(Chunk chunk, KeyValuePair<byte, byte[]> subChunkRawData)
         {
             CopySubChunkToChunk(chunk, subChunkRawData.Key, subChunkRawData.Value);
@@ -199,12 +218,12 @@ namespace Maploader.World
                             int y = position & 0xF;
                             int z = (position >> 4) & 0xF;
 
-                            chunk.SetBlockId(x, yOffset + y, z,
-                                new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (blockData))
-                                {
-                                    Version = 0,
-                                },
-                                true);
+                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (blockData))
+                            {
+                                Version = 0,
+                            };
+
+                            chunk.SetBlockId(x, yOffset + y, z, ref b, true);
                         }
 
                         break;
@@ -263,8 +282,9 @@ namespace Maploader.World
 
                                     try
                                     {
+                                        var b = localPalette.Keys[state];
                                         // Todo: doppelte keys treten immer noch auf!?
-                                        chunk.SetBlockId(x, yOffset + y, z, localPalette.Keys[state], true);
+                                        chunk.SetBlockId(x, yOffset + y, z, ref b, true);
                                     }
                                     catch (Exception ex)
                                     {

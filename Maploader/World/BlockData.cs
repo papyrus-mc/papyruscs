@@ -14,7 +14,7 @@ namespace Maploader.World
             XZ = x * 256 + z;
         }
 
-        public BlockData Block { get; }
+        public BlockData Block { get; set; }
         public int X { get; }
         public int Y { get; }
         public int Z { get; }
@@ -26,54 +26,32 @@ namespace Maploader.World
         }
     }
 
-    public class BlockData
+    public struct BlockData
     {
-        protected bool Equals(BlockData other)
-        {
-            return string.Equals(Id, other.Id, StringComparison.InvariantCulture) && Data == other.Data;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((BlockData) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (StringComparer.InvariantCulture.GetHashCode(Id) * 397) ^ Data.GetHashCode();
-            }
-        }
-
-        public static bool operator ==(BlockData left, BlockData right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(BlockData left, BlockData right)
-        {
-            return !Equals(left, right);
-        }
-
         public BlockData(string id, long data)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             Data = data;
+            Version = 0;
         }
 
         [NotNull]
-        public string Id { get; }
-        public long Data { get; }
+        public string Id { get; set; }
+
+        public long Data { get; set; }
 
         public int Version { get; set; }
 
         public override string ToString()
         {
             return string.Format($"{Id}:{Data} ({Version})");
+        }
+
+        public void Reset()
+        {
+            Id = "minecraft:air";
+            Data = 0;
+            Version = 0;
         }
     }
 }
