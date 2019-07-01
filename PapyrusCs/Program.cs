@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using CommandLine;
+using Maploader.Core;
 using Maploader.Extensions;
 using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
@@ -65,7 +66,7 @@ namespace PapyrusCs
             }
             else if (opts.Smallflow)
             {
-                TestSmallFlow(opts);
+                TestSmallFlow2(opts);
             }
 
             return 0;
@@ -267,6 +268,127 @@ namespace PapyrusCs
 
             tb.Complete();
             chunkCreator.Completion.Wait();
+
+            Console.WriteLine($"Reading key {i}");
+            Console.WriteLine(_time.Elapsed);
+        }
+
+        private static void TestSmallFlow2(TestOptions opts)
+        {
+            var world = new World();
+            try
+            {
+                Console.WriteLine("Testing SmallFlow2. Opening world...");
+                world.Open(opts.MinecraftWorld);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
+                Console.WriteLine("The reason was:");
+                Console.WriteLine(ex.Message);
+                {
+                    return;
+                }
+            }
+
+            int i = 0;
+            int nextout = 2000;
+            var keys = new HashSet<ulong>();
+            foreach (var x in world.OverworldKeys)
+            {
+                var key = new LevelDbWorldKey2(x);
+                if (!keys.Contains(key.XZ))
+                    keys.Add(key.XZ);
+            }
+            Console.WriteLine(keys.Count());
+
+            _time = Stopwatch.StartNew();
+            var chunkdatalist = new List<ChunkData>();
+
+
+            var tb = new TransformBlock<IEnumerable<ulong>, IReadOnlyCollection<ChunkData>>(key2 =>
+            {
+                var ret = new List<ChunkData>();
+                foreach (var u in key2)
+                {
+                    var X = (int)((ulong)u >> 32);
+                    var Z = (int)((ulong)u & 0xffffffff);
+                    var cd = world.GetChunkData(X, Z);
+                    ret.Add(cd);
+                }
+
+                return ret;
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 1, BoundedCapacity = 16 });
+
+            var justStore = new ActionBlock<IReadOnlyCollection<ChunkData>>(datas => chunkdatalist.AddRange(datas), new ExecutionDataflowBlockOptions() {MaxDegreeOfParallelism = 1});
+
+
+            var chunkCreator = new ActionBlock<IReadOnlyCollection<ChunkData>>(data =>
+            {
+                var sp = Stopwatch.StartNew();
+                Chunk ck = null;
+                foreach (var d in data)
+                {
+                    ck = world.GetChunk(d.X, d.Z, d);
+                }
+
+                Interlocked.Add(ref i, data.Count);
+                if (i > nextout)
+                {
+                    Interlocked.Add(ref nextout, 2000);
+                    Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
+                    if (ck != null)
+                    {
+                        Console.WriteLine(ck.Blocks.Count());
+                    }
+                }
+
+                Console.WriteLine(sp.Elapsed);
+            }, new ExecutionDataflowBlockOptions() { MaxDegreeOfParallelism = 4, BoundedCapacity = 16 });
+
+            //tb.LinkTo(chunkCreator, new DataflowLinkOptions() { PropagateCompletion = true });
+            tb.LinkTo(justStore, new DataflowLinkOptions() { PropagateCompletion = true });
+
+            int i2 = 0;
+            foreach (var k in keys.Batch(256))
+            {
+
+                i2 += 256;
+                if (!tb.Post(k))
+                {
+                    tb.SendAsync(k).Wait();
+                }
+
+                if (i2 > 25 * 1000)
+                {
+                    //break;
+                }
+            }
+
+            tb.Complete();
+            justStore.Completion.Wait();
+            Console.WriteLine(chunkdatalist.Count);
+
+
+            _time = Stopwatch.StartNew();
+            NotParallel.ForEach(chunkdatalist, d =>
+            {
+                Chunk ck = null;
+                ck = world.GetChunk(d.X, d.Z, d);
+
+                Interlocked.Add(ref i, 1);
+                if (i > nextout)
+                {
+                    Interlocked.Add(ref nextout, 2000);
+                    Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
+                    if (ck != null)
+                    {
+                        Console.WriteLine(ck.Blocks.Count());
+                    }
+                }
+            });
+         
+
 
             Console.WriteLine($"Reading key {i}");
             Console.WriteLine(_time.Elapsed);
