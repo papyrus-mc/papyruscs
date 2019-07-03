@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
+using Maploader.Core;
 using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
@@ -15,21 +16,23 @@ namespace PapyrusCs.Strategies.Dataflow
         private int processedCount;
         public TransformBlock<IEnumerable<ChunkAndData>, ImageInfo<TImage>> Block { get; }
 
-        public BitmapRenderBlock(Dictionary<string, Texture> textureDictionary, string texturePath,
+        public BitmapRenderBlock(Dictionary<string, Texture> textureDictionary, string texturePath, ChunkPool pool,
             RenderSettings renderSettings, IGraphicsApi<TImage> graphics, int chunkSize, int chunksPerDimension,
             ExecutionDataflowBlockOptions options)
         {
             int tileSize = chunksPerDimension * chunkSize;
+            graphics.SetPoolDimensions(tileSize, tileSize);
             int chunkRenderedCounter = 0;
             ThreadLocal<RendererCombi<TImage>> renderCombi = new ThreadLocal<RendererCombi<TImage>>(() =>
                 new RendererCombi<TImage>(textureDictionary, texturePath, renderSettings, graphics));
 
             Block = new TransformBlock<IEnumerable<ChunkAndData>, ImageInfo<TImage>>(chunkAndData =>
             {
-                var b = graphics.CreateEmptyImage(tileSize, tileSize);
+                var b = graphics.GetPooledImage();
                 {
                     var chunkList = chunkAndData.ToList();
-                    var first = chunkList.First().C;
+                    var firstX = chunkList.First().C.X;
+                    var firstZ = chunkList.First().C.Z;
                     var chunkRenderer = renderCombi.Value.ChunkRenderer;
 
                     foreach (var chunk in chunkList)
@@ -39,11 +42,13 @@ namespace PapyrusCs.Strategies.Dataflow
                         if (x < 0) x += chunksPerDimension;
                         if (z < 0) z += chunksPerDimension;
                         chunkRenderer.RenderChunk(b, chunk.C, x * chunkSize, z * chunkSize);
+
+                        pool?.Return(chunk.C);
                     }
 
 
-                    var fx = CoordHelpers.GetGroupedCoordinate(first.X, chunksPerDimension);
-                    var fz = CoordHelpers.GetGroupedCoordinate(first.Z, chunksPerDimension);
+                    var fx = CoordHelpers.GetGroupedCoordinate(firstX, chunksPerDimension);
+                    var fz = CoordHelpers.GetGroupedCoordinate(firstZ, chunksPerDimension);
 
                     Interlocked.Increment(ref processedCount);
                     Interlocked.Add(ref chunkRenderedCounter, chunkList.Count);

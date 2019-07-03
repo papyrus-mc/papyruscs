@@ -11,7 +11,7 @@ namespace Maploader.Renderer.Imaging
     public interface IGraphicsApi<TImage>
     {
         TImage LoadImage(string path);
-        TImage CreateEmptyImage(int with, int height);
+        TImage CreateEmptyImage(int width, int height);
         void RotateFlip(TImage image, RotateFlip infoRotation);
         void SaveImage(TImage image, string filepath);
         void DrawImageWithBrightness(TImage dest, TImage image, int x, int y, float brightness);
@@ -19,5 +19,8 @@ namespace Maploader.Renderer.Imaging
         void DrawImage(TImage dest, TImage src, int x, int y, int w, int h);
         void DrawString(TImage dest, string str, Font font, Brush brush, int x, int y);
         int DefaultQuality { get; set; }
+        void ReturnImage(TImage b);
+        void SetPoolDimensions(int pwidth, int pheight);
+        TImage GetPooledImage();
     }
 }

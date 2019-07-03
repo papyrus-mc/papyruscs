@@ -60,10 +60,6 @@ namespace Maploader.World
             if (ChunkPool != null)
             {
                 c = ChunkPool.Get();
-                if (c == null)
-                {
-                    Debugger.Break();
-                }
                 c.X = x;
                 c.Z = z;
             }
@@ -104,7 +100,18 @@ namespace Maploader.World
 
             if (!haveData) return null;
 
-            Chunk c = new Chunk(x, z);
+            Chunk c;
+            if (ChunkPool != null)
+            {
+                c = ChunkPool.Get();
+                c.X = x;
+                c.Z = z;
+            }
+            else
+            {
+                c = new Chunk(x, z);
+            }
+
             foreach (var subChunkRaw in subChunks)
             {
                 CopySubChunkToChunk(c, subChunkRaw);

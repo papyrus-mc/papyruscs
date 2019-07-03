@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Numerics;
 using DmitryBrant.ImageFormats;
+using Maploader.Core;
 
 namespace Maploader.Renderer.Imaging
 {
@@ -47,9 +48,36 @@ namespace Maploader.Renderer.Imaging
             }
         }
 
-        public Bitmap CreateEmptyImage(int with, int height)
+        private int width = -1;
+        private int height = -1;
+
+        public void SetPoolDimensions(int pwidth, int pheight)
         {
-            return new Bitmap(with, height);
+
+            this.width = pwidth;
+            this.height = pheight;
+            this.pool = new GenericPool<Bitmap>(() => new Bitmap(pwidth, pheight));
+
+        }
+
+        public Bitmap GetPooledImage()
+        {
+            return pool.Get();
+        }
+
+        public Bitmap CreateEmptyImage(int width, int height)
+        {
+            return new Bitmap(width, height);
+        }
+
+        public void ReturnImage(Bitmap b)
+        {
+            using (var g = Graphics.FromImage(b))
+            {
+                g.Clear(Color.Transparent);
+            }
+
+            this.pool?.Return(b);
         }
 
         public void DrawImage(Bitmap dest, Bitmap src, Rect translationDest, Rect translationSource)
@@ -86,6 +114,7 @@ namespace Maploader.Renderer.Imaging
         }
 
         private static Vector3 v255 = Vector3.One * 255;
+        private GenericPool<Bitmap> pool;
 
         public unsafe void DrawImageWithBrightness(Bitmap dest, Bitmap image, int x, int y, float brightness)
         {

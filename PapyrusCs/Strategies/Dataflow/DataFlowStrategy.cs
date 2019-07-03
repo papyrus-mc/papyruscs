@@ -62,6 +62,7 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public void RenderInitialLevel()
         {
+            World.ChunkPool = new ChunkPool();
             graphics.DefaultQuality = FileQuality;
           
 
@@ -78,15 +79,15 @@ namespace PapyrusCs.Strategies.Dataflow
             Console.WriteLine(chunkKeys.Count);
 
             var getOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var chunkCreatorOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
             var bitmapOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
             var saveOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var dbOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 32, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
+                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension))
                 .ToList();
             Console.WriteLine($"Grouped by {ChunksPerDimension} to {groupedToTiles.Count} tiles");
@@ -94,8 +95,11 @@ namespace PapyrusCs.Strategies.Dataflow
             Console.WriteLine($"Average of {average} chunks per tile");
 
             var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, forceOverwrite);
-            var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
-            var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
+            //var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
+            //var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, World.ChunkPool, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
+
+            var createAndRender = new CreateChunkAndRenderBlock<TImage>(World, TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
+
             var saveBitmapBlock = new SaveBitmapBlock<TImage>(isUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat, saveOptions, graphics);
 
             // Todo, put in own class
@@ -122,11 +126,10 @@ namespace PapyrusCs.Strategies.Dataflow
 
             }, dbOptions);
 
-            bitmapBlock.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
+            createAndRender.ChunksRendered += (sender, args) => ChunksRendered?.Invoke(sender, args);
 
-            getDataBlock.Block.LinkTo(createChunkBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true,});
-            createChunkBlock.Block.LinkTo(bitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
-            bitmapBlock.Block.LinkTo(saveBitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
+            getDataBlock.Block.LinkTo(createAndRender.Block, new DataflowLinkOptions() {PropagateCompletion = true,});
+            createAndRender.Block.LinkTo(saveBitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
             saveBitmapBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() {PropagateCompletion = true});
 
             int postCount = 0;
@@ -143,7 +146,7 @@ namespace PapyrusCs.Strategies.Dataflow
                 if (postCount > 1000)
                 {
                     postCount = 0;
-                    Console.WriteLine($"\n{inserts}, {updates}");
+                    Console.WriteLine($"\n{getDataBlock.InputCount} {createAndRender.InputCount}  {saveBitmapBlock.InputCount}");
                 }
             }
 
@@ -152,15 +155,13 @@ namespace PapyrusCs.Strategies.Dataflow
             getDataBlock.Block.Complete();
             while (!dbBLock.Completion.Wait(1000))
             {
-                Console.WriteLine(
-                    $"\n{getDataBlock.ProcessedCount} {createChunkBlock.ProcessedCount} {bitmapBlock.ProcessedCount} {saveBitmapBlock.ProcessedCount}");
+                Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createAndRender.ProcessedCount}  {saveBitmapBlock.ProcessedCount}");
             }
             Console.WriteLine("DbUpdate complete");
 
 
             Console.WriteLine($"\n{inserts}, {updates}");
-            Console.WriteLine(
-                $"\n{getDataBlock.ProcessedCount} {createChunkBlock.ProcessedCount} {bitmapBlock.ProcessedCount} {saveBitmapBlock.ProcessedCount}");
+            Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createAndRender.ProcessedCount}  {saveBitmapBlock.ProcessedCount}");
         }
 
 

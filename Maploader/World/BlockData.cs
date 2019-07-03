@@ -26,7 +26,7 @@ namespace Maploader.World
         }
     }
 
-    public struct BlockData
+    public class BlockData
     {
         public BlockData(string id, long data)
         {

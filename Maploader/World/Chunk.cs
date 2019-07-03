@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using Maploader.Core;
 
 namespace Maploader.World
 {
-    public class Chunk
+    public class Chunk : IResettable
     {
         public int X { get; set; }
         public int Z { get; set; }
@@ -15,7 +17,7 @@ namespace Maploader.World
         }
 
         public Chunk(int x, int z)
-        {
+        { 
             X = x;
             Z = z;
         }

@@ -17,6 +17,7 @@ namespace PapyrusCs.Strategies
             {
                 disp.Dispose();
             }
+            GC.SuppressFinalize(this);
         }
     }
 }

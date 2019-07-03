@@ -45,7 +45,7 @@ namespace Maploader.Renderer
             {
                 var blocksToRender = new Stack<BlockCoord>();
 
-                List<KeyValuePair<uint, BlockCoord>> blocksFromSkyToBedrock = blocks.OrderByDescending(x => x.Value.Y).ToList();
+                List<KeyValuePair<uint, BlockCoord>> blocksFromSkyToBedrock = blocks.Where(x => x.Value.Block.Id != "minecraft:air").OrderByDescending(x => x.Value.Y).ToList();
                 if (renderSettings.YMax > 0)
                     blocksFromSkyToBedrock = blocksFromSkyToBedrock.Where(x => x.Value.Y <= renderSettings.YMax).ToList();
 

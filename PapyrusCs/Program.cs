@@ -66,7 +66,7 @@ namespace PapyrusCs
             }
             else if (opts.Smallflow)
             {
-                TestSmallFlow2(opts);
+                TestSmallFlow(opts);
             }
 
             return 0;

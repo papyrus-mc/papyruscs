@@ -8,7 +8,6 @@ namespace PapyrusCs.Strategies.Dataflow
 {
     public class SaveBitmapBlock<TImage> : ITplBlock where TImage : class
     {
-        private readonly bool isUpdate;
         private readonly string fileFormat;
         private readonly IGraphicsApi<TImage> graphics;
         public string OutputPath { get; }
@@ -23,6 +22,10 @@ namespace PapyrusCs.Strategies.Dataflow
             Block = new TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>>(info =>
             {
                 SaveBitmap(initialZoomLevel, info.X, info.Z, info.Image);
+
+                graphics.ReturnImage(info.Image);
+                info.Image = null;
+
                 ProcessedCount++;
                 info.Dispose();
                 return info.Cd;
