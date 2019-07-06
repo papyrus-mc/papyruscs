@@ -43,16 +43,9 @@ namespace PapyrusCs
 
             if (args.Length == 0 || !(new string[]{"map", "test"}.Contains(args[0])))
             {
-                newargs = new[] {"map"}.Union(args).ToArray();
+                newargs = new[] {"map"}.Concat((args)).ToArray();
             }
-            foreach (var arg in args)
-            {
-                Console.WriteLine("arg: {0}", arg);
-            }
-            foreach (var newarg in newargs)
-            {
-                Console.WriteLine("newarg: {0}", newarg);
-            }
+           
 
             return CommandLine.Parser.Default.ParseArguments<Options, TestOptions>(newargs)
                 .MapResult(
