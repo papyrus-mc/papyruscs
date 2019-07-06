@@ -38,15 +38,20 @@ namespace PapyrusCs
 
         static int Main(string[] args)
         {
-           
-            
+
+            var newargs = args;
 
             if (args.Length == 0 || !(new string[]{"map", "test"}.Contains(args[0])))
             {
-                args = new[] {"map"}.Union(args).ToArray();
+                newargs = new[] {"map"}.Union(args).ToArray();
             }
 
-            return CommandLine.Parser.Default.ParseArguments<Options, TestOptions>(args)
+            foreach (var newarg in newargs)
+            {
+                Console.WriteLine("arg: {0}", newarg);
+            }
+
+            return CommandLine.Parser.Default.ParseArguments<Options, TestOptions>(newargs)
                 .MapResult(
                     (Options opts) => { opts.Loaded = true;
                         return RunMapCommand(opts);
