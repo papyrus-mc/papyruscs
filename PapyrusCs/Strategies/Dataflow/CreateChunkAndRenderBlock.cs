@@ -72,7 +72,7 @@ namespace PapyrusCs.Strategies.Dataflow
                     Interlocked.Increment(ref processedCount);
                     Interlocked.Add(ref chunkRenderedCounter, count);
 
-                    if (chunkRenderedCounter >= 32)
+                    if (chunkRenderedCounter >= 128)
                     {
                         var v = chunkRenderedCounter;
                         ChunksRendered?.Invoke(this, new ChunksRenderedEventArgs(v));

@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_23062019\\db\" -o c:\\papyrus\\speedtest --threads 8 --dim 0 --profile aquatic -f png",
+      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_23062019\\db\" -o c:\\papyrus\\speedtest2 --threads 8 --dim 0 -f png",
       "workingDirectory": "c:\\temp"
     }
   }

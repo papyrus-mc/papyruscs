@@ -92,7 +92,7 @@ namespace PapyrusCs.Strategies.Dataflow
                 .ToList();
             Console.WriteLine($"Grouped by {ChunksPerDimension} to {groupedToTiles.Count} tiles");
             var average = groupedToTiles.Average(x => x.Count());
-            Console.WriteLine($"Average of {average} chunks per tile");
+            Console.WriteLine($"Average of {average:0.0} chunks per tile");
 
             var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, forceOverwrite);
             //var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
@@ -102,14 +102,18 @@ namespace PapyrusCs.Strategies.Dataflow
 
             var saveBitmapBlock = new SaveBitmapBlock<TImage>(isUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat, saveOptions, graphics);
 
+            var batchBlock = new BatchBlock<IEnumerable<SubChunkData>>(128, new GroupingDataflowBlockOptions() {BoundedCapacity = 128*8, EnsureOrdered = false});
+
             // Todo, put in own class
             var inserts = 0;
             var updates = 0;
             var r = new Random();
-            var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
+            var dbBLock = new ActionBlock<IEnumerable<IEnumerable<SubChunkData>>>(data =>
             {
-                if (datas == null)
+                if (data == null)
                     return;
+
+                var datas = data.Where(x => x != null).SelectMany(x => x).ToList();
                 try
                 {
                     /*
@@ -147,7 +151,9 @@ namespace PapyrusCs.Strategies.Dataflow
 
             getDataBlock.Block.LinkTo(createAndRender.Block, new DataflowLinkOptions() {PropagateCompletion = true,});
             createAndRender.Block.LinkTo(saveBitmapBlock.Block, new DataflowLinkOptions() {PropagateCompletion = true});
-            saveBitmapBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() {PropagateCompletion = true});
+            saveBitmapBlock.Block.LinkTo(batchBlock, new DataflowLinkOptions() {PropagateCompletion = true});
+            batchBlock.LinkTo(dbBLock, new DataflowLinkOptions {PropagateCompletion = true});
+            //saveBitmapBlock.Block.LinkTo(dbBLock, new DataflowLinkOptions() {PropagateCompletion = true});
 
             int postCount = 0;
             foreach (var groupedToTile in groupedToTiles)
@@ -163,7 +169,7 @@ namespace PapyrusCs.Strategies.Dataflow
                 if (postCount > 1000)
                 {
                     postCount = 0;
-                    Console.WriteLine($"\n{getDataBlock.InputCount} {createAndRender.InputCount}  {saveBitmapBlock.InputCount}");
+                    Console.WriteLine($"\nQueue Stat: GetData {getDataBlock.InputCount} Render {createAndRender.InputCount} Save {saveBitmapBlock.InputCount} Db {dbBLock.InputCount}");
                 }
             }
 
@@ -172,7 +178,7 @@ namespace PapyrusCs.Strategies.Dataflow
             getDataBlock.Block.Complete();
             while (!dbBLock.Completion.Wait(1000))
             {
-                Console.WriteLine($"\n{getDataBlock.ProcessedCount} {createAndRender.ProcessedCount}  {saveBitmapBlock.ProcessedCount}");
+                Console.WriteLine($"\nQueue Stat: GetData {getDataBlock.InputCount} Render {createAndRender.InputCount} Save {saveBitmapBlock.InputCount} Db {dbBLock.InputCount}");
             }
             Console.WriteLine("DbUpdate complete");
 

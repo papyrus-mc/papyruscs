@@ -703,9 +703,11 @@ namespace PapyrusCs
                     "layers = " + JsonConvert.SerializeObject(layersdef) + 
                     "; config = " + JsonConvert.SerializeObject(globalconfig) + ";");
 
+                Directory.CreateDirectory(Path.Combine(outputPath, "map"));
                 File.WriteAllText(Path.Combine(outputPath, "map", mapHtmlFile), mapHtmlContext);
                 if (isUpdate)
                 {
+                    Directory.CreateDirectory(Path.Combine(outputPath, "update"));
                     File.WriteAllText(Path.Combine(outputPath, "update", mapHtmlFile), mapHtmlContext);
                 }
             }
