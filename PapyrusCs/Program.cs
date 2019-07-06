@@ -45,10 +45,13 @@ namespace PapyrusCs
             {
                 newargs = new[] {"map"}.Union(args).ToArray();
             }
-
+            foreach (var arg in args)
+            {
+                Console.WriteLine("arg: {0}", arg);
+            }
             foreach (var newarg in newargs)
             {
-                Console.WriteLine("arg: {0}", newarg);
+                Console.WriteLine("newarg: {0}", newarg);
             }
 
             return CommandLine.Parser.Default.ParseArguments<Options, TestOptions>(newargs)
