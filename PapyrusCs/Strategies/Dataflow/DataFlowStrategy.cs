@@ -80,12 +80,14 @@ namespace PapyrusCs.Strategies.Dataflow
 
             var t = Math.Max(1, this.RenderSettings.MaxNumberOfThreads);
 
+            var tsave = FileFormat == "webp" ? t : 2;
+
             var getOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 2*t, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var bitmapOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = t };
             var saveOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = 2};
+                {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = tsave};
             var dbOptions = new ExecutionDataflowBlockOptions()
                 {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension))
