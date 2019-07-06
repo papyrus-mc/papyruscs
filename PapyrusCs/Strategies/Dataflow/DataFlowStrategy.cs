@@ -456,12 +456,12 @@ namespace PapyrusCs.Strategies.Dataflow
             if (Directory.Exists(pathToMapUpdate))
             {
                 var filesToCopy = Directory.EnumerateFiles(pathToMapUpdate, "*." + FileFormat, SearchOption.AllDirectories);
+                Console.WriteLine($"Copying {filesToCopy.Count()} to {pathToMap}");
                 foreach (var f in filesToCopy)
                 {
                     var newPath = f.Replace(pathToMapUpdate, pathToMap);
                     FileInfo fi = new FileInfo(newPath);
                     fi.Directory?.Create();
-                    Console.WriteLine("Copying {0} to {1}", f, newPath);
                     File.Copy(f, newPath, true);
                 }
             }
