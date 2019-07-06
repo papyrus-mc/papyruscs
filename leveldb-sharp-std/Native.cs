@@ -31,6 +31,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 using System;
+using System.Buffers;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -218,7 +219,9 @@ namespace leveldb_sharp_std
                         return null;
                     }
 
-                    var ret = new byte[(int) valueLength];
+                    // TODO HOT
+                    //var ret = new byte[(int) valueLength];
+                    var ret = ArrayPool<byte>.Shared.Rent((int) valueLength);
                     Marshal.Copy(valuePtr, ret, 0, (int)valueLength);
 
                     leveldb_free(valuePtr);

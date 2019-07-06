@@ -57,7 +57,7 @@ namespace Maploader.Core
 
                 if (sp.ElapsedMilliseconds > 2000)
                 {
-                    Console.WriteLine("Pool stat {1} {0}", counter, typeof(T));
+                    //Console.WriteLine("Pool stat {1} {0}", counter, typeof(T));
                     sp.Restart();
                 }
             }

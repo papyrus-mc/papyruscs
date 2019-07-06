@@ -398,8 +398,9 @@ namespace PapyrusCs
             Console.WriteLine(_time.Elapsed);
         }
 
-        private static int RunMapCommand(Options options)
+        private static int  RunMapCommand(Options options)
         {
+            _time = Stopwatch.StartNew();
             if (!options.Loaded)
             {
                 return -1;
@@ -529,7 +530,7 @@ namespace PapyrusCs
             }
 
             const int chunkSize = 256;
-            int chunksPerDimension = 8;
+            int chunksPerDimension = 2;
             int tileSize = chunkSize * chunksPerDimension;
             Console.WriteLine($"Tilesie is {tileSize}x{tileSize}");
             Directory.CreateDirectory(options.OutputPath);

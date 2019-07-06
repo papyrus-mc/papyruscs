@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 
 namespace Maploader.World
 {
@@ -13,6 +14,7 @@ namespace Maploader.World
 
         public void ClearData()
         {
+            ArrayPool<byte>.Shared.Return(Data);
             Data = null;
         }
     }

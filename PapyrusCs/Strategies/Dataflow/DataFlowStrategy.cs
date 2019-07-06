@@ -78,16 +78,16 @@ namespace PapyrusCs.Strategies.Dataflow
 
             Console.WriteLine(chunkKeys.Count);
 
+            var t = Math.Max(1, this.RenderSettings.MaxNumberOfThreads);
+
             var getOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
-            var chunkCreatorOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
+                {BoundedCapacity = 2*t, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var bitmapOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = Math.Max(1, this.RenderSettings.MaxNumberOfThreads)};
+                {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = t };
             var saveOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
+                {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = 2};
             var dbOptions = new ExecutionDataflowBlockOptions()
-                {BoundedCapacity = 16, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
+                {BoundedCapacity = 2 * t, EnsureOrdered = false, MaxDegreeOfParallelism = 1};
             var groupedToTiles = chunkKeys.GroupBy(x => x.Subchunks.First().Value.GetXZGroup(ChunksPerDimension))
                 .ToList();
             Console.WriteLine($"Grouped by {ChunksPerDimension} to {groupedToTiles.Count} tiles");
@@ -105,23 +105,40 @@ namespace PapyrusCs.Strategies.Dataflow
             // Todo, put in own class
             var inserts = 0;
             var updates = 0;
+            var r = new Random();
             var dbBLock = new ActionBlock<IEnumerable<SubChunkData>>(datas =>
             {
-                var toInsert = datas.Where(x => x.FoundInDb == false)
-                    .Select(x => new Checksum {Crc32 = x.Crc32, LevelDbKey = x.Key, Profile = Profile}).ToList();
-
-                if (toInsert.Count > 0)
+                if (datas == null)
+                    return;
+                try
                 {
-                    db.BulkInsert(toInsert);
-                    inserts += toInsert.Count;
+                    /*
+                    if (r.Next(100) == 0)
+                    {
+                        throw new ArgumentOutOfRangeException("Test Error in dbBLock");
+                    }*/
+                    
+                    var toInsert = datas.Where(x => x.FoundInDb == false)
+                        .Select(x => new Checksum {Crc32 = x.Crc32, LevelDbKey = x.Key, Profile = Profile}).ToList();
+
+                    if (toInsert.Count > 0)
+                    {
+                        db.BulkInsert(toInsert);
+                        inserts += toInsert.Count;
+                    }
+
+                    var toUpdate = datas.Where(x => x.FoundInDb).Select(x => new Checksum()
+                        {Id = x.ForeignDbId, Crc32 = x.Crc32, LevelDbKey = x.Key, Profile = Profile}).ToList();
+                    if (toUpdate.Count > 0)
+                    {
+                        db.BulkUpdate(toUpdate);
+                        updates += toUpdate.Count;
+                    }
+
                 }
-
-                var toUpdate = datas.Where(x => x.FoundInDb).Select(x => new Checksum()
-                    {Id = x.ForeignDbId, Crc32 = x.Crc32, LevelDbKey = x.Key, Profile = Profile }).ToList();
-                if (toUpdate.Count > 0)
+                catch (Exception ex)
                 {
-                    db.BulkUpdate(toUpdate);
-                    updates += toUpdate.Count;
+                    Console.WriteLine("Error in CreateChunkAndRenderBlock: " + ex.Message);
                 }
 
             }, dbOptions);

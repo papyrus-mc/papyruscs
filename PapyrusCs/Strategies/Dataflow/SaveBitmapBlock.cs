@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks.Dataflow;
 using Maploader.Renderer.Imaging;
 using Maploader.World;
@@ -12,6 +14,7 @@ namespace PapyrusCs.Strategies.Dataflow
         private readonly IGraphicsApi<TImage> graphics;
         public string OutputPath { get; }
         public TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>> Block { get; }
+        readonly Random r = new Random();
 
         public SaveBitmapBlock(string outputPath, int initialZoomLevel, string fileFormat, ExecutionDataflowBlockOptions options,
             IGraphicsApi<TImage> graphics)
@@ -21,14 +24,34 @@ namespace PapyrusCs.Strategies.Dataflow
             this.graphics = graphics;
             Block = new TransformBlock<ImageInfo<TImage>, IEnumerable<SubChunkData>>(info =>
             {
-                SaveBitmap(initialZoomLevel, info.X, info.Z, info.Image);
+                if (info == null)
+                    return null;
+                try
+                {
+                    /*if (r.Next(100) == 0)
+                    {
+                        throw new ArgumentOutOfRangeException("TestError in SaveBitmap");
+                    }*/
 
-                graphics.ReturnImage(info.Image);
-                info.Image = null;
+                    SaveBitmap(initialZoomLevel, info.X, info.Z, info.Image);
+                    ProcessedCount++;
+                    return info.Cd;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in SaveBitmapBlock: " + ex.Message);
+                    return null;
 
-                ProcessedCount++;
-                info.Dispose();
-                return info.Cd;
+                }
+                finally
+                {
+                    if (info != null)
+                    {
+                        graphics.ReturnImage(info.Image);
+                        info.Image = null;
+                    }
+                }
+
             }, options);
         }
 
