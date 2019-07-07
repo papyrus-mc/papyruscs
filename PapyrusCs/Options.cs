@@ -98,6 +98,9 @@ namespace PapyrusCs
         [Option("use_leaflet_legacy", Required = false, Default = false, HelpText = "Use the legacy leaflet.js map renderer instead of the new OpenLayers version")]
         public bool UseLeafletLegacy { get; set; }
 
+        [Option("bot_websocket_url", Required = false, Default = "", HelpText = "If you're using Papyrus Bot to monitor chat and player position, provide it's WebSocket URL here")]
+        public string BotWebsocketUrl { get; set; }
+
 
         // Derivative options
         public bool Loaded { get; set; }
