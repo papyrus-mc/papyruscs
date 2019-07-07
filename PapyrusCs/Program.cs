@@ -562,7 +562,7 @@ namespace PapyrusCs
 
 
             WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
-                options.UseLeafletLegacy);
+                options.UseLeafletLegacy, options.BotWebsocketUrl);
 
             strat.Finish();
             Console.WriteLine("Total Time {0}", _time.Elapsed);
@@ -654,10 +654,11 @@ namespace PapyrusCs
             public double factor;
             public int globalMinZoom;
             public int globalMaxZoom;
+            public string botWebSocketUrl;
         }
 
         private static void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings,
-            bool isUpdate, bool useLegacyLeaflet)
+            bool isUpdate, bool useLegacyLeaflet, string botWebSocketUrl)
         {
             try
             {
@@ -695,7 +696,8 @@ namespace PapyrusCs
                 {
                     factor = (Math.Pow(2, settings.First().MaxZoom - 4)),
                     globalMaxZoom = settings.First(x => x.Dimension == settings.Min(y => y.Dimension)).MaxZoom,
-                    globalMinZoom = settings.First(x => x.Dimension == settings.Min(y => y.Dimension)).MinZoom
+                    globalMinZoom = settings.First(x => x.Dimension == settings.Min(y => y.Dimension)).MinZoom,
+                    botWebSocketUrl = botWebSocketUrl,
                 };
 
                 mapHtmlContext = mapHtmlContext.Replace(

@@ -60,6 +60,7 @@
     ></script>
 
     <div id="map"></div>
+    <div id="chat" style="display: none;"></div>
     <script>
       var layers = {
         dim0: {
@@ -158,6 +159,14 @@
 
       let map;
       let locationElement;
+
+      const vectorSource = new ol.source.Vector({
+        wrapX: false,
+      });
+
+      const vectorLayer = new ol.layer.Vector({
+        source: vectorSource,
+      });
 
       const tileLayers = Object.keys(layers)
         .sort()
@@ -335,7 +344,7 @@
 
       map = new ol.Map({
         target: "map",
-        layers: tileLayers,
+        layers: [...tileLayers, vectorLayer],
         view: view,
         controls: [
           new ol.control.Zoom(),
@@ -356,6 +365,84 @@
 
         locationElement.innerText = "X: " + x + " Z: " + z;
       });
+
+      if (config.botWebSocketUrl.length > 0) {
+        const chatBox = document.getElementById("chat");
+        chatBox.style.display = "flex";
+
+        const messages = [];
+        let playerFeatures = {};
+
+        const initialMessage = document.createElement("span");
+        initialMessage.innerText = "Chat messages will appear here.";
+        initialMessage.style.color = "gray";
+        initialMessage.style.fontStyle = "italic";
+        chatBox.appendChild(initialMessage);
+        messages.push(initialMessage);
+
+        function addMessage(m) {
+          const msgSpan = document.createElement("span");
+          msgSpan.innerText = m;
+          chatBox.prepend(msgSpan);
+          messages.push(msgSpan);
+
+          if (messages.length > 10) {
+            const deleted = messages.splice(0, 1);
+            for (const del of deleted) {
+              del.parentElement.removeChild(del);
+            }
+          }
+        }
+
+        const webSocket = new WebSocket(config.botWebSocketUrl);
+        webSocket.addEventListener('open', function(event) {
+          addMessage('Connected');
+        });
+        webSocket.addEventListener('message', function(event) {
+          const data = JSON.parse(event.data);
+          switch (data.type) {
+            case "pos": 
+              const playerName1 = data.playerName;
+              const x = (data.x / minecraftTilesAtMostZoomedInLevel) * zoomRatioForMaximumZoom;
+              const z = (data.z / minecraftTilesAtMostZoomedInLevel) * -zoomRatioForMaximumZoom;
+
+              if (playerFeatures[playerName1] === undefined) {
+                playerFeatures[playerName1] = {
+                  pos: [x, z],
+                  feature: null,
+                }
+              }
+
+              playerFeatures[playerName1].pos = [x, z];
+
+              const feature = new ol.Feature({
+                geometry: new ol.geom.Point(playerFeatures[playerName1].pos),
+              })
+
+              feature.setStyle(new ol.style.Style({
+                image: new ol.style.Icon(({
+                  color: '#8959A8',
+                  crossOrigin: 'anonymous',
+                  src: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAABpUlEQVQ4y7WVPXLbMBBGn+2G6cAOJdypo8qUuEF0A/EGPoKPwMkJPOyois4NWLoUSlXEDbjsoAopBCQaWbSdif3NYIbNvtmfb5c3vC+VHoCkt6ibNyBroALMBdADDthfg18DroEfgAXW6qQTTQQRkQQbgF/pexG4Bh6AjTFGWWupqopzoHOOYRjw3gvwDPy8hJ7DnsqyFGttbJomjuMYLzWOY2yaJlprY1mWAjyl2Fc9ewQma23s+z5O0xSXNE1T7Ps+WmsjMKVYBXCXgN+B2hiz2m63bDabP2VeU1EUaK0JIXA4HIpTWzmkgUHq21TX9dUylzSOY6zrOmf5AHCbUjVKKVVVFcYYPipjTB6ayvbKQKWUerPMRdf/jVMZ+Km6zeuUTPvPgLM4ASQDvYiIcw7v/Ydh3nucc3l7PCDZNt+AlYgYpRSr1YqiKN7NrOs6drsdIvIC7AB/d7b0WkTWx+Ox0FqjtV6EigjDMNC2Lfv9XoAu7XXIwADMgJrn+d57X4QQ0Fq/mrz3nq7raNsW59wcQngG2mzqTz8OX36+vuTA/tcv4DcQ5j3msmvKlAAAAABJRU5ErkJggg=='
+                }))
+              }));
+
+              if (playerFeatures[playerName1].feature !== null) {
+                vectorSource.removeFeature(playerFeatures[playerName1].feature);
+              }
+
+              playerFeatures[playerName1].feature = feature;
+              vectorSource.addFeature(playerFeatures[playerName1].feature);
+
+              break;
+            case "chat":
+              const playerName2 = data.playerName;
+              const message = data.message;
+              addMessage(playerName2 + ": " + message);
+              break;
+          }
+        });
+      }
     </script>
   </body>
 </html>
