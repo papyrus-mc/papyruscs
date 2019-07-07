@@ -37,6 +37,22 @@
         right: 0.5em;
         width: 150px;
       }
+
+      #chat {
+        position: absolute;
+        width: 25vw;
+        min-width: 300px;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        min-height: 10em;
+        display: flex; 
+        flex-direction: column-reverse;
+        padding: 5px;
+      }
+
+      #chat span {
+        color: white;
+      }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
