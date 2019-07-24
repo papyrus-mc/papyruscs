@@ -34,6 +34,7 @@ namespace PapyrusCs.Strategies
         bool IsUpdate { get; }
         bool DeleteExistingUpdateFolder { get; set; }
         string Profile { get; set; }
+        bool ForceOverwrite { get; set; }
 
         void RenderInitialLevel();
         void RenderZoomLevels();

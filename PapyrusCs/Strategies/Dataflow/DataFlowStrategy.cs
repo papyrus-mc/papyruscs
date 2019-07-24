@@ -25,10 +25,9 @@ namespace PapyrusCs.Strategies.Dataflow
         private ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubchunks;
         private bool isUpdate;
 
-        public DataFlowStrategy(IGraphicsApi<TImage> graphics, bool forceOverwrite)
+        public DataFlowStrategy(IGraphicsApi<TImage> graphics)
         {
             this.graphics = graphics;
-            this.forceOverwrite = forceOverwrite;
         }
 
         public int XMin { get; set; }
@@ -59,6 +58,11 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public int NewInitialZoomLevel { get; set; }
         public int NewLastZoomLevel { get; set; }
+        private string pathToDb;
+        private string pathToDbUpdate;
+        private string pathToDbBackup;
+        private string pathToMapUpdate;
+        private string pathToMap;
 
         public void RenderInitialLevel()
         {
@@ -96,7 +100,7 @@ namespace PapyrusCs.Strategies.Dataflow
             var average = groupedToTiles.Average(x => x.Count());
             Console.WriteLine($"Average of {average:0.0} chunks per tile");
 
-            var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, forceOverwrite);
+            var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, ForceOverwrite);
             //var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
             //var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, World.ChunkPool, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
 
@@ -192,6 +196,8 @@ namespace PapyrusCs.Strategies.Dataflow
 
         protected Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy =>
             Parallel.ForEach;
+
+        public bool ForceOverwrite { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void RenderZoomLevels()
         {
@@ -330,12 +336,7 @@ namespace PapyrusCs.Strategies.Dataflow
 
         public event EventHandler<ChunksRenderedEventArgs> ChunksRendered;
         public event EventHandler<ZoomRenderedEventArgs> ZoomLevelRenderd;
-        private string pathToDb;
-        private string pathToDbUpdate;
-        private string pathToDbBackup;
-        private string pathToMapUpdate;
-        private string pathToMap;
-        private readonly bool forceOverwrite;
+       
 
         public void Init()
         {

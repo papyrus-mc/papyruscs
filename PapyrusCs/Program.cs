@@ -15,7 +15,6 @@ using Newtonsoft.Json;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
-using PapyrusCs.Strategies.For;
 
 namespace PapyrusCs
 {
@@ -197,9 +196,9 @@ namespace PapyrusCs
             }
 
             const int chunkSize = 256;
-            int chunksPerDimension = 2;
+            int chunksPerDimension = options.ChunksPerDimension;
             int tileSize = chunkSize * chunksPerDimension;
-            Console.WriteLine($"Tilesie is {tileSize}x{tileSize}");
+            Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
             Directory.CreateDirectory(options.OutputPath);
 
             // db stuff
@@ -207,8 +206,7 @@ namespace PapyrusCs
             var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
 
             var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunksPerDimension,
-                chunkSize, zmin, zmax, xmin, xmax);
+            ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunkSize, zmin, zmax, xmin, xmax);
 
             strat.Init();
 
@@ -244,18 +242,11 @@ namespace PapyrusCs
             IRenderStrategy strat = null;
             switch (options.Strategy)
             {
-                case Strategy.ParallelFor:
-                    strat = new ParallelForRenderStrategy<Bitmap>(new SystemDrawing());
-                    break;
-                case Strategy.SingleFor:
-                    strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
-                    break;
                 case Strategy.Dataflow:
-                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing(), options.ForceOverwrite);
-                    break;
                 default:
-                    strat = new SingleForRenderStrategy<Bitmap>(new SystemDrawing());
+                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing());
                     break;
+               
             }
 
             return strat;
@@ -264,7 +255,7 @@ namespace PapyrusCs
         private static void ConfigureStrategy(IRenderStrategy strat, Options options,
             HashSet<LevelDbWorldKey2> allSubChunks,
             int extendedDia, int zoom, World world, Dictionary<string, Texture> textures, int tileSize,
-            int chunksPerDimension, int chunkSize,
+            int chunkSize,
             int zmin, int zmax, int xmin, int xmax)
         {
             strat.RenderSettings = new RenderSettings()
@@ -279,6 +270,7 @@ namespace PapyrusCs
                 TrimCeiling = options.TrimCeiling,
                 Profile = options.Profile,
             };
+            strat.ForceOverwrite = options.ForceOverwrite;
             strat.AllWorldKeys = allSubChunks;
             strat.InitialDiameter = extendedDia;
             strat.InitialZoomLevel = (int)zoom;
@@ -288,7 +280,7 @@ namespace PapyrusCs
             strat.TextureDictionary = textures;
             strat.OutputPath = options.OutputPath;
             strat.TileSize = tileSize;
-            strat.ChunksPerDimension = chunksPerDimension;
+            strat.ChunksPerDimension = options.ChunksPerDimension;
             strat.ChunkSize = chunkSize;
             strat.ZMin = zmin;
             strat.ZMax = zmax;
