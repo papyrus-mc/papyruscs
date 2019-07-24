@@ -23,6 +23,17 @@ namespace PapyrusCs
         public int Threads { get; set; }
     }
 
+    [Verb("find")]
+    public class FindOptions
+    {
+        [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
+        public string MinecraftWorld { get; set; }
+
+        [Option('s', "search", Required = false, HelpText = "Search for Block. Requires something like: minecraft:diamand_ore")]
+        public string BlockId { get; set; }
+    }
+
+
     [Verb("map")]
     public class Options
     {
