@@ -46,7 +46,7 @@ namespace PapyrusCs
         [Option("htmlfile", Required = false, HelpText = "Sets name of html map file", Default = "map.html")]
         public string MapHtml { get; set; }
 
-        [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid are Dataflow, SingleFor and ParallelFor (Multithreaded)", Default = Strategy.Dataflow)]
+        [Option('s', "strategy", Required = false, HelpText = "Sets the render strategy. Valid is only Dataflow", Default = Strategy.Dataflow)]
         public Strategy Strategy { get; set; }
 
         [Option("coords", Required = false, HelpText = "Render text coordinates in each chunk", Default = false)]
@@ -108,6 +108,9 @@ namespace PapyrusCs
 
         [Option("use_leaflet_legacy", Required = false, Default = false, HelpText = "Use the legacy leaflet.js map renderer instead of the new OpenLayers version")]
         public bool UseLeafletLegacy { get; set; }
+
+        [Option("chunksperdimension", Required = false, Default = 2, HelpText = "Sets the chunks per X and Y dimension for the generated tiles. 1 => 1 chunk per tile, 2 => 4 chunks per tile and so on")]
+        public int ChunksPerDimension { get; set; }
 
 
         // Derivative options

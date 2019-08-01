@@ -18,6 +18,16 @@ namespace Maploader.World
 
         public void Open(string pathDb)
         {
+            if (pathDb == null)
+                throw new ArgumentNullException(nameof(pathDb));
+
+            if (!pathDb.ToLowerInvariant().EndsWith("db") &&
+                !pathDb.ToLowerInvariant().EndsWith("db" + Path.DirectorySeparatorChar) &&
+                !pathDb.ToLowerInvariant().EndsWith("db" + Path.AltDirectorySeparatorChar))
+            {
+                pathDb = Path.Combine(pathDb, "db");
+            }
+
             var options = new Options();
             options.Compression = CompressionType.ZlibRaw;
 
