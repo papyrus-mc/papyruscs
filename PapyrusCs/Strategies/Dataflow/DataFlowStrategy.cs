@@ -399,7 +399,8 @@ namespace PapyrusCs.Strategies.Dataflow
             {
                 this.FileFormat = settings.Format;
                 this.FileQuality = settings.Quality;
-                Console.WriteLine("Overriding settings with: Format {0}, Quality {1}", FileFormat, FileQuality);
+                this.ChunksPerDimension = settings.ChunksPerDimension;
+                Console.WriteLine("Overriding settings with: Format {0}, Quality {1} ChunksPerDimension {2}", FileFormat, FileQuality, ChunksPerDimension);
 
                 settings.MaxZoom = NewInitialZoomLevel;
                 settings.MinZoom = NewLastZoomLevel;
@@ -408,6 +409,7 @@ namespace PapyrusCs.Strategies.Dataflow
             }
             else
             {
+                
                 settings = new Settings()
                 {
                     Dimension = Dimension,
@@ -416,6 +418,7 @@ namespace PapyrusCs.Strategies.Dataflow
                     Format = FileFormat,
                     MaxZoom = this.NewInitialZoomLevel,
                     MinZoom = this.NewLastZoomLevel,
+                    ChunksPerDimension = db.Settings.FirstOrDefault()?.ChunksPerDimension ?? this.ChunksPerDimension
                 };
                 db.Add(settings);
                 db.SaveChanges();
