@@ -94,7 +94,7 @@
       const openLayersInternalTileSize = Math.pow(2, 8); // 256
 
       // The actual size of the tiles that we're using in Papyrus.
-      const tileSize = 512;
+      const tileSize = config.tileSize;
 
       // The maximum positive extents of the whole map. The units for this
       // value are "number of tiles at the most zoomed out level generated
@@ -110,25 +110,22 @@
       const minimumExtentSize = -10000;
 
       // Computes the resolutions array to use for OpenLayers. For each OpenLayers
-      // zoom level (0 through 43), this computes the ratio such that a single tile
+      // zoom level (0 through 42), this computes the ratio such that a single tile
       // at OpenLayers zoom level 0 is a single tile at the minimum Papyrus zoom level.
       const papyrusMinimumZoomScale = Math.pow(2, config.globalMinZoom);
-      const convertedFromTilesToPixelsUsingTileSize =
-        papyrusMinimumZoomScale / tileSize;
+      const convertedFromTilesToPixelsUsingTileSize = papyrusMinimumZoomScale / tileSize;
       const resolutions = new Array(43);
       for (let z = 0; z < 43; ++z) {
-        resolutions[z] =
-          convertedFromTilesToPixelsUsingTileSize / Math.pow(2, z);
+        resolutions[z] = convertedFromTilesToPixelsUsingTileSize / Math.pow(2, z);
       }
 
       // When we calculate resolutions above, we've effectively saying that zoom level 0 is
       // zoom level N, where N is the lowest zoom level. This zoom level N also becomes
       // the range of [0, 0] -> [1, 1] in the coordinate system. We need to be able to translate
       // coordinates in that "zoomed out" coordinate system, back down to the maximum zoom level
-      // where each tile represents 32x32 Minecraft tiles.
-      const zoomRatioForMaximumZoom =
-        1 / Math.pow(2, config.globalMaxZoom - config.globalMinZoom);
-      const minecraftTilesAtMostZoomedInLevel = 32;
+      // where each tile represents 32x32 (depending on tilesize) Minecraft tiles.
+      const zoomRatioForMaximumZoom = 1 / Math.pow(2, config.globalMaxZoom - config.globalMinZoom);
+      const minecraftTilesAtMostZoomedInLevel = config.blocksPerTile;
 
       // Use a projection where pixels have a 1:1 ratio with the screen at zoom level 0.
       const projection = new ol.proj.Projection({

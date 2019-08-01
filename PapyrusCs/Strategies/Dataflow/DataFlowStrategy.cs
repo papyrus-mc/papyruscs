@@ -197,7 +197,7 @@ namespace PapyrusCs.Strategies.Dataflow
         protected Func<IEnumerable<int>, ParallelOptions, Action<int>, ParallelLoopResult> OuterLoopStrategy =>
             Parallel.ForEach;
 
-        public bool ForceOverwrite { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool ForceOverwrite { get; set; }
 
         public void RenderZoomLevels()
         {

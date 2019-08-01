@@ -540,13 +540,15 @@ namespace PapyrusCs
                 {
                     factor = (Math.Pow(2, settings.First().MaxZoom - 4)),
                     globalMaxZoom = settings.First(x => x.Dimension == settings.Min(y => y.Dimension)).MaxZoom,
-                    globalMinZoom = settings.First(x => x.Dimension == settings.Min(y => y.Dimension)).MinZoom
+                    globalMinZoom = settings.First(x => x.Dimension == settings.Min(y => y.Dimension)).MinZoom,
+                    tileSize = tileSize,
+                    blocksPerTile = tileSize/16
                 };
 
                 mapHtmlContext = mapHtmlContext.Replace(
                     "// # INJECT DATA HERE", 
-                    "layers = " + JsonConvert.SerializeObject(layersdef) + 
-                    "; config = " + JsonConvert.SerializeObject(globalconfig) + ";");
+                    "layers = " + JsonConvert.SerializeObject(layersdef) + "; \r\n"+
+                    "config = " + JsonConvert.SerializeObject(globalconfig) + ";");
 
                 Directory.CreateDirectory(Path.Combine(outputPath, "map"));
                 File.WriteAllText(Path.Combine(outputPath, "map", mapHtmlFile), mapHtmlContext);
