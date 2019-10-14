@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "find -w \"C:\\Users\\r\\AppData\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\LocalState\\games\\com.mojang\\minecraftWorlds\\world_bedrock_10072019\\db\"",
+      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock\" -o \"C:\\papyrus\\homeworld_ts4_net3\" --chunksperdimension 4 -f png --dim 0 --htmlfile index.html ",
       "workingDirectory": "c:\\temp"
     }
   }

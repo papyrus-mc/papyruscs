@@ -28,8 +28,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapLoader.NUnitTests", "MapLoader.NUnitTests\MapLoader.NUnitTests.csproj", "{8A87A116-D0B8-4B0A-A543-0086BA77B74B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "Benchmark\Benchmark.csproj", "{2FC0E33F-69B5-4AAB-A869-B8F5DDC4DC90}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusCs.Tests.Core", "PapyrusCs.Tests.Core\PapyrusCs.Tests.Core.csproj", "{7857B9C7-64DF-459B-A558-0BF1AA2E6DFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imazen.WebP-std", "Imazen.WebP-std\Imazen.WebP-std.csproj", "{82CCF552-5A68-4C6A-B3F3-A40550D47990}"
@@ -56,10 +54,6 @@ Global
 		{8A87A116-D0B8-4B0A-A543-0086BA77B74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A87A116-D0B8-4B0A-A543-0086BA77B74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A87A116-D0B8-4B0A-A543-0086BA77B74B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FC0E33F-69B5-4AAB-A869-B8F5DDC4DC90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FC0E33F-69B5-4AAB-A869-B8F5DDC4DC90}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FC0E33F-69B5-4AAB-A869-B8F5DDC4DC90}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FC0E33F-69B5-4AAB-A869-B8F5DDC4DC90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7857B9C7-64DF-459B-A558-0BF1AA2E6DFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7857B9C7-64DF-459B-A558-0BF1AA2E6DFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7857B9C7-64DF-459B-A558-0BF1AA2E6DFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
