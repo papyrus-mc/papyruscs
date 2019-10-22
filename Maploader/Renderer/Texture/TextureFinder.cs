@@ -290,7 +290,6 @@ namespace Maploader.Renderer.Texture
                             return GetTexture("double_plant_carried", data & 0xF7);
                         case 0:
                             return GetTexture("double_plant_bottom", data & 0xF7);
-                            break;
                     }
 
                     return null;
@@ -412,6 +411,16 @@ namespace Maploader.Renderer.Texture
 
                 case "smoker":
                     return GetTexture("smoker_top", 0);
+                case "barrel":
+                    switch ((BlockFace)data)
+                    {
+                        case BlockFace.Up:
+                            return GetTexture("barrel_top", 0);
+                        case BlockFace.Down:
+                            return GetTexture("barrel_bottom", 0);
+                        default:
+                            return GetTexture("barrel_side", data);
+                    }
                 case "bell":
                     return GetTexture("bell_top", 0).Translate(
                         new Rect(0, 0, 8, 8),
@@ -568,8 +577,9 @@ namespace Maploader.Renderer.Texture
                     return RenderButton(data, "birch_planks");
                 case "jungle_button":
                     return RenderButton(data, "jungle_planks");
-
+                case "wall_banner":
                 case "standing_banner":
+                    return RenderSign(data, "sign");
                 case "tripWire":
                 case "tripwire_hook":
                     return null;
@@ -719,6 +729,8 @@ namespace Maploader.Renderer.Texture
                         data);
                 case "stripped_oak_log":
                     return GetTexture((data & 2) == 0 ? "stripped_oak_log_top" : "stripped_oak_log_side", data);
+                case "stripped_acacia_log":
+                    return GetTexture((data & 2) == 0 ? "stripped_acacia_log_top" : "stripped_acacia_log_side", data);
 
                 case "enchanting_table":
                     return GetTexture("enchanting_table_top", data);
@@ -842,6 +854,12 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderFenceGate(long data, string texture)
         {
+            if ((data & 8) == 8)
+            {
+                // Per https://minecraft.gamepedia.com/Fence_Gate : 0x8	If 1, the gate is lowered by three pixels, to accommodate attaching more cleanly with normal and mossy Cobblestone Walls
+                //  3 pixels, on the scale rendering, doesn't matter, so remove that bit
+                data = data ^ 8;
+            }
             switch (data)
             {
                 case 0:
