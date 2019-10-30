@@ -842,8 +842,15 @@ namespace Maploader.Renderer.Texture
                 new Rect(6, 6, 4, 3),
                 new Rect(6, 0, 4, 3)
             );
+            if ((data & 8) == 8)
+            {
+                // Per https://minecraft.gamepedia.com/Button : 0x8	If this bit is set, the button is currently active
+                //  Active/Unactive, on the scale rendering, doesn't matter, so remove that bit
+                data = data ^ 8;
+            }
             switch (data)
             {
+                
                 case 1:
                     return t.Translate(
                         new Rect(6, 6, 4, 4),
@@ -855,7 +862,8 @@ namespace Maploader.Renderer.Texture
                     return t.Rotate(RotateFlip.RotateNoneFlipNone);
                 case 4:
                     return t.Rotate(RotateFlip.Rotate90FlipNone);
-                case 5:
+                case 0: // 0: Button on block bottom facing down. Assuming bottom = top
+                case 5: // 5: Button on block top facing up
                     return t.Rotate(RotateFlip.Rotate270FlipNone);
                 default:
                     return null;
