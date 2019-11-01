@@ -15,7 +15,7 @@ namespace Maploader.Renderer.Imaging
         void RotateFlip(TImage image, RotateFlip infoRotation);
         void SaveImage(TImage image, string filepath);
         void DrawImageWithBrightness(TImage dest, TImage image, int x, int y, float brightness);
-        void DrawImage(TImage dest, TImage src, Rect translationDest, Rect translationSource);
+        void DrawImage(TImage dest, TImage src, Rect translationDest, Rect ts);
         void DrawImage(TImage dest, TImage src, int x, int y, int w, int h);
         void DrawString(TImage dest, string str, Font font, Brush brush, int x, int y);
         int DefaultQuality { get; set; }

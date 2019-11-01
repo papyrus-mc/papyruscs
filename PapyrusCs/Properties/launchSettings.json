@@ -2,7 +2,7 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock\" -o \"C:\\papyrus\\homeworld_ts4_net3\" --chunksperdimension 4 -f png --dim 0 --htmlfile index.html ",
+      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock\" -o \"C:\\papyrus\\homeworld_drawing\" --limitx -15,16 --limitz -15,16 --chunksperdimension 2 -f png --dim 0 --htmlfile index.html ",
       "workingDirectory": "c:\\temp"
     }
   }
