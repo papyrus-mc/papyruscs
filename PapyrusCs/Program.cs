@@ -15,6 +15,7 @@ using Maploader.Renderer.Texture;
 using Maploader.World;
 using MoreLinq.Extensions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
@@ -28,6 +29,19 @@ namespace PapyrusCs
         private static Stopwatch _time = new Stopwatch();
         private static Stopwatch _time2 = new Stopwatch();
 
+        private static readonly string[] randomPlayerMapIconColors = {
+            // You can also use hex colors "#FFFFFF" and rgb "rgb(128, 128, 128)"
+            "DeepPink",
+            "DarkRed",
+            "DarkOrange",
+            "Gold",
+            "SaddleBrown",
+            "DarkGreen",
+            "Teal",
+            "DarkBlue",
+            "Purple",
+            "SlateGray"
+        };
 
 
         static int Main(string[] args)
@@ -429,6 +443,78 @@ namespace PapyrusCs
             Console.WriteLine("Time is {0}", _time.Elapsed);
             strat.RenderZoomLevels();
 
+            // Note: Use a .js file instead of .json because there are CORS issues if the user wants to view the .html file from their local file system instead of a web server
+            var playersDataJsonFile = Path.Combine(options.OutputPath, "map", "playersData.js");
+            var playersDataJsonFileForUpdate = Path.Combine(options.OutputPath, "update", "playersData.js");
+
+            if (options.ShowPlayerIcons)
+            {
+                Console.WriteLine("Retrieving player data and writing to json file");
+
+                const string playersDataJsonFileTemplate =
+@"// NOTE: Please only modify player attributes below such as name and color
+// This file is automatically updated, and if other parts are changed, it will fail to update
+// Names and colors will only be read from the /map/playersData.js file - /update/playersData.js will be overwritten, so don't make changes there
+var playersData = // # INJECT DATA HERE;";
+
+                if (!File.Exists(playersDataJsonFile))
+                {
+                    File.WriteAllText(playersDataJsonFile, 
+                        playersDataJsonFileTemplate.Replace(
+                            "// # INJECT DATA HERE",
+                            "{ players: [] }"));
+                }
+
+                var existingPlayersDataRaw = File.ReadAllText(playersDataJsonFile);
+                var existingPlayersData = JObject.Parse(existingPlayersDataRaw.Substring(existingPlayersDataRaw.IndexOf('=') + 1).Trim().TrimEnd(';'));
+
+                var random = new Random();
+
+                foreach (var (uuid, name, dimensionId, position) in world.GetPlayerData())
+                {
+                    var existingPlayerData = existingPlayersData["players"].FirstOrDefault(player => (Guid)player["uuid"] == uuid);
+
+                    if (existingPlayerData == null)
+                    {
+                        // First time we have seen this player
+                        // Add their record to the list, and pick a random color for their icon on the map
+                        ((JArray)existingPlayersData["players"]).Add(JObject.FromObject(new
+                        {
+                            uuid,
+                            name,
+                            dimensionId,
+                            position,
+                            color = randomPlayerMapIconColors[random.Next(0, randomPlayerMapIconColors.Length)]
+                        }));
+                    }
+                    else
+                    {
+                        // This player has already been added to the list - just update properties that may have changed
+                        existingPlayerData["dimensionId"] = dimensionId;
+                        existingPlayerData["position"] = new JArray { position[0], position[1], position[2] };
+                    }
+                }
+
+                File.WriteAllText(playersDataJsonFile, 
+                    playersDataJsonFileTemplate.Replace(
+                        "// # INJECT DATA HERE",
+                        JsonConvert.SerializeObject(existingPlayersData, Formatting.Indented)));
+
+                File.Copy(playersDataJsonFile, playersDataJsonFileForUpdate, overwrite: true);
+            }
+            else
+            {
+                // Player icons disabled
+                if (File.Exists(playersDataJsonFile))
+                {
+                    File.Delete(playersDataJsonFile);
+                }
+
+                if (File.Exists(playersDataJsonFileForUpdate))
+                {
+                    File.Delete(playersDataJsonFileForUpdate);
+                }
+            }
 
             WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
                 options.UseLeafletLegacy);

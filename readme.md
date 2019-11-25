@@ -23,11 +23,13 @@ outputdir
 |   |-dim1
 |   |-dim2
 |   |-map.html
+|   |-playersData.js
 |-update
 |   |-dim0
 |   |-dim1
 |   |-dim2
 |   |-map.html
+|   |-playersData.js
 |-chunks.sqlite
 |-chunks-backup.sqlite
 ```
@@ -92,9 +94,7 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 
 #### Planned
 
-- Nether/ The End support
 - Isometric renders
-- Auto-Updating renders
 
 ## Installation
 Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
@@ -179,6 +179,12 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
   --use_leaflet_legacy            (Default: false) Use the legacy leaflet.js map renderer instead of the new
                                   OpenLayers version
                                   
+  --playericons                   (Default: true) Renders player markers on the map. Player names must be manually entered.
+                                  After running, edit '/map/playersData.js' text file to modify player names and colors.
+                                  Updated player names and colors will be preserved when re-running
+								  Currently, only players on the Overworld are supported
+                                  Note: Not compatible with 'use_leaflet_legacy'
+
   --help                          Display this help screen.
 
   --version                       Display version information.

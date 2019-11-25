@@ -9,12 +9,18 @@
     />
     <link
       rel="stylesheet"
-      href="https://openlayers.org/en/v5.3.0/css/ol.css"
+      href="https://openlayers.org/en/v6.1.1/css/ol.css"
     />
     <link
       href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
       rel="stylesheet"
     />
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+		integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc="
+		crossorigin="anonymous" />
 
     <style>
       #map {
@@ -42,7 +48,7 @@
   </head>
 
   <body margin="0" padding="0">
-    <script src="https://openlayers.org/en/v5.3.0/build/ol.js"></script>
+    <script src="https://openlayers.org/en/v6.1.1/build/ol.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
@@ -58,6 +64,8 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+
+    <script src="playersData.js"></script>
 
     <div id="map"></div>
     <script>
@@ -165,7 +173,7 @@
               tileUrlFunction: function(tileCoord, pixelRatio, projection) {
                 const z = tileCoord[0];
                 const x = tileCoord[1];
-                const y = -tileCoord[2] - 1;
+                const y = tileCoord[2];
                 return (
                   "./" +
                   layer.folder +
@@ -353,6 +361,53 @@
 
         locationElement.innerText = "X: " + x + " Z: " + z;
       });
+
+      if (typeof(playersData) !== "undefined") {
+        var playerFeatures = [];
+
+        for (var playerIndex in playersData.players)
+        {
+            var player = playersData.players[playerIndex];
+
+            if (player.dimensionId !== 0) {
+                // TODO: Currently I'm only adding player markers who are in the Overworld
+                // We'll want to show players depending on which dimension is being viewed
+                // Maybe add a separate layer for players in each dimension
+                continue;
+            }
+
+            var style = new ol.style.Style({
+                text: new ol.style.Text({
+                    text: player.name + "\n\uf041", // map-marker
+                    font: "900 18px 'Font Awesome 5 Free'",
+                    textBaseline: "bottom",
+                    fill: new ol.style.Fill({color: player.color}),
+                    stroke: new ol.style.Stroke({color: "white", width: 2})
+                })
+            });
+
+            var playerFeature = new ol.Feature({
+                geometry: new ol.geom.Point([
+                    (player.position[0] * zoomRatioForMaximumZoom) / minecraftTilesAtMostZoomedInLevel,
+                    (player.position[2] * zoomRatioForMaximumZoom) / minecraftTilesAtMostZoomedInLevel
+                ])
+            });
+
+            playerFeature.setStyle(style);
+
+            playerFeatures.push(playerFeature);
+        }
+
+        var vectorSource = new ol.source.Vector({
+            features: playerFeatures
+        });
+
+        var vectorLayer = new ol.layer.Vector({
+            source: vectorSource
+        });
+
+        map.addLayer(vectorLayer);
+      }
     </script>
   </body>
 </html>
