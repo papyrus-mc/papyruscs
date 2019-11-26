@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -212,6 +213,10 @@ namespace PapyrusCs.Strategies.Dataflow
 
             while (sourceZoomLevel > NewLastZoomLevel)
             {
+                // Force garbage collection (may not be necessary)
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
                 var destDiameter = sourceDiameter / 2;
                 var sourceZoom = sourceZoomLevel;
                 var destZoom = sourceZoomLevel - 1;
@@ -278,6 +283,12 @@ namespace PapyrusCs.Strategies.Dataflow
                                     }
 
                                     SaveBitmap(destZoom, x / 2, z / 2, isUpdate, bfinal);
+                                }
+
+                                // Dispose of any bitmaps, releasing memory
+                                foreach (var bitmap in new[] { b1, b2, b3, b4, bfinal }.OfType<Bitmap>())
+                                {
+                                    bitmap.Dispose();
                                 }
                             }
                         }

@@ -294,7 +294,7 @@ namespace PapyrusCs
             catch (Exception)
             {
                 Console.WriteLine(
-                    $"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
+                    $"The value '{options.LimitX}' for the LimitX parameter is not valid. Try something like -10,10");
                 return -1;
             }
 
