@@ -115,6 +115,9 @@ namespace PapyrusCs
         [Option("playericons", Required = false, Default = true, HelpText = "Renders player markers on the map. Player names must be manually entered. After running, edit '/map/playersData.js' text file to modify player names and colors.")]
         public bool ShowPlayerIcons { get; set; }
 
+        [Option("render_map", Required = false, Default = true, HelpText = "Renders the map. This is the main feature of this program. Only disable this in special circumstances, such as if you want to quickly update player markers without updating the map.")]
+        public bool RenderMap { get; set; }
+
 
         // Derivative options
         public bool Loaded { get; set; }

@@ -352,98 +352,107 @@ namespace PapyrusCs
             }
 
             // Start Generation
-            int xmin = 0;
-            int xmax = 0;
-            int zmin = 0;
-            int zmax = 0;
-            HashSet<LevelDbWorldKey2> allSubChunks = null;
-
-            Func<LevelDbWorldKey2, bool> constraintX = b => true;
-            Func<LevelDbWorldKey2, bool> constraintZ = b => true;
-
-            if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
+            if (options.RenderMap)
             {
-                xmin = options.LimitXLow.Value;
-                xmax = options.LimitXHigh.Value;
-                Console.WriteLine($"Limiting X to {xmin} to {xmax}");
-                var xmax1 = xmax;
-                var xmin1 = xmin;
-                constraintX = key => key.X >= xmin1 && key.X <= xmax1;
-            }
+                int xmin = 0;
+                int xmax = 0;
+                int zmin = 0;
+                int zmax = 0;
+                HashSet<LevelDbWorldKey2> allSubChunks = null;
 
-            if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
-            {
-                zmin = options.LimitZLow.Value;
-                zmax = options.LimitZHigh.Value;
-                Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
-                var zmax1 = zmax;
-                var zmin1 = zmin;
-                constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
-            }
+                Func<LevelDbWorldKey2, bool> constraintX = b => true;
+                Func<LevelDbWorldKey2, bool> constraintZ = b => true;
 
-            if (options.Dimension == 1 && options.NoAutoTrimCeiling == false)
-            {
-                // Nether
-                options.TrimCeiling = true;
-                if (options.LimitY == -1)
+                if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
                 {
-                    options.LimitY = 120;
+                    xmin = options.LimitXLow.Value;
+                    xmax = options.LimitXHigh.Value;
+                    Console.WriteLine($"Limiting X to {xmin} to {xmax}");
+                    var xmax1 = xmax;
+                    var xmin1 = xmin;
+                    constraintX = key => key.X >= xmin1 && key.X <= xmax1;
                 }
+
+                if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
+                {
+                    zmin = options.LimitZLow.Value;
+                    zmax = options.LimitZHigh.Value;
+                    Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
+                    var zmax1 = zmax;
+                    var zmin1 = zmin;
+                    constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
+                }
+
+                if (options.Dimension == 1 && options.NoAutoTrimCeiling == false)
+                {
+                    // Nether
+                    options.TrimCeiling = true;
+                    if (options.LimitY == -1)
+                    {
+                        options.LimitY = 120;
+                    }
+                }
+
+
+                Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
+                var keys = world.GetDimension(options.Dimension).ToList();
+                allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
+                        .Where(k => constraintX(k) && constraintZ(k)));
+
+                _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
+                Console.WriteLine($"Total Chunk count {_totalChunk}");
+                Console.WriteLine();
+
+                xmin = allSubChunks.Min(x => x.X);
+                xmax = allSubChunks.Max(x => x.X);
+                zmin = allSubChunks.Min(x => x.Z);
+                zmax = allSubChunks.Max(x => x.Z);
+
+                Console.WriteLine($"The total dimensions of the map are");
+                Console.WriteLine($"  X: {xmin} to {xmax}");
+                Console.WriteLine($"  Z: {zmin} to {zmax}");
+                Console.WriteLine();
+
+                if (options.LimitY > 0)
+                {
+                    Console.WriteLine($"Limiting Y to {options.LimitY}");
+                }
+
+                const int chunkSize = 256;
+                int chunksPerDimension = options.ChunksPerDimension;
+                int tileSize = chunkSize * chunksPerDimension;
+                Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
+                Directory.CreateDirectory(options.OutputPath);
+
+                // db stuff
+                var textures = ReadTerrainTextureJson();
+                var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
+
+                var strat = InstanciateStrategy(options);
+                ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunkSize, zmin, zmax, xmin, xmax);
+
+                strat.Init();
+
+                // other stuff
+
+                strat.RenderInitialLevel();
+
+                var missingTextures = strat.MissingTextures;
+                if (missingTextures != null)
+                {
+                    File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
+                }
+
+
+                Console.WriteLine("Time is {0}", _time.Elapsed);
+                strat.RenderZoomLevels();
+
+                WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
+                    options.UseLeafletLegacy);
+
+                strat.Finish();
+                Console.WriteLine("Total Time {0}", _time.Elapsed);
             }
-
-
-            Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-            var keys = world.GetDimension(options.Dimension).ToList();
-            allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
-                    .Where(k => constraintX(k) && constraintZ(k)));
-
-            _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
-            Console.WriteLine($"Total Chunk count {_totalChunk}");
-            Console.WriteLine();
-
-            xmin = allSubChunks.Min(x => x.X);
-            xmax = allSubChunks.Max(x => x.X);
-            zmin = allSubChunks.Min(x => x.Z);
-            zmax = allSubChunks.Max(x => x.Z);
-
-            Console.WriteLine($"The total dimensions of the map are");
-            Console.WriteLine($"  X: {xmin} to {xmax}");
-            Console.WriteLine($"  Z: {zmin} to {zmax}");
-            Console.WriteLine();
-
-            if (options.LimitY > 0)
-            {
-                Console.WriteLine($"Limiting Y to {options.LimitY}");
-            }
-
-            const int chunkSize = 256;
-            int chunksPerDimension = options.ChunksPerDimension;
-            int tileSize = chunkSize * chunksPerDimension;
-            Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
-            Directory.CreateDirectory(options.OutputPath);
-
-            // db stuff
-            var textures = ReadTerrainTextureJson();
-            var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
-
-            var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunkSize, zmin, zmax, xmin, xmax);
-
-            strat.Init();
-
-            // other stuff
-
-            strat.RenderInitialLevel();
-
-            var missingTextures = strat.MissingTextures;
-            if (missingTextures != null)
-            {
-                File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
-            }
-
-
-            Console.WriteLine("Time is {0}", _time.Elapsed);
-            strat.RenderZoomLevels();
 
             // Note: Use a .js file instead of .json because there are CORS issues if the user wants to view the .html file from their local file system instead of a web server
             var playersDataJsonFile = Path.Combine(options.OutputPath, "map", "playersData.js");
@@ -454,9 +463,10 @@ namespace PapyrusCs
                 Console.WriteLine("Retrieving player data and writing to json file");
 
                 const string playersDataJsonFileTemplate =
-@"// NOTE: Please only modify player attributes below such as name and color
+@"// NOTE: Please only modify player attributes below such as name, color, and visible
+// To hide a player's marker, change their 'visible' variable from 'true' to 'false'
 // This file is automatically updated, and if other parts are changed, it will fail to update
-// Names and colors will only be read from the /map/playersData.js file - /update/playersData.js will be overwritten, so don't make changes there
+// Changes will only be read from the /map/playersData.js file - /update/playersData.js will be overwritten, so don't make changes there
 var playersData = // # INJECT DATA HERE;";
 
                 if (!File.Exists(playersDataJsonFile))
@@ -486,7 +496,8 @@ var playersData = // # INJECT DATA HERE;";
                             name,
                             dimensionId,
                             position,
-                            color = randomPlayerMapIconColors[random.Next(0, randomPlayerMapIconColors.Length)]
+                            color = randomPlayerMapIconColors[random.Next(0, randomPlayerMapIconColors.Length)],
+                            visible = true
                         }));
                     }
                     else
@@ -502,7 +513,10 @@ var playersData = // # INJECT DATA HERE;";
                         "// # INJECT DATA HERE",
                         JsonConvert.SerializeObject(existingPlayersData, Formatting.Indented)));
 
-                File.Copy(playersDataJsonFile, playersDataJsonFileForUpdate, overwrite: true);
+                if (Directory.Exists(Path.Combine(options.OutputPath, "update")))
+                {
+                    File.Copy(playersDataJsonFile, playersDataJsonFileForUpdate, overwrite: true);
+                }
             }
             else
             {
@@ -518,11 +532,6 @@ var playersData = // # INJECT DATA HERE;";
                 }
             }
 
-            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
-                options.UseLeafletLegacy);
-
-            strat.Finish();
-            Console.WriteLine("Total Time {0}", _time.Elapsed);
             world.Close();
 
 

@@ -369,6 +369,10 @@
         {
             var player = playersData.players[playerIndex];
 
+            if (!player.visible) {
+                continue;
+            }
+
             if (player.dimensionId !== 0) {
                 // TODO: Currently I'm only adding player markers who are in the Overworld
                 // We'll want to show players depending on which dimension is being viewed
@@ -389,7 +393,7 @@
             var playerFeature = new ol.Feature({
                 geometry: new ol.geom.Point([
                     (player.position[0] * zoomRatioForMaximumZoom) / minecraftTilesAtMostZoomedInLevel,
-                    (player.position[2] * zoomRatioForMaximumZoom) / minecraftTilesAtMostZoomedInLevel
+                    (-player.position[2] * zoomRatioForMaximumZoom) / minecraftTilesAtMostZoomedInLevel
                 ])
             });
 

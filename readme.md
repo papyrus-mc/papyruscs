@@ -185,6 +185,10 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 								  Currently, only players on the Overworld are supported
                                   Note: Not compatible with 'use_leaflet_legacy'
 
+  --render_map                    (Default: true) Renders the map. This is the main feature of this program.
+                                  Only disable this in special circumstances, such as if you want to
+                                  quickly update player markers without updating the map.
+
   --help                          Display this help screen.
 
   --version                       Display version information.

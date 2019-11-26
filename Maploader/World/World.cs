@@ -219,7 +219,7 @@ namespace Maploader.World
                     // This UUID different than the Minecraft Java edition UUID - I haven't been able to find a way to get a player name using this
                     // For now, I'll just rely on users manually entering names into a JSON file on the web server
                     Uuid: playerNbtData.PlayerUuid,
-                    Name: playerNbtData.PlayerUuid.ToString(),
+                    Name: $"Player {playerNbtData.PlayerUuid.ToString().Substring(0, 5)}",
                     DimensionId: playerTag["DimensionId"].IntValue,
                     Position: new[] { playerTag["Pos"][0].FloatValue, playerTag["Pos"][1].FloatValue, playerTag["Pos"][2].FloatValue }
                 );
