@@ -18,6 +18,8 @@ using Newtonsoft.Json;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
+using SkiaSharp;
+using SkiaSharp = Maploader.Renderer.Imaging.SkiaSharp;
 
 namespace PapyrusCs
 {
@@ -449,7 +451,8 @@ namespace PapyrusCs
             {
                 case Strategy.Dataflow:
                 default:
-                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing());
+                    //strat = new DataFlowStrategy<SKBitmap>(new Maploader.Renderer.Imaging.SkiaSharp());
+                    strat = new DataFlowStrategy<Bitmap>(new Maploader.Renderer.Imaging.SystemDrawing());
                     break;
                
             }
