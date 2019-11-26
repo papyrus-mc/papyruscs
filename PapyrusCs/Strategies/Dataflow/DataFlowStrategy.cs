@@ -286,7 +286,7 @@ namespace PapyrusCs.Strategies.Dataflow
                                 }
 
                                 // Dispose of any bitmaps, releasing memory
-                                foreach (var bitmap in new[] { b1, b2, b3, b4, bfinal }.OfType<Bitmap>())
+                                foreach (var bitmap in new[] { b1, b2, b3, b4, bfinal }.OfType<IDisposable>())
                                 {
                                     bitmap.Dispose();
                                 }
