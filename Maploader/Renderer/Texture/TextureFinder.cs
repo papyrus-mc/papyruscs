@@ -290,7 +290,6 @@ namespace Maploader.Renderer.Texture
                             return GetTexture("double_plant_carried", data & 0xF7);
                         case 0:
                             return GetTexture("double_plant_bottom", data & 0xF7);
-                            break;
                     }
 
                     return null;
@@ -412,6 +411,16 @@ namespace Maploader.Renderer.Texture
 
                 case "smoker":
                     return GetTexture("smoker_top", 0);
+                case "barrel":
+                    switch ((BlockFace)data)
+                    {
+                        case BlockFace.Up:
+                            return GetTexture("barrel_top", 0);
+                        case BlockFace.Down:
+                            return GetTexture("barrel_bottom", 0);
+                        default:
+                            return GetTexture("barrel_side", data);
+                    }
                 case "bell":
                     return GetTexture("bell_top", 0).Translate(
                         new Rect(0, 0, 8, 8),
@@ -568,8 +577,9 @@ namespace Maploader.Renderer.Texture
                     return RenderButton(data, "birch_planks");
                 case "jungle_button":
                     return RenderButton(data, "jungle_planks");
-
+                case "wall_banner":
                 case "standing_banner":
+                    return RenderSign(data, "sign");
                 case "tripWire":
                 case "tripwire_hook":
                     return null;
@@ -610,11 +620,17 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("piston_top", data);
                 case "jukebox":
                     return GetTexture("jukebox_top", data);
+                case "stonecutter_block":
                 case "stonecutter":
                     return GetTexture("stonecutter_top", data);
                 case "loom":
                     return GetTexture("loom_top", data);
-
+                case "smithing_table":
+                    return GetTexture("smithing_table_top", data);
+                case "cartography_table":
+                    return GetTexture("cartography_table_top", data);
+                case "fletching_table":
+                    return GetTexture("fletching_table_top", data);
                 case "redstone_lamp":
                     return GetTexture("redstone_lamp_off", data);
                 case "lit_redstone_lamp":
@@ -697,6 +713,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("polished_granite", data);
                 case "diorite_stairs":
                     return GetTexture("diorite", data);
+                case "granite_stairs":
+                    return GetTexture("granite", data);
                 /* LEAVES */
                 case "leaves":
                     return GetTexture("leaves_carried", data & 0xF7);
@@ -719,6 +737,8 @@ namespace Maploader.Renderer.Texture
                         data);
                 case "stripped_oak_log":
                     return GetTexture((data & 2) == 0 ? "stripped_oak_log_top" : "stripped_oak_log_side", data);
+                case "stripped_acacia_log":
+                    return GetTexture((data & 2) == 0 ? "stripped_acacia_log_top" : "stripped_acacia_log_side", data);
 
                 case "enchanting_table":
                     return GetTexture("enchanting_table_top", data);
@@ -726,11 +746,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture((data & 8) == 0 ? "log_top" : "log_side", data & 3);
                 case "log2":
                     return GetTexture((data & 8) == 0 ? "log_top2" : "log_side2", data & 3);
-
+              
                 case "coral_fan_hang":
                     return GetTexture("coral_fan_hang_a", data);
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
+                case "grindstone":
+                    return GetTexture("grindstone_pivot", data);
                 case "sweet_berry_bush":
                     return GetTexture($"sweet_berry_bush_{data%4}", 0);
             }
@@ -820,8 +842,15 @@ namespace Maploader.Renderer.Texture
                 new Rect(6, 6, 4, 3),
                 new Rect(6, 0, 4, 3)
             );
+            if ((data & 8) == 8)
+            {
+                // Per https://minecraft.gamepedia.com/Button : 0x8	If this bit is set, the button is currently active
+                //  Active/Unactive, on the scale rendering, doesn't matter, so remove that bit
+                data = data ^ 8;
+            }
             switch (data)
             {
+                
                 case 1:
                     return t.Translate(
                         new Rect(6, 6, 4, 4),
@@ -833,7 +862,8 @@ namespace Maploader.Renderer.Texture
                     return t.Rotate(RotateFlip.RotateNoneFlipNone);
                 case 4:
                     return t.Rotate(RotateFlip.Rotate90FlipNone);
-                case 5:
+                case 0: // 0: Button on block bottom facing down. Assuming bottom = top
+                case 5: // 5: Button on block top facing up
                     return t.Rotate(RotateFlip.Rotate270FlipNone);
                 default:
                     return null;
@@ -842,6 +872,12 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderFenceGate(long data, string texture)
         {
+            if ((data & 8) == 8)
+            {
+                // Per https://minecraft.gamepedia.com/Fence_Gate : 0x8	If 1, the gate is lowered by three pixels, to accommodate attaching more cleanly with normal and mossy Cobblestone Walls
+                //  3 pixels, on the scale rendering, doesn't matter, so remove that bit
+                data = data ^ 8;
+            }
             switch (data)
             {
                 case 0:
@@ -925,17 +961,14 @@ namespace Maploader.Renderer.Texture
 
             try
             {
-                string extension = ".jpg";
                 string filepath = Path.Combine(path, localPath);
                 TImage b = null;
                 if (File.Exists(filepath + ".png"))
                 {
-                    extension = ".png";
                     b = graphics.LoadImage(filepath + ".png");
                 }
                 else if (File.Exists(filepath + ".tga"))
                 {
-                    extension = ".tga";
                     b = graphics.LoadImage(filepath + ".tga");
                 }
 

@@ -19,6 +19,8 @@ using Newtonsoft.Json.Linq;
 using PapyrusCs.Database;
 using PapyrusCs.Strategies;
 using PapyrusCs.Strategies.Dataflow;
+using SkiaSharp;
+using SkiaSharp = Maploader.Renderer.Imaging.SkiaSharp;
 
 namespace PapyrusCs
 {
@@ -306,7 +308,7 @@ namespace PapyrusCs
             catch (Exception)
             {
                 Console.WriteLine(
-                    $"The value '{options.LimitX}' for the LimitZ parameter is not valid. Try something like -10,10");
+                    $"The value '{options.LimitX}' for the LimitX parameter is not valid. Try something like -10,10");
                 return -1;
             }
 
@@ -535,7 +537,8 @@ var playersData = // # INJECT DATA HERE;";
             {
                 case Strategy.Dataflow:
                 default:
-                    strat = new DataFlowStrategy<Bitmap>(new SystemDrawing());
+                    //strat = new DataFlowStrategy<SKBitmap>(new Maploader.Renderer.Imaging.SkiaSharp());
+                    strat = new DataFlowStrategy<Bitmap>(new Maploader.Renderer.Imaging.SystemDrawing());
                     break;
                
             }
