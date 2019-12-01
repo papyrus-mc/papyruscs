@@ -14,5 +14,6 @@ namespace Maploader.Renderer
         public RenderMode RenderMode { get; set; }
         public bool TrimCeiling { get; set; } = true;
         public string Profile { get; set; }
+        public int MaxNumberOfQueueEntries { get; set; }
     }
 }

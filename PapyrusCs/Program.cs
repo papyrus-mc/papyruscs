@@ -383,9 +383,15 @@ namespace PapyrusCs
             allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
                     .Where(k => constraintX(k) && constraintZ(k)));
 
+
             _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
             Console.WriteLine($"Total Chunk count {_totalChunk}");
             Console.WriteLine();
+
 
             xmin = allSubChunks.Min(x => x.X);
             xmax = allSubChunks.Max(x => x.X);
@@ -471,6 +477,7 @@ namespace PapyrusCs
                 RenderCoordinateStrings = options.RenderCoords,
                 RenderMode = options.RenderMode,
                 MaxNumberOfThreads = options.MaxNumberOfThreads,
+                MaxNumberOfQueueEntries = options.MaxNumberOfQueueEntries,
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider,
