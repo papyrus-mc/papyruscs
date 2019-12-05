@@ -400,8 +400,13 @@ namespace PapyrusCs
                         .Where(k => constraintX(k) && constraintZ(k)));
 
                 _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
                 Console.WriteLine($"Total Chunk count {_totalChunk}");
                 Console.WriteLine();
+
 
                 xmin = allSubChunks.Min(x => x.X);
                 xmax = allSubChunks.Max(x => x.X);
@@ -566,6 +571,7 @@ var playersData = // # INJECT DATA HERE;";
                 RenderCoordinateStrings = options.RenderCoords,
                 RenderMode = options.RenderMode,
                 MaxNumberOfThreads = options.MaxNumberOfThreads,
+                MaxNumberOfQueueEntries = options.MaxNumberOfQueueEntries,
                 YMax = options.LimitY,
                 BrillouinJ = options.BrillouinJ,
                 BrillouinDivider = options.BrillouinDivider,

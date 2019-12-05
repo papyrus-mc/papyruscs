@@ -105,14 +105,14 @@ Make sure that your graphics libs are up-to-date: (Syntax may vary in other dist
 ```
 sudo apt-get update
 sudo apt-get install libgdiplus
-sudo apt-get install llibc6-dev
+sudo apt-get install libc6-dev
 ```
 
 And give PapyrusCs execution rights:
 ```chmod +x PapyrusCs```
 
 For own compilation:
-Requires [.NET Core 2.2](https://dotnet.microsoft.com/download/dotnet-core/2.2). You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
+Requires [.NET Core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0). You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
 
 
 ## Usage

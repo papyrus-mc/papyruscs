@@ -64,6 +64,9 @@ namespace PapyrusCs
         [Option("threads", Required = false, HelpText = "Set maximum of used threads", Default = 16)]
         public int MaxNumberOfThreads { get; set; }
 
+        [Option("maxqueue", Required = false, HelpText = "Set maximum queue length for the pipeline stages", Default = 128)]
+        public int MaxNumberOfQueueEntries { get; set; }
+
         [Option('r', "rendermode", Required = false, HelpText = "RenderMode: Basic - Render without brightness adjustment. Heightmap - Render with brightness adjustment based on brillouin function and height of block", Default = RenderMode.Heightmap)]
         public RenderMode RenderMode { get; set; }
 
