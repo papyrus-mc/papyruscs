@@ -7,6 +7,43 @@ If you want to help improving Papyrus please consider forking the repository.
 
 Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
+## Version 0.4.0 - Memory usage and textures improvements
+A few tweaks to improve memory usage:
+
+use parameter --threads 1 --maxqueue 1 to limit memory usage.
+
+This version also includes two pull requests:
+ * Significantly improve memory usage when rendering zoom levels (#21 by barrett777)
+ * Fixed bunch of annoyances (#19 by jflin404)
+
+Thx for the help!
+Thx to Mecu for updating the docs!
+
+
+## Version 0.3.7 - .NET Core 3 Update
+Update to .NET Core 3
+Changed link to openlayers
+Some other optimizations...
+
+## Version 0.3.6
+Less memory usage and faster!
+More robust!
+
+## Version 0.3.5
+Thx to @hach-que!
+```
+--profile underground|aquatic|ore|stronghold
+```
+add underground, aquatic, ore OR stronghold after `--profile` for the specific profile view.
+
+## Version 0.3.3
+OpenLayers as new default mapping library! Thanks for the contribution!
+Use
+```
+--use_leaflet_legacy
+```
+options if you want to use the old leaflet instead.
+
 ## Version 0.3.2
 Texture fixes\
 --brillouin_offset x parameter for worlds with low/high ground level\
