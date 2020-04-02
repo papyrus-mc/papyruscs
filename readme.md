@@ -144,6 +144,8 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 
   --threads                       (Default: 16) Set maximum of used threads
 
+  --maxqueue                      (Default: 128) Set maximum queue length for the pipeline stages
+
   -r, --rendermode                (Default: Heightmap) RenderMode: Basic - Render without brightness adjustment.
                                   Heightmap - Render with brightness adjustment based on brillouin function and height
                                   of block
@@ -168,6 +170,8 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 
   -d, --dim                       (Default: 0) Selects the dimension. 0: Overworld, 1: Nether, 2: End
 
+  -p, --profile                   (Default: ) Optional profile: 'underground', 'aquatic', 'ore', 'stronghold'
+  
   --trimceiling                   (Default: false) Removes the ceiling starting from y-max. Automatically activated
                                   for nether
 
@@ -178,7 +182,10 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
 
   --use_leaflet_legacy            (Default: false) Use the legacy leaflet.js map renderer instead of the new
                                   OpenLayers version
-                                  
+ 
+  --chunksperdimension            (Default: 2) Sets the chunks per X and Y dimension for the generated tiles. 1 => 1 chunk per tile, 2
+                                  => 4 chunks per tile and so on
+
   --help                          Display this help screen.
 
   --version                       Display version information.
