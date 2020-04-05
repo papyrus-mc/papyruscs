@@ -37,7 +37,7 @@ namespace PapyrusCs
     [Verb("map")]
     public class Options
     {
-        [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
+        [Option('w', "world", Required = false, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
         public string MinecraftWorld { get; set; }
 
         [Option('o', "output", Required = false, HelpText = "Sets the output path for the generated map tiles", Default = "generatedmap")]

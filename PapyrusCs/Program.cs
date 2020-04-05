@@ -323,6 +323,49 @@ namespace PapyrusCs
                 return -1;
             }
 
+            if(String.IsNullOrEmpty(options.MinecraftWorld))
+            {
+                Console.WriteLine("World not specified.  Looking for worlds in default Bedrock world folder.");
+                try {
+                    // Get all of the world folders that exist
+                    string worldsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Resources.DefaultBedrockWorldsLocation);
+                    string[] worldDirectories = Directory.GetDirectories(worldsFolder);
+                    Console.WriteLine($"Found {worldDirectories.Length} worlds:");
+
+                    // Print out the list of worlds
+                    for (int i = 0; i < worldDirectories.Length; i++)
+                    {
+                        string worldNameFilePath = Path.Combine(worldDirectories[i], Properties.Resources.WorldNameFile);
+                        string worldName = File.ReadLines(worldNameFilePath).First();
+                        Console.WriteLine($"{i} - {worldName}");
+                    }
+
+                    // Make the user choose one of the worlds
+                    while (String.IsNullOrEmpty(options.MinecraftWorld))
+                    {
+                        Console.Write("Type a world number and press Enter: ");
+                        string userInput = Console.ReadLine();
+                        bool parseSuccess = Int32.TryParse(userInput, out int worldNumber);
+
+                        if(!parseSuccess)
+                        {
+                            Console.WriteLine($"'{userInput}' was not recognized as a number.");
+                        }
+                        else if((worldNumber < 0) || (worldNumber >= worldDirectories.Length))
+                        {
+                            Console.WriteLine($"There is no world #{worldNumber}");
+                        }
+                        else
+                        {
+                            options.MinecraftWorld = Path.Combine(worldDirectories[worldNumber], Properties.Resources.WorldDatabaseFolder);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception: " + ex.Message);
+                }
+            }
             var world = new World();
             try
             {
