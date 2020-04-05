@@ -325,11 +325,29 @@ namespace PapyrusCs
 
             if(String.IsNullOrEmpty(options.MinecraftWorld))
             {
-                Console.WriteLine("World not specified.  Looking for worlds in default Bedrock world folder.");
+                Console.WriteLine("World not specified.  Looking for worlds in the default Bedrock Edition worlds folder.");
+
                 try {
                     // Get all of the world folders that exist
                     string worldsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Resources.DefaultBedrockWorldsLocation);
-                    string[] worldDirectories = Directory.GetDirectories(worldsFolder);
+                    string[] worldDirectories = { };
+
+                    try
+                    {
+                        worldDirectories = Directory.GetDirectories(worldsFolder);
+                    }
+                    catch (DirectoryNotFoundException)
+                    {
+                        Console.WriteLine("Bedrock Edition worlds folder not found.  Please specify a world manually using the --world parameter.");
+                        return -1;
+                    }
+
+                    if (worldDirectories.Length == 0)
+                    {
+                        Console.WriteLine("No worlds found.  Please specify one using the --world parameter.");
+                        return -1;
+                    }
+
                     Console.WriteLine($"Found {worldDirectories.Length} worlds:");
 
                     // Print out the list of worlds
@@ -364,6 +382,7 @@ namespace PapyrusCs
                 catch (Exception ex)
                 {
                     Console.WriteLine("Exception: " + ex.Message);
+                    return -1;
                 }
             }
             var world = new World();
