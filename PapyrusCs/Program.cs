@@ -329,7 +329,7 @@ namespace PapyrusCs
 
                 try {
                     // Get all of the world folders that exist
-                    string worldsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Resources.DefaultBedrockWorldsLocation);
+                    string worldsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), PapyrusCs.Properties.Resources.DefaultBedrockWorldsLocation);
                     string[] worldDirectories = { };
 
                     try
@@ -353,7 +353,7 @@ namespace PapyrusCs
                     // Print out the list of worlds
                     for (int i = 0; i < worldDirectories.Length; i++)
                     {
-                        string worldNameFilePath = Path.Combine(worldDirectories[i], Properties.Resources.WorldNameFile);
+                        string worldNameFilePath = Path.Combine(worldDirectories[i], PapyrusCs.Properties.Resources.WorldNameFile);
                         string worldName = File.ReadLines(worldNameFilePath).First();
                         Console.WriteLine($"{i} - {worldName}");
                     }
@@ -375,7 +375,7 @@ namespace PapyrusCs
                         }
                         else
                         {
-                            options.MinecraftWorld = Path.Combine(worldDirectories[worldNumber], Properties.Resources.WorldDatabaseFolder);
+                            options.MinecraftWorld = Path.Combine(worldDirectories[worldNumber], PapyrusCs.Properties.Resources.WorldDatabaseFolder);
                         }
                     }
                 }
