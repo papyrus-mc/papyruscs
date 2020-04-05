@@ -7,7 +7,7 @@ namespace PapyrusCs
     [Verb("test")]
     public class TestOptions
     {
-        [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
+        [Option('w', "world", Required = true, HelpText = "Sets the path the Minecraft Bedrock Edition Map, looks in default location if not specified")]
         public string MinecraftWorld { get; set; }
 
         [Option("db", Required = false, HelpText = "Tests Db Read")]
