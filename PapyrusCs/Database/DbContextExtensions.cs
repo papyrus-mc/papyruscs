@@ -237,9 +237,7 @@ namespace PapyrusCs.Database
         /// <returns>name of the table in the database</returns>
         public static string GetTableName(DbContext dbContext, Type t)
         {
-            var mapping = dbContext.Model.FindEntityType(t).Relational();
-            var schema = mapping.Schema;
-            return mapping.TableName;
+            return dbContext.Model.FindEntityType(t).GetTableName();
         }
 
         public struct PropertyDbName
@@ -263,11 +261,11 @@ namespace PapyrusCs.Database
             {
                 if (c.IsKey())
                 {
-                    keyRet.Add(new PropertyDbName(c.Name, c.Relational().ColumnName));
+                    keyRet.Add(new PropertyDbName(c.Name, c.GetColumnName()));
                 }
                 else
                 {
-                    propRet.Add(new PropertyDbName(c.Name, c.Relational().ColumnName));
+                    propRet.Add(new PropertyDbName(c.Name, c.GetColumnName()));
                 }
 
             }
