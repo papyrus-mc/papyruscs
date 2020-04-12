@@ -755,6 +755,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("grindstone_pivot", data);
                 case "sweet_berry_bush":
                     return GetTexture($"sweet_berry_bush_{data%4}", 0);
+                case "bee_nest":
+                    return GetTexture("bee_nest_top", data);
             }
 
             return null;
