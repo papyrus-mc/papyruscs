@@ -4,6 +4,9 @@
   "padding": 8,
   "num_mip_levels": 4,
   "texture_data": {
+    "missing": {
+      "textures": "textures/misc/missing_texture"
+    },
     "grass_side": {
       "textures": [
         {
@@ -535,6 +538,9 @@
         "textures/blocks/flower_lily_of_the_valley"
       ]
     },
+    "wither_rose": {
+      "textures": "textures/blocks/flower_wither_rose"
+    },
     "double_plant_bottom": {
       "textures": [
         "textures/blocks/double_plant_sunflower_bottom",
@@ -827,7 +833,12 @@
         "textures/blocks/coral_plant_pink",
         "textures/blocks/coral_plant_purple",
         "textures/blocks/coral_plant_red",
-        "textures/blocks/coral_plant_yellow"
+        "textures/blocks/coral_plant_yellow",
+        "textures/blocks/coral_plant_blue_dead",
+        "textures/blocks/coral_plant_pink_dead",
+        "textures/blocks/coral_plant_purple_dead",
+        "textures/blocks/coral_plant_red_dead",
+        "textures/blocks/coral_plant_yellow_dead"
       ]
     },
     "coral_fan": {
@@ -1123,6 +1134,9 @@
         "textures/blocks/farmland_wet",
         "textures/blocks/farmland_dry"
       ]
+    },
+    "farmland_side": {
+      "textures": "textures/blocks/dirt"
     },
     "wheat": {
       "textures": [
@@ -2117,6 +2131,9 @@
         "textures/blocks/turtle_egg_very_cracked"
       ]
     },
+    "turtle_egg_carried": {
+      "textures": "textures/items/turtle_egg"
+    },
     "beacon": {
       "textures": "textures/blocks/beacon"
     },
@@ -2401,13 +2418,22 @@
       "textures": "textures/blocks/fletcher_table_side2"
     },
     "barrel_top": {
-      "textures": "textures/blocks/barrel_top"
+      "textures": [
+        "textures/blocks/barrel_top",
+        "textures/blocks/barrel_top_open"
+      ]
     },
     "barrel_bottom": {
-      "textures": "textures/blocks/barrel_bottom"
+      "textures": [
+        "textures/blocks/barrel_bottom",
+        "textures/blocks/barrel_bottom"
+      ]
     },
     "barrel_side": {
-      "textures": "textures/blocks/barrel_side"
+      "textures": [
+        "textures/blocks/barrel_side",
+        "textures/blocks/barrel_side"
+      ]
     },
     "smithing_table_bottom": {
       "textures": "textures/blocks/smithing_table_bottom"
@@ -2420,6 +2446,14 @@
     },
     "smithing_table_top": {
       "textures": "textures/blocks/smithing_table_top"
+    },
+    "smoker": {
+      "textures": [
+        "textures/blocks/smoker_front_off",
+        "textures/blocks/smoker_front_on",
+        "textures/blocks/smoker_side",
+        "textures/blocks/smoker_top"
+      ]
     },
     "smoker_front_off": {
       "textures": "textures/blocks/smoker_front_off"
@@ -2466,10 +2500,16 @@
       "textures": "textures/blocks/blast_furnace_front_on"
     },
     "blast_furnace_top": {
-      "textures": "textures/blocks/blast_furnace_top"
+      "textures": [
+        "textures/blocks/blast_furnace_top",
+        "textures/blocks/blast_furnace_top"
+      ]
     },
     "blast_furnace_side": {
-      "textures": "textures/blocks/blast_furnace_side"
+      "textures": [
+        "textures/blocks/blast_furnace_side",
+        "textures/blocks/blast_furnace_side"
+      ]
     },
     "lantern": {
       "textures": "textures/blocks/lantern"
@@ -2480,14 +2520,11 @@
     "campfire_fire": {
       "textures": "textures/blocks/campfire"
     },
-    "campfire_top": {
-      "textures": "textures/blocks/campfire_top"
+    "campfire_log": {
+      "textures": "textures/blocks/campfire_log"
     },
-    "campfire_top_on": {
-      "textures": "textures/blocks/campfire_top_on"
-    },
-    "campfire_side": {
-      "textures": "textures/blocks/campfire_side"
+    "campfire_log_lit": {
+      "textures": "textures/blocks/campfire_log_lit"
     },
     "loom_top": {
       "textures": "textures/blocks/loom_top"
@@ -2559,6 +2596,83 @@
     },
     "composter_bottom": {
       "textures": "textures/blocks/composter_bottom"
+    },
+    "light_block_carried": {
+      "textures": [
+        "textures/items/light_block_0",
+        "textures/items/light_block_1",
+        "textures/items/light_block_2",
+        "textures/items/light_block_3",
+        "textures/items/light_block_4",
+        "textures/items/light_block_5",
+        "textures/items/light_block_6",
+        "textures/items/light_block_7",
+        "textures/items/light_block_8",
+        "textures/items/light_block_9",
+        "textures/items/light_block_10",
+        "textures/items/light_block_11",
+        "textures/items/light_block_12",
+        "textures/items/light_block_13",
+        "textures/items/light_block_14",
+        "textures/items/light_block_15"
+      ]
+    },
+    "bee_nest_top": {
+      "textures": [
+        "textures/blocks/bee_nest_top"
+      ]
+    },
+    "bee_nest_front": {
+      "textures": [
+        "textures/blocks/bee_nest_front",
+        "textures/blocks/bee_nest_front_honey"
+      ]
+    },
+    "bee_nest_side": {
+      "textures": [
+        "textures/blocks/bee_nest_side"
+      ]
+    },
+    "bee_nest_bottom": {
+      "textures": [
+        "textures/blocks/bee_nest_bottom"
+      ]
+    },
+    "beehive_top": {
+      "textures": [
+        "textures/blocks/beehive_top"
+      ]
+    },
+    "beehive_side": {
+      "textures": [
+        "textures/blocks/beehive_side"
+      ]
+    },
+    "beehive_front": {
+      "textures": [
+        "textures/blocks/beehive_front",
+        "textures/blocks/beehive_front_honey"
+      ]
+    },
+    "honey_side": {
+      "textures": [
+        "textures/blocks/honey_side"
+      ]
+    },
+    "honey_top": {
+      "textures": [
+        "textures/blocks/honey_top"
+      ]
+    },
+    "honey_bottom": {
+      "textures": [
+        "textures/blocks/honey_bottom"
+      ]
+    },
+    "honeycomb_block": {
+      "textures": [
+        "textures/blocks/honeycomb"
+      ]
     }
   }
 }
