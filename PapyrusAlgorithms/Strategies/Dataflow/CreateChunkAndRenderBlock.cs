@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks.Dataflow;
 using Maploader.Core;
@@ -10,7 +9,7 @@ using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 
-namespace PapyrusCs.Strategies.Dataflow
+namespace PapyrusAlgorithms.Strategies.Dataflow
 {
     class CreateChunkAndRenderBlock<TImage> : ITplBlock where TImage : class
     {

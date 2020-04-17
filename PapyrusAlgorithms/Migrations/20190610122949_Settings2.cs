@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace PapyrusCs.Migrations
+namespace PapyrusAlgorithms.Migrations
 {
     public partial class Settings2 : Migration
     {

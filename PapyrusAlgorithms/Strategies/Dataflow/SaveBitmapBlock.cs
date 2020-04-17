@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks.Dataflow;
 using Maploader.Renderer.Imaging;
 using Maploader.World;
 
-namespace PapyrusCs.Strategies.Dataflow
+namespace PapyrusAlgorithms.Strategies.Dataflow
 {
     public class SaveBitmapBlock<TImage> : ITplBlock where TImage : class
     {

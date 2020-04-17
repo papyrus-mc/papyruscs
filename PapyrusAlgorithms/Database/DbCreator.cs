@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace PapyrusCs.Database
+namespace PapyrusAlgorithms.Database
 {
     public class DbCreator : IDesignTimeDbContextFactory<PapyrusContext>
     {

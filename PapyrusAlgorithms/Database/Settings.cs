@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PapyrusCs.Database
+namespace PapyrusAlgorithms.Database
 {
     public class Settings
     {

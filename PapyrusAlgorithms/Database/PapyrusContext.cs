@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace PapyrusCs.Database
+namespace PapyrusAlgorithms.Database
 {
     public class PapyrusContext : DbContext
     {

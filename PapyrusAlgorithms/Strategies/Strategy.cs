@@ -1,4 +1,4 @@
-﻿namespace PapyrusCs
+﻿namespace PapyrusAlgorithms.Strategies
 {
     public enum Strategy
     {

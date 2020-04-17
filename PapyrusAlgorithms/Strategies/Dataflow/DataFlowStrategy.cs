@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -15,9 +14,11 @@ using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using Microsoft.EntityFrameworkCore;
+using PapyrusAlgorithms.Data;
+using PapyrusAlgorithms.Database;
 using PapyrusCs.Database;
 
-namespace PapyrusCs.Strategies.Dataflow
+namespace PapyrusAlgorithms.Strategies.Dataflow
 {
     public class DataFlowStrategy<TImage> : IRenderStrategy where TImage : class
     {

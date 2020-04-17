@@ -7,7 +7,7 @@ using System.Text;
 using FastMember;
 using Microsoft.EntityFrameworkCore;
 
-namespace PapyrusCs.Database
+namespace PapyrusAlgorithms.Database
 {
     public static class DbContextExtensions
     {

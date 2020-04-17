@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace PapyrusCs.Migrations
+namespace PapyrusAlgorithms.Migrations
 {
     public partial class Initial : Migration
     {

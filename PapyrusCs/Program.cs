@@ -12,11 +12,10 @@ using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using Newtonsoft.Json;
+using PapyrusAlgorithms.Strategies;
+using PapyrusAlgorithms.Strategies.Dataflow;
 using PapyrusCs.Database;
-using PapyrusCs.Migrations;
-using PapyrusCs.Strategies;
-using PapyrusCs.Strategies.Dataflow;
-using Settings = PapyrusCs.Database.Settings;
+using Settings = PapyrusAlgorithms.Database.Settings;
 
 namespace PapyrusCs
 {

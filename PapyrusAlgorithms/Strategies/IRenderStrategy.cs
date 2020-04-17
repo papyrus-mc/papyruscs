@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
+using PapyrusAlgorithms.Database;
 using PapyrusCs.Database;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusAlgorithms.Strategies
 {
     public interface IRenderStrategy
     {

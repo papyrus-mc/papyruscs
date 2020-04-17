@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using CommandLine;
 using Maploader.Renderer;
+using PapyrusAlgorithms.Strategies;
 
 namespace PapyrusCs
 {

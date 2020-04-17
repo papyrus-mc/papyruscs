@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusAlgorithms.Strategies
 {
     public class ChunksRenderedEventArgs : EventArgs
     {

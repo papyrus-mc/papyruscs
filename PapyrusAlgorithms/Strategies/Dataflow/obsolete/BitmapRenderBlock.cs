@@ -9,7 +9,7 @@ using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 
-namespace PapyrusCs.Strategies.Dataflow
+namespace PapyrusAlgorithms.Strategies.Dataflow.obsolete
 {
     public class BitmapRenderBlock<TImage> : ITplBlock where TImage : class
     {

@@ -3,7 +3,7 @@ using Maploader.Renderer;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusAlgorithms.Strategies
 {
     class RendererCombi<TImage> where TImage : class
     {

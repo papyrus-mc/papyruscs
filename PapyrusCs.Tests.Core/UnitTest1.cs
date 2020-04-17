@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using PapyrusAlgorithms.Database;
 using PapyrusCs.Database;
 
 namespace Tests

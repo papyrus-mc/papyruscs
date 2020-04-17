@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks.Dataflow;
 using Maploader.World;
-using PapyrusCs.Database;
 
-namespace PapyrusCs.Strategies.Dataflow
+namespace PapyrusAlgorithms.Strategies.Dataflow.obsolete
 {
     public class CreateDataBlock : ITplBlock
     {

@@ -1,4 +1,4 @@
-﻿namespace PapyrusCs.Strategies.Dataflow
+﻿namespace PapyrusAlgorithms.Strategies.Dataflow
 {
     public interface ITplBlock
     {

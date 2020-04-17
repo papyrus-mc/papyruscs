@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Maploader.World;
 
-namespace PapyrusCs.Strategies.Dataflow
+namespace PapyrusAlgorithms.Strategies.Dataflow
 {
     public class ChunkAndData
     {

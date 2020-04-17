@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Maploader.World;
 
-namespace PapyrusCs.Strategies
+namespace PapyrusAlgorithms.Strategies
 {
     public class ImageInfo<TImage> where TImage : class
     {

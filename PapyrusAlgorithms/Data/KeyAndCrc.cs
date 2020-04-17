@@ -1,4 +1,4 @@
-﻿namespace PapyrusCs
+﻿namespace PapyrusAlgorithms.Data
 {
     public struct KeyAndCrc
     {
