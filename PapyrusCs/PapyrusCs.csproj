@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Maploader\Maploader.csproj" />
+    <ProjectReference Include="..\PapyrusAlgorithms\PapyrusAlgorithms.csproj" />
   </ItemGroup>
 
   <ItemGroup>

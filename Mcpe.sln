@@ -32,6 +32,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusCs.Tests.Core", "Pap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imazen.WebP-std", "Imazen.WebP-std\Imazen.WebP-std.csproj", "{82CCF552-5A68-4C6A-B3F3-A40550D47990}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PapyrusAlgorithms", "PapyrusAlgorithms\PapyrusAlgorithms.csproj", "{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{82CCF552-5A68-4C6A-B3F3-A40550D47990}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82CCF552-5A68-4C6A-B3F3-A40550D47990}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82CCF552-5A68-4C6A-B3F3-A40550D47990}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
