@@ -12,10 +12,13 @@ using Maploader.Renderer;
 using Maploader.Renderer.Texture;
 using Maploader.World;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using PapyrusAlgorithms.Strategies;
 using PapyrusAlgorithms.Strategies.Dataflow;
 using PapyrusCs.Database;
 using Settings = PapyrusAlgorithms.Database.Settings;
+using SkiaSharp;
+using SkiaSharp = Maploader.Renderer.Imaging.SkiaSharp;
 
 namespace PapyrusCs
 {
@@ -26,6 +29,19 @@ namespace PapyrusCs
         private static Stopwatch _time = new Stopwatch();
         private static Stopwatch _time2 = new Stopwatch();
 
+        private static readonly string[] randomPlayerMapIconColors = {
+            // You can also use hex colors "#FFFFFF" and rgb "rgb(128, 128, 128)"
+            "DeepPink",
+            "DarkRed",
+            "DarkOrange",
+            "Gold",
+            "SaddleBrown",
+            "DarkGreen",
+            "Teal",
+            "DarkBlue",
+            "Purple",
+            "SlateGray"
+        };
 
 
         static int Main(string[] args)
@@ -405,111 +421,191 @@ namespace PapyrusCs
             }
 
             // Start Generation
-            int xmin = 0;
-            int xmax = 0;
-            int zmin = 0;
-            int zmax = 0;
-            HashSet<LevelDbWorldKey2> allSubChunks = null;
-
-            Func<LevelDbWorldKey2, bool> constraintX = b => true;
-            Func<LevelDbWorldKey2, bool> constraintZ = b => true;
-
-            if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
+            if (options.RenderMap)
             {
-                xmin = options.LimitXLow.Value;
-                xmax = options.LimitXHigh.Value;
-                Console.WriteLine($"Limiting X to {xmin} to {xmax}");
-                var xmax1 = xmax;
-                var xmin1 = xmin;
-                constraintX = key => key.X >= xmin1 && key.X <= xmax1;
-            }
+                int xmin = 0;
+                int xmax = 0;
+                int zmin = 0;
+                int zmax = 0;
+                HashSet<LevelDbWorldKey2> allSubChunks = null;
 
-            if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
-            {
-                zmin = options.LimitZLow.Value;
-                zmax = options.LimitZHigh.Value;
-                Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
-                var zmax1 = zmax;
-                var zmin1 = zmin;
-                constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
-            }
+                Func<LevelDbWorldKey2, bool> constraintX = b => true;
+                Func<LevelDbWorldKey2, bool> constraintZ = b => true;
 
-            if (options.Dimension == 1 && options.NoAutoTrimCeiling == false)
-            {
-                // Nether
-                options.TrimCeiling = true;
-                if (options.LimitY == -1)
+                if (options.LimitXLow.HasValue && options.LimitXHigh.HasValue)
                 {
-                    options.LimitY = 120;
+                    xmin = options.LimitXLow.Value;
+                    xmax = options.LimitXHigh.Value;
+                    Console.WriteLine($"Limiting X to {xmin} to {xmax}");
+                    var xmax1 = xmax;
+                    var xmin1 = xmin;
+                    constraintX = key => key.X >= xmin1 && key.X <= xmax1;
+                }
+
+                if (options.LimitZLow.HasValue && options.LimitZHigh.HasValue)
+                {
+                    zmin = options.LimitZLow.Value;
+                    zmax = options.LimitZHigh.Value;
+                    Console.WriteLine($"Limiting Z to {zmin} to {zmax}");
+                    var zmax1 = zmax;
+                    var zmin1 = zmin;
+                    constraintZ = key => key.Z >= zmin1 && key.Z <= zmax1;
+                }
+
+                if (options.Dimension == 1 && options.NoAutoTrimCeiling == false)
+                {
+                    // Nether
+                    options.TrimCeiling = true;
+                    if (options.LimitY == -1)
+                    {
+                        options.LimitY = 120;
+                    }
+                }
+
+
+                Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
+                var keys = world.GetDimension(options.Dimension).ToList();
+                allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
+                        .Where(k => constraintX(k) && constraintZ(k)));
+
+                _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Console.WriteLine($"Total Chunk count {_totalChunk}");
+                Console.WriteLine();
+
+
+                xmin = allSubChunks.Min(x => x.X);
+                xmax = allSubChunks.Max(x => x.X);
+                zmin = allSubChunks.Min(x => x.Z);
+                zmax = allSubChunks.Max(x => x.Z);
+
+                Console.WriteLine($"The total dimensions of the map are");
+                Console.WriteLine($"  X: {xmin} to {xmax}");
+                Console.WriteLine($"  Z: {zmin} to {zmax}");
+                Console.WriteLine();
+
+                if (options.LimitY > 0)
+                {
+                    Console.WriteLine($"Limiting Y to {options.LimitY}");
+                }
+
+                const int chunkSize = 256;
+                int chunksPerDimension = options.ChunksPerDimension;
+                int tileSize = chunkSize * chunksPerDimension;
+                Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
+                Directory.CreateDirectory(options.OutputPath);
+
+                // db stuff
+                var textures = ReadTerrainTextureJson();
+                var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
+
+                var strat = InstanciateStrategy(options);
+                ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunkSize, zmin, zmax, xmin, xmax);
+
+                strat.Init();
+
+                // other stuff
+
+                strat.RenderInitialLevel();
+
+                var missingTextures = strat.MissingTextures;
+                if (missingTextures != null)
+                {
+                    File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
+                }
+
+
+                Console.WriteLine("Time is {0}", _time.Elapsed);
+                strat.RenderZoomLevels();
+
+                WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
+                    options.UseLeafletLegacy);
+
+                strat.Finish();
+                Console.WriteLine("Total Time {0}", _time.Elapsed);
+            }
+
+            // Note: Use a .js file instead of .json because there are CORS issues if the user wants to view the .html file from their local file system instead of a web server
+            var playersDataJsonFile = Path.Combine(options.OutputPath, "map", "playersData.js");
+            var playersDataJsonFileForUpdate = Path.Combine(options.OutputPath, "update", "playersData.js");
+
+            if (options.ShowPlayerIcons)
+            {
+                Console.WriteLine("Retrieving player data and writing to json file");
+
+                const string playersDataJsonFileTemplate =
+@"// NOTE: Please only modify player attributes below such as name, color, and visible
+// To hide a player's marker, change their 'visible' variable from 'true' to 'false'
+// This file is automatically updated, and if other parts are changed, it will fail to update
+// Changes will only be read from the /map/playersData.js file - /update/playersData.js will be overwritten, so don't make changes there
+var playersData = // # INJECT DATA HERE;";
+
+                if (!File.Exists(playersDataJsonFile))
+                {
+                    File.WriteAllText(playersDataJsonFile, 
+                        playersDataJsonFileTemplate.Replace(
+                            "// # INJECT DATA HERE",
+                            "{ players: [] }"));
+                }
+
+                var existingPlayersDataRaw = File.ReadAllText(playersDataJsonFile);
+                var existingPlayersData = JObject.Parse(existingPlayersDataRaw.Substring(existingPlayersDataRaw.IndexOf('=') + 1).Trim().TrimEnd(';'));
+
+                var random = new Random();
+
+                foreach (var (uuid, name, dimensionId, position) in world.GetPlayerData())
+                {
+                    var existingPlayerData = existingPlayersData["players"].FirstOrDefault(player => (Guid)player["uuid"] == uuid);
+
+                    if (existingPlayerData == null)
+                    {
+                        // First time we have seen this player
+                        // Add their record to the list, and pick a random color for their icon on the map
+                        ((JArray)existingPlayersData["players"]).Add(JObject.FromObject(new
+                        {
+                            uuid,
+                            name,
+                            dimensionId,
+                            position,
+                            color = randomPlayerMapIconColors[random.Next(0, randomPlayerMapIconColors.Length)],
+                            visible = true
+                        }));
+                    }
+                    else
+                    {
+                        // This player has already been added to the list - just update properties that may have changed
+                        existingPlayerData["dimensionId"] = dimensionId;
+                        existingPlayerData["position"] = new JArray { position[0], position[1], position[2] };
+                    }
+                }
+
+                File.WriteAllText(playersDataJsonFile, 
+                    playersDataJsonFileTemplate.Replace(
+                        "// # INJECT DATA HERE",
+                        JsonConvert.SerializeObject(existingPlayersData, Formatting.Indented)));
+
+                if (Directory.Exists(Path.Combine(options.OutputPath, "update")))
+                {
+                    File.Copy(playersDataJsonFile, playersDataJsonFileForUpdate, overwrite: true);
+                }
+            }
+            else
+            {
+                // Player icons disabled
+                if (File.Exists(playersDataJsonFile))
+                {
+                    File.Delete(playersDataJsonFile);
+                }
+
+                if (File.Exists(playersDataJsonFileForUpdate))
+                {
+                    File.Delete(playersDataJsonFileForUpdate);
                 }
             }
 
-
-            Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
-            var keys = world.GetDimension(options.Dimension).ToList();
-            allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
-                    .Where(k => constraintX(k) && constraintZ(k)));
-
-
-            _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            Console.WriteLine($"Total Chunk count {_totalChunk}");
-            Console.WriteLine();
-
-
-            xmin = allSubChunks.Min(x => x.X);
-            xmax = allSubChunks.Max(x => x.X);
-            zmin = allSubChunks.Min(x => x.Z);
-            zmax = allSubChunks.Max(x => x.Z);
-
-            Console.WriteLine($"The total dimensions of the map are");
-            Console.WriteLine($"  X: {xmin} to {xmax}");
-            Console.WriteLine($"  Z: {zmin} to {zmax}");
-            Console.WriteLine();
-
-            if (options.LimitY > 0)
-            {
-                Console.WriteLine($"Limiting Y to {options.LimitY}");
-            }
-
-            const int chunkSize = 256;
-            int chunksPerDimension = options.ChunksPerDimension;
-            int tileSize = chunkSize * chunksPerDimension;
-            Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
-            Directory.CreateDirectory(options.OutputPath);
-
-            // db stuff
-            var textures = ReadTerrainTextureJson();
-            var zoom = CalculateZoom(xmax, xmin, zmax, zmin, chunksPerDimension, out var extendedDia);
-
-            var strat = InstanciateStrategy(options);
-            ConfigureStrategy(strat, options, allSubChunks, extendedDia, zoom, world, textures, tileSize, chunkSize, zmin, zmax, xmin, xmax);
-
-            strat.Init();
-
-            // other stuff
-
-            strat.RenderInitialLevel();
-
-            var missingTextures = strat.MissingTextures;
-            if (missingTextures != null)
-            {
-                File.WriteAllLines("missingtextures.txt", missingTextures.Distinct());
-            }
-
-
-            Console.WriteLine("Time is {0}", _time.Elapsed);
-            strat.RenderZoomLevels();
-
-
-            WriteMapHtml(tileSize, options.OutputPath, options.MapHtml, strat.GetSettings(), strat.IsUpdate,
-                options.UseLeafletLegacy);
-
-            strat.Finish();
-            Console.WriteLine("Total Time {0}", _time.Elapsed);
             world.Close();
 
 

@@ -116,6 +116,12 @@ namespace PapyrusCs
         [Option("chunksperdimension", Required = false, Default = 2, HelpText = "Sets the chunks per X and Y dimension for the generated tiles. 1 => 1 chunk per tile, 2 => 4 chunks per tile and so on")]
         public int ChunksPerDimension { get; set; }
 
+        [Option("playericons", Required = false, Default = true, HelpText = "Renders player markers on the map. Player names must be manually entered. After running, edit '/map/playersData.js' text file to modify player names and colors.")]
+        public bool ShowPlayerIcons { get; set; }
+
+        [Option("render_map", Required = false, Default = true, HelpText = "Renders the map. This is the main feature of this program. Only disable this in special circumstances, such as if you want to quickly update player markers without updating the map.")]
+        public bool RenderMap { get; set; }
+
 
         // Derivative options
         public bool Loaded { get; set; }
