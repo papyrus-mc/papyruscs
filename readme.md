@@ -60,11 +60,13 @@ outputdir
 |   |-dim1
 |   |-dim2
 |   |-map.html
+|   |-playersData.js
 |-update
 |   |-dim0
 |   |-dim1
 |   |-dim2
 |   |-map.html
+|   |-playersData.js
 |-chunks.sqlite
 |-chunks-backup.sqlite
 ```
@@ -129,9 +131,7 @@ Since MCBE worlds don't use the Anvil format like in the Java Edition, but rathe
 
 #### Planned
 
-- Nether/ The End support
 - Isometric renders
-- Auto-Updating renders
 
 ## Installation
 Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
@@ -224,6 +224,15 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
   --chunksperdimension            (Default: 2) Sets the chunks per X and Y dimension for the generated tiles. 1 => 1 chunk per tile, 2
                                   => 4 chunks per tile and so on
 
+  --playericons                   (Default: true) Renders player markers on the map. Player names must be manually entered.
+                                  After running, edit '/map/playersData.js' text file to modify player names and colors.
+                                  Updated player names and colors will be preserved when re-running
+								  Currently, only players on the Overworld are supported
+                                  Note: Not compatible with 'use_leaflet_legacy'
+
+  --render_map                    (Default: true) Renders the map. This is the main feature of this program.
+                                  Only disable this in special circumstances, such as if you want to
+                                  quickly update player markers without updating the map.
   --help                          Display this help screen.
 
   --version                       Display version information.
