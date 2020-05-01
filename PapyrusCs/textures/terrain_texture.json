@@ -2526,6 +2526,15 @@
     "campfire_log_lit": {
       "textures": "textures/blocks/campfire_log_lit"
     },
+    "campfire_top": {
+      "textures": "textures/blocks/campfire_top"
+    },
+    "campfire_top_on": {
+      "textures": "textures/blocks/campfire_top_on"
+    },
+    "campfire_side": {
+      "textures": "textures/blocks/campfire_side"
+    },    
     "loom_top": {
       "textures": "textures/blocks/loom_top"
     },
