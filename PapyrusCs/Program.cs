@@ -57,7 +57,8 @@ namespace PapyrusCs
 
             return CommandLine.Parser.Default.ParseArguments<Options, TestOptions, FindOptions>(newargs)
                 .MapResult(
-                    (Options opts) => { opts.Loaded = true;
+                    (Options opts) => { 
+                        opts.Loaded = true;
                         return RunMapCommand(opts);
                     },
                     (TestOptions opts) => RunTestOptions(opts),
@@ -65,223 +66,9 @@ namespace PapyrusCs
                     errs => 1);
         }
 
-        private static int RunFindOptions(FindOptions opts)
-        {
-            var world = new World();
+      
 
-            int result = 0;
-
-            if (!string.IsNullOrWhiteSpace(opts.BlockId))
-            {
-                result = FindBlockId(opts, world);
-            }
-            else
-            {
-                result = FindVillages(opts, world);
-            }
-
-            Console.WriteLine(_time.Elapsed);
-
-            return result;
-        }
-
-        private class Village
-        {
-            public string Name { get; set; }
-            public int X0 { get; set; }
-            public int X1 { get; set; }
-            public int Y0 { get; set; }
-            public int Y1 { get; set; }
-            public int Z0 { get; set; }
-            public int Z1 { get; set; }
-
-            public int XSize => Math.Abs(X0 - X1);
-            public int YSize => Math.Abs(Y0 - Y1);
-            public int ZSize => Math.Abs(Z0 - Z1);
-
-            public string Center => $"{X0 + (XSize / 2)} {Y0 + (YSize / 2)} {Z0 + (ZSize / 2)}";
-        }
-
-        private static int FindVillages(FindOptions opts, World world)
-        {
-            try
-            {
-                Console.WriteLine("Find Villages Decode. Opening world...");
-                world.Open(opts.MinecraftWorld);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
-                Console.WriteLine("The reason was:");
-                Console.WriteLine(ex.Message);
-                {
-                    return -1;
-                }
-            }
-
-            int i = 0;
-            int nextout = 2000;
-            foreach (var k in world.Keys)
-            {
-                if (i > nextout)
-                {
-                    Console.WriteLine("Key {0}", i);
-                    nextout += 50000;
-                }
-
-                i++;
-
-                if (k.Length > 8 && k[8] == 47)
-                {
-                    continue;
-                }
-
-                var village = new [] {'V', 'I', 'L', 'L', 'A','G','E'}.Select(x => (byte)x).ToArray();
-                if (k.Locate(village).Length == 0) 
-                    continue;
-
-                var data = world.GetData(k);
-
-                var golem = new[] { 'M', 'T', 'i','c','k'}.Select(x => (byte)x).ToArray();
-
-                var searchResults = data.Locate(golem);
-                if (searchResults != null && searchResults.Length > 0)
-                {
-
-                    var s = new MemoryStream(data);
-                    var nbt = new fNbt.NbtReader(s, false);
-
-                    var v = new Village();
-
-                    var result = nbt.ReadToFollowing();
-                    if (nbt.IsCompound)
-                    {
-                        result = nbt.ReadToFollowing();
-                        while (result)
-                        {
-                            if (nbt.HasName && nbt.HasValue)
-                            {
-                                var n = nbt.TagName;
-                                var val = nbt.ReadValue();
-                                //Console.WriteLine($"\t\t{n}: {val}");
-
-                                switch (n)
-                                {
-                                    case "X0":
-                                        v.X0 = Convert.ToInt32(val);
-                                        break;
-                                    case "X1":
-                                        v.X1 = Convert.ToInt32(val);
-                                        break;
-                                    case "Y0":
-                                        v.Y0 = Convert.ToInt32(val);
-                                        break;
-                                    case "Y1":
-                                        v.Y1 = Convert.ToInt32(val);
-                                        break;
-                                    case "Z0":
-                                        v.Z0 = Convert.ToInt32(val);
-                                        break;
-                                    case "Z1":
-                                        v.Z1 = Convert.ToInt32(val);
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                            }
-
-                            result = nbt.ReadToFollowing();
-
-                        }
-
-                        if (v.Y0 > 150)
-                        {
-                            Console.WriteLine("Found golem in {0}", string.Join(" ", k.Select(x => $"{x:X2}")));
-                            Console.WriteLine($"Center us {v.Center}");
-                            return 0;
-
-                        }
-
-
-                    }
-                    //var nbt2 = new fNbt.NbtFile();
-                    //nbt2.LoadFromBuffer(data, 0, data.Length, NbtCompression.None);
-
-
-                }
-
-            }
-
-            return 0;
-        }
-
-        private static int FindBlockId(FindOptions opts, World world)
-        {
-            world.ChunkPool = new ChunkPool();
-            try
-            {
-                Console.WriteLine("Find Blocks. Opening world...");
-                world.Open(opts.MinecraftWorld);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Could not open world at '{opts.MinecraftWorld}'!. Did you specify the .../db folder?");
-                Console.WriteLine("The reason was:");
-                Console.WriteLine(ex.Message);
-                {
-                    return -1;
-                }
-            }
-
-            int i = 0;
-            int nextout = 2000;
-            var keys = world.OverworldKeys.Select(x => new LevelDbWorldKey2(x)).GroupBy(x => x.XZ).Select(x => x.Key).ToList();
-            Console.WriteLine(keys.Count());
-
-            _time = Stopwatch.StartNew();
-            foreach (var key in keys)
-            {
-                i++;
-
-                var X = (int) ((ulong) key >> 32);
-                var Z = (int) ((ulong) key & 0xffffffff);
-                var cd = world.GetChunkData(X, Z);
-                var c = world.GetChunk(cd.X, cd.Z, cd);
-
-                var bells = c.Blocks.Where(x => x.Value.Block.Id == opts.BlockId);
-                foreach (var b in bells)
-                {
-                    Console.WriteLine($"Chunk {X} {Z} {c.X} {c.Z} -- Block {b.Value.X + c.X * 16} {b.Value.Z + c.Z * 16} {b.Value.Y} {b.Value.Block.Id}");
-                }
-
-                if (i > nextout)
-                {
-                    nextout += 2000;
-                    Console.WriteLine($"Reading key {i} {_time.Elapsed} {i / (_time.ElapsedMilliseconds / 1000.0)}");
-                }
-            }
-
-            Console.WriteLine($"Reading key {i}");
-            return 0;
-        }
-
-        private static int RunTestOptions(TestOptions opts)
-        {
-            if (opts.TestDbRead)
-            {
-                TestCommands.TestDbRead(opts);
-            } else if (opts.Decode)
-            {
-                TestCommands.TestDecode(opts);
-            }
-            else if (opts.Smallflow)
-            {
-                TestCommands.TestSmallFlow(opts);
-            }
-
-            return 0;
-        }
+  
   
         private static int  RunMapCommand(Options options)
         {
@@ -337,74 +124,8 @@ namespace PapyrusCs
 
             if(String.IsNullOrEmpty(options.MinecraftWorld))
             {
-                if(!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Console.WriteLine("World not specified.  Please specify one using the --world parameter.");
-                }
-                else
-                {
-                    Console.WriteLine("World not specified.  Looking for worlds in the default Bedrock Edition worlds folder.");
-
-                    try
-                    {
-                        // Get all of the world folders that exist
-                        string worldsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), Properties.Resources.DefaultBedrockWorldsLocation);
-                        string[] worldDirectories = { };
-
-                        try
-                        {
-                            worldDirectories = Directory.GetDirectories(worldsFolder);
-                        }
-                        catch (DirectoryNotFoundException)
-                        {
-                            Console.WriteLine("Bedrock Edition worlds folder not found.  Please specify a world manually using the --world parameter.");
-                            return -1;
-                        }
-
-                        if (worldDirectories.Length == 0)
-                        {
-                            Console.WriteLine("No worlds found.  Please specify one using the --world parameter.");
-                            return -1;
-                        }
-
-                        Console.WriteLine($"Found {worldDirectories.Length} worlds:");
-
-                        // Print out the list of worlds
-                        for (int i = 0; i < worldDirectories.Length; i++)
-                        {
-                            string worldNameFilePath = Path.Combine(worldDirectories[i], Properties.Resources.WorldNameFile);
-                            string worldName = File.ReadLines(worldNameFilePath).First();
-                            Console.WriteLine($"{i} - {worldName}");
-                        }
-
-                        // Make the user choose one of the worlds
-                        while (String.IsNullOrEmpty(options.MinecraftWorld))
-                        {
-                            Console.Write("Type a world number and press Enter: ");
-                            string userInput = Console.ReadLine();
-                            bool parseSuccess = Int32.TryParse(userInput, out int worldNumber);
-
-                            if (!parseSuccess)
-                            {
-                                Console.WriteLine($"'{userInput}' was not recognized as a number.");
-                            }
-                            else if ((worldNumber < 0) || (worldNumber >= worldDirectories.Length))
-                            {
-                                Console.WriteLine($"There is no world #{worldNumber}");
-                            }
-                            else
-                            {
-                                options.MinecraftWorld = Path.Combine(worldDirectories[worldNumber], Properties.Resources.WorldDatabaseFolder);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Exception: " + ex.Message);
-                        return -1;
-                    }
-                }
-                
+                if (!InteractiveMode(options)) 
+                    return -1;
             }
             var world = new World();
             try
@@ -612,6 +333,8 @@ var playersData = // # INJECT DATA HERE;";
             Console.WriteLine("Map generation finished!");
             return 0;
         }
+
+   
 
         private static IRenderStrategy InstanciateStrategy(Options options)
         {
