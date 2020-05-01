@@ -4,7 +4,7 @@ using Maploader.World;
 
 namespace PapyrusAlgorithms.Strategies
 {
-    public class ImageInfo<TImage> where TImage : class
+    public class ImageInfo<TImage> : IDisposable where TImage : class
     {
         public TImage Image { get; set; }
         public int X { get; set; }

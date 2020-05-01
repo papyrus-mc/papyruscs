@@ -27,9 +27,9 @@ namespace PapyrusCs.Output.OpenLayers
         };
 
         public void OutputMap(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings,
-            bool isUpdate, bool useLegacyLeaflet, bool showPlayerIcons, World world)
+            bool isUpdate, bool showPlayerIcons, World world)
         {
-            WriteMapHtml(tileSize, outputPath, mapHtmlFile, settings, isUpdate, useLegacyLeaflet);
+            WriteMapHtml(tileSize, outputPath, mapHtmlFile, settings, isUpdate);
             AddPlayerIcons(outputPath, showPlayerIcons, world);
         }
 
@@ -114,8 +114,7 @@ var playersData = // # INJECT DATA HERE;";
             }
         }
 
-        public void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings,
-            bool isUpdate, bool useLegacyLeaflet)
+        public void WriteMapHtml(int tileSize, string outputPath, string mapHtmlFile, Settings[] settings, bool isUpdate)
         {
             try
             {
@@ -130,7 +129,7 @@ var playersData = // # INJECT DATA HERE;";
                     { "dim2", "The End" },
                 };
 
-                var mapHtmlContext = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, useLegacyLeaflet ? "map.leaflet.thtml" : "map.thtml"));
+                var mapHtmlContext = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "map.thtml"));
 
                 Func<Settings, string> getDimWithProfile = (Settings setting) => "dim" + setting.Dimension + (string.IsNullOrEmpty(setting.Profile) ? "" : $"_{setting.Profile}");
 

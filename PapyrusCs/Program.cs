@@ -231,7 +231,6 @@ namespace PapyrusCs
                     options.MapHtml, 
                     strat.GetSettings(),
                     strat.IsUpdate,
-                    options.UseLeafletLegacy, 
                     options.ShowPlayerIcons, 
                     world);
 
