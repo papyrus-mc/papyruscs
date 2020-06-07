@@ -41,7 +41,7 @@ namespace PapyrusCs
         [Option('w', "world", Required = false, HelpText = "Sets the path the Minecraft Bedrock Edition Map")]
         public string MinecraftWorld { get; set; }
 
-        [Option('o', "output", Required = false, HelpText = "Sets the output path for the generated map tiles", Default = "generatedmap")]
+        [Option('o', "output", Required = false, HelpText = "Sets the output path for the generated map tiles")]
         public string OutputPath { get; set; }
 
         [Option("htmlfile", Required = false, HelpText = "Sets name of html map file", Default = "map.html")]

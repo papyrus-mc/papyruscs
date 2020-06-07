@@ -162,7 +162,7 @@ For Linux: give the extracted PapyrusCs file execution rights! See installation 
   -w, --world                     Sets the path the Minecraft Bedrock Edition Map.  When not specified, searches 
                                   Bedrock Edition worlds folder and lets you chose from found worlds.
 
-  -o, --output                    (Default: generatedmap) Sets the output path for the generated map tiles
+  -o, --output                    (Default: generatedmaps/<world name>) Sets the output path for the generated map tiles
 
   --htmlfile                      (Default: map.html) Sets name of html map file
 

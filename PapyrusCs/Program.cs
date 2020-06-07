@@ -199,7 +199,17 @@ namespace PapyrusCs
                 int chunksPerDimension = options.ChunksPerDimension;
                 int tileSize = chunkSize * chunksPerDimension;
                 Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
-                Directory.CreateDirectory(options.OutputPath);
+                
+                if (String.IsNullOrEmpty(options.OutputPath))
+                {
+                    options.OutputPath = Path.Combine("generatedmaps", world.WorldName);
+                    Console.WriteLine($"Output folder not specified, defaulting to {options.OutputPath}");
+                }
+
+                if (!Directory.Exists(options.OutputPath))
+                {
+                    Directory.CreateDirectory(options.OutputPath);
+                }
 
                 // db stuff
                 var textures = ReadTerrainTextureJson();

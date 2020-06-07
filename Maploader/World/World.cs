@@ -16,6 +16,11 @@ namespace Maploader.World
     public class World
     {
         private DB db;
+        private string _dbPath;
+
+        public string WorldName { get; private set; }
+
+        public string WorldPath { get; private set; }
 
         public void Open(string pathDb)
         {
@@ -29,12 +34,39 @@ namespace Maploader.World
                 pathDb = Path.Combine(pathDb, "db");
             }
 
+            WorldPath = DbPathToWorldPath(pathDb);
+
+            LoadWorldName();
+            LoadLevelDat();
+            LoadDatabase();
+        }
+
+        private void LoadWorldName()
+        {
+            string worldNameFilePath = Path.Combine(WorldPath, "levelname.txt");
+            WorldName = File.ReadLines(worldNameFilePath).First();
+        }
+
+        private void LoadLevelDat()
+        {
+            string levelDatFilePath = Path.Combine(WorldPath, "level.dat");
+            // Process the level.dat file (NBT).
+            // Hopefully will get changes merged into CoreFNBT to allow reading this specific variation on the NBT file format.
+        }
+
+        private void LoadDatabase()
+        {
+            _dbPath = Path.Combine(WorldPath, "db");
+
             var options = new Options();
             options.Compression = CompressionType.ZlibRaw;
 
-            db = new DB(options, pathDb);
+            db = new DB(options, _dbPath);
         }
-
+        private string DbPathToWorldPath(string dbPath)
+        {
+            return Directory.GetParent(dbPath).FullName;
+        }
 
         public ChunkData GetOverworldChunkData(int x, int z)
         {
