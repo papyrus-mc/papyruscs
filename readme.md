@@ -11,6 +11,8 @@ Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.
 ## Usage
 For Linux: give the extracted PapyrusCs file execution rights! See installation notes above. 
 
+For Windows: you can now start the papyruscs.exe in interactive mode. Just start it, it will try to find your local minecraft maps.
+
 ```papyruscs --world "My World/db" --output "C:\papyrus"```
 
 ```
