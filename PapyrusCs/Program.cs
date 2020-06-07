@@ -23,7 +23,7 @@ namespace PapyrusCs
         private static Stopwatch _time = new Stopwatch();
         private static Stopwatch _time2 = new Stopwatch();
 
-    
+
 
 
         static int Main(string[] args)
@@ -31,7 +31,7 @@ namespace PapyrusCs
 
             var newargs = args;
 
-            if (args.Length == 0 || !(new string[]{"map", "test","find"}.Contains(args[0])))
+            if (args.Length == 0 || !(new string[] { "map", "test", "find" }.Contains(args[0])))
             {
                 newargs = new[] { "map" }.Concat((args)).ToArray();
             }
@@ -39,7 +39,8 @@ namespace PapyrusCs
 
             return CommandLine.Parser.Default.ParseArguments<Options, TestOptions, FindOptions>(newargs)
                 .MapResult(
-                    (Options opts) => { 
+                    (Options opts) =>
+                    {
                         opts.Loaded = true;
                         return RunMapCommand(opts);
                     },
@@ -48,13 +49,14 @@ namespace PapyrusCs
                     errs => 1);
         }
 
-      
 
-  
-  
-        private static int  RunMapCommand(Options options)
+
+
+
+        private static int RunMapCommand(Options options)
         {
             _time = Stopwatch.StartNew();
+            bool isInteractiveMode = false;
             if (!options.Loaded)
             {
                 return -1;
@@ -98,17 +100,24 @@ namespace PapyrusCs
             }
 
             options.FileFormat = options.FileFormat.ToLowerInvariant();
-            if (new string[] {"jpg", "png", "webp", "none"}.All(x => x != options.FileFormat))
+            if (new string[] { "jpg", "png", "webp", "none" }.All(x => x != options.FileFormat))
             {
                 Console.WriteLine($"The value {options.FileFormat} is not allowed for option -f");
                 return -1;
             }
 
-            if(String.IsNullOrEmpty(options.MinecraftWorld))
+            if (String.IsNullOrEmpty(options.MinecraftWorld))
             {
-                if (!InteractiveMode(options)) 
+                if (InteractiveMode(options))
+                {
+                    isInteractiveMode = true;
+                }
+                else
+                {
                     return -1;
+                }
             }
+
             var world = new World();
             try
             {
@@ -169,7 +178,7 @@ namespace PapyrusCs
                 Console.WriteLine("Generating a list of all chunk keys in the database.\nThis could take a few minutes");
                 var keys = world.GetDimension(options.Dimension).ToList();
                 allSubChunks = Enumerable.ToHashSet(keys.Select(x => new LevelDbWorldKey2(x))
-                        .Where(k => constraintX(k) && constraintZ(k)));
+                    .Where(k => constraintX(k) && constraintZ(k)));
 
                 _totalChunk = allSubChunks.GroupBy(x => x.XZ).Count();
 
@@ -199,7 +208,7 @@ namespace PapyrusCs
                 int chunksPerDimension = options.ChunksPerDimension;
                 int tileSize = chunkSize * chunksPerDimension;
                 Console.WriteLine($"Tilesize is {tileSize}x{tileSize}");
-                
+
                 if (String.IsNullOrEmpty(options.OutputPath))
                 {
                     options.OutputPath = Path.Combine("generatedmaps", world.WorldName);
@@ -236,25 +245,46 @@ namespace PapyrusCs
 
                 var output = new OpenLayers();
 
-                output.OutputMap(tileSize, 
-                    options.OutputPath, 
-                    options.MapHtml, 
+                output.OutputMap(tileSize,
+                    options.OutputPath,
+                    options.MapHtml,
                     strat.GetSettings(),
                     strat.IsUpdate,
-                    options.ShowPlayerIcons, 
+                    options.ShowPlayerIcons,
                     world);
 
                 strat.Finish();
 
                 Console.WriteLine("Total Time {0}", _time.Elapsed);
             }
-            world.Close();
+
 
             Console.WriteLine("Map generation finished!");
+            if (options.OutputPath.Length >= 2 && options.OutputPath[1] == ':') // absolute path 
+            {
+                Console.WriteLine($"Your map is at {options.OutputPath}");
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine($"Your map is at {Path.Combine(Environment.CurrentDirectory, options.OutputPath)}");
+                Console.WriteLine();
+                Console.WriteLine();
+            }
+
+
+            if (isInteractiveMode)
+            {
+                Console.WriteLine("Press enter to close this window!");
+                Console.ReadLine();
+            }
+
+            world.Close();
             return 0;
         }
 
-    
+
 
 
         private static IRenderStrategy InstanciateStrategy(Options options)
@@ -267,7 +297,7 @@ namespace PapyrusCs
                     //strat = new DataFlowStrategy<SKBitmap>(new Maploader.Renderer.Imaging.SkiaSharp());
                     strat = new DataFlowStrategy<Bitmap>(new Maploader.Renderer.Imaging.SystemDrawing());
                     break;
-               
+
             }
 
             return strat;
@@ -316,9 +346,9 @@ namespace PapyrusCs
             strat.Profile = options.Profile;
             strat.DeleteExistingUpdateFolder = options.DeleteExistingUpdateFolder;
         }
-      
 
-      
+
+
 
         private static int CalculateZoom(int xmax, int xmin, int zmax, int zmin, int chunksPerDimension, out int extendedDia)
         {
