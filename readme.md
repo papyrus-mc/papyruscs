@@ -7,6 +7,100 @@ If you want to help improving Papyrus please consider forking the repository.
 
 Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
+
+## Usage
+For Linux: give the extracted PapyrusCs file execution rights! See installation notes above. 
+
+```papyruscs --world "My World/db" --output "C:\papyrus"```
+
+```
+
+PapyrusCs 0.5.0
+Copyright (C) 2020 Markus Jungnickel
+
+  -w, --world                     Sets the path the Minecraft Bedrock Edition Map
+
+  -o, --output                    Sets the output path for the generated map tiles
+
+  --htmlfile                      (Default: map.html) Sets name of html map file
+
+  -s, --strategy                  (Default: Dataflow) Sets the render strategy. Valid is only Dataflow
+
+  --coords                        (Default: false) Render text coordinates in each chunk
+
+  --limitx                        Limits the chunk rendering in the x dimension (inclusive). Provide two
+                                  values with comma separated, eg: -10,10
+
+  --limitz                        Limits the chunk rendering in the z dimension (inclusive). Provide two
+                                  values with comma separated, eg: -10,10
+
+  -y, --limity                    (Default: -1) Limits the chunk rendering in the y dimension
+                                  (inclusive). For y provide just one positive value, eg: 10. -1 means:
+                                  all
+
+  --threads                       (Default: 16) Set maximum of used threads
+
+  --maxqueue                      (Default: 128) Set maximum queue length for the pipeline stages
+
+  -r, --rendermode                (Default: Heightmap) RenderMode: Basic - Render without brightness
+                                  adjustment. Heightmap - Render with brightness adjustment based on
+                                  brillouin function and height of block
+
+  --brillouin_j                   (Default: 10000) Sets factor j for heightmap brightness formula
+                                  brillouin: brightness = 1+brillouin((height-offset) / divider): See
+                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the
+                                  function.
+
+  --brillouin_divider             (Default: 20) Sets divider for heightmap brightness formula brillouin:
+                                  brightness = 1+brillouin((height-offset) / divider). See
+                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the
+                                  function.
+
+  --brillouin_offset              (Default: 64) Sets the offset for heightmap brightness formula
+                                  brillouin: brightness = 1+brillouin((height-offset) / divider). See
+                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the
+                                  function.
+
+  -f                              (Default: png) Sets the output file format
+
+  -q                              (Default: -1) Sets quality for jpg or web format (0-100, -1 for
+                                  lossless webp)
+
+  --forceoverwrite                (Default: false) Forces PapyrusCs to render every chunk again
+
+  -d, --dim                       (Default: 0) Selects the dimension. 0: Overworld, 1: Nether, 2: End
+
+  -p, --profile                   (Default: ) Optional profile: 'underground', 'aquatic', 'ore',
+                                  'stronghold'
+
+  --trimceiling                   (Default: false) Removes the ceiling starting from y-max.
+                                  Automatically activated for nether
+
+  --notrimceiling                 (Default: false) Disables auto ceiling removal for Nether
+
+  --deleteexistingupdatefolder    (Default: false) Delete an existing update/dimX folder right before
+                                  creating a possible new update
+
+  --chunksperdimension            (Default: 2) Sets the chunks per X and Y dimension for the generated
+                                  tiles. 1 => 1 chunk per tile, 2 => 4 chunks per tile and so on
+
+  --playericons                   (Default: false) Renders player markers on the map. Player names must
+                                  be manually entered. After running, edit '/map/playersData.js' text
+                                  file to modify player names and colors.
+
+  --render_map                    (Default: true) Renders the map. This is the main feature of this
+                                  program. Only disable this in special circumstances, such as if you
+                                  want to quickly update player markers without updating the map.
+
+  --help                          Display this help screen.
+
+  --version                       Display version information.
+
+
+```
+
+The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
+
 ## Version 0.5.0 - So many things
 Update to .NET Core 3.1
 Updated textures
@@ -162,98 +256,6 @@ For own compilation:
 Requires [.NET Core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0). You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
 
 
-## Usage
-For Linux: give the extracted PapyrusCs file execution rights! See installation notes above. 
-
-```papyruscs --world "My World/db" --output "C:\papyrus"```
-
-```
-
-PapyrusCs 0.5.0
-Copyright (C) 2020 Markus Jungnickel
-
-  -w, --world                     Sets the path the Minecraft Bedrock Edition Map
-
-  -o, --output                    Sets the output path for the generated map tiles
-
-  --htmlfile                      (Default: map.html) Sets name of html map file
-
-  -s, --strategy                  (Default: Dataflow) Sets the render strategy. Valid is only Dataflow
-
-  --coords                        (Default: false) Render text coordinates in each chunk
-
-  --limitx                        Limits the chunk rendering in the x dimension (inclusive). Provide two
-                                  values with comma separated, eg: -10,10
-
-  --limitz                        Limits the chunk rendering in the z dimension (inclusive). Provide two
-                                  values with comma separated, eg: -10,10
-
-  -y, --limity                    (Default: -1) Limits the chunk rendering in the y dimension
-                                  (inclusive). For y provide just one positive value, eg: 10. -1 means:
-                                  all
-
-  --threads                       (Default: 16) Set maximum of used threads
-
-  --maxqueue                      (Default: 128) Set maximum queue length for the pipeline stages
-
-  -r, --rendermode                (Default: Heightmap) RenderMode: Basic - Render without brightness
-                                  adjustment. Heightmap - Render with brightness adjustment based on
-                                  brillouin function and height of block
-
-  --brillouin_j                   (Default: 10000) Sets factor j for heightmap brightness formula
-                                  brillouin: brightness = 1+brillouin((height-offset) / divider): See
-                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the
-                                  function.
-
-  --brillouin_divider             (Default: 20) Sets divider for heightmap brightness formula brillouin:
-                                  brightness = 1+brillouin((height-offset) / divider). See
-                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the
-                                  function.
-
-  --brillouin_offset              (Default: 64) Sets the offset for heightmap brightness formula
-                                  brillouin: brightness = 1+brillouin((height-offset) / divider). See
-                                  https://de.wikipedia.org/wiki/Brillouin-Funktion for a diagram of the
-                                  function.
-
-  -f                              (Default: png) Sets the output file format
-
-  -q                              (Default: -1) Sets quality for jpg or web format (0-100, -1 for
-                                  lossless webp)
-
-  --forceoverwrite                (Default: false) Forces PapyrusCs to render every chunk again
-
-  -d, --dim                       (Default: 0) Selects the dimension. 0: Overworld, 1: Nether, 2: End
-
-  -p, --profile                   (Default: ) Optional profile: 'underground', 'aquatic', 'ore',
-                                  'stronghold'
-
-  --trimceiling                   (Default: false) Removes the ceiling starting from y-max.
-                                  Automatically activated for nether
-
-  --notrimceiling                 (Default: false) Disables auto ceiling removal for Nether
-
-  --deleteexistingupdatefolder    (Default: false) Delete an existing update/dimX folder right before
-                                  creating a possible new update
-
-  --chunksperdimension            (Default: 2) Sets the chunks per X and Y dimension for the generated
-                                  tiles. 1 => 1 chunk per tile, 2 => 4 chunks per tile and so on
-
-  --playericons                   (Default: false) Renders player markers on the map. Player names must
-                                  be manually entered. After running, edit '/map/playersData.js' text
-                                  file to modify player names and colors.
-
-  --render_map                    (Default: true) Renders the map. This is the main feature of this
-                                  program. Only disable this in special circumstances, such as if you
-                                  want to quickly update player markers without updating the map.
-
-  --help                          Display this help screen.
-
-  --version                       Display version information.
-
-
-```
-
-The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
 ## Compilation
 To compile for windows use either Visual Studio or run:
