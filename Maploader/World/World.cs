@@ -513,10 +513,7 @@ namespace Maploader.World
             return ret;
         }
 
-        public object GetChunkData(LevelDbWorldKey2 groupedChunkSubKeys)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public ChunkData GetChunkData(IGrouping<ulong, LevelDbWorldKey2> groupedChunkSubKeys)
         {
@@ -543,7 +540,7 @@ namespace Maploader.World
                         Data = data,
                         DataLength = (int)length,
                         Key = key.Key,
-                       // Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data, 0, (int)length),
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data, 0, (int)length),
                     };
                     ret.SubChunks.Add(subChunkData);
                 }
