@@ -111,13 +111,11 @@ namespace PapyrusAlgorithms.Strategies.Dataflow
             Console.WriteLine($"Average of {average:0.0} chunks per tile");
 
             var getDataBlock = new GetDataBlock(World, renderedSubchunks, getOptions, ForceOverwrite);
-            //var createChunkBlock = new CreateDataBlock(World, chunkCreatorOptions);
-            //var bitmapBlock = new BitmapRenderBlock<TImage>(TextureDictionary, TexturePath, World.ChunkPool, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
 
             var createAndRender = new CreateChunkAndRenderBlock<TImage>(World, TextureDictionary, TexturePath, RenderSettings, graphics, ChunkSize, ChunksPerDimension, bitmapOptions);
-
+            
             var saveBitmapBlock = new SaveBitmapBlock<TImage>(isUpdate ? pathToMapUpdate : pathToMap, NewInitialZoomLevel, FileFormat, saveOptions, graphics);
-
+            
             var batchBlock = new BatchBlock<IEnumerable<SubChunkData>>(128, new GroupingDataflowBlockOptions() {BoundedCapacity = 128*8, EnsureOrdered = false});
 
             // Todo, put in own class

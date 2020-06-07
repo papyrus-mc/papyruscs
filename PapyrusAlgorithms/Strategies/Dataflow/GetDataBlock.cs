@@ -9,12 +9,10 @@ namespace PapyrusAlgorithms.Strategies.Dataflow
 {
     public class GetDataBlock : ITplBlock
     {
-        private bool forceOverwrite;
         public TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>> Block { get; }
 
         public GetDataBlock(World world, ImmutableDictionary<LevelDbWorldKey2, KeyAndCrc> renderedSubChunks, ExecutionDataflowBlockOptions options, bool forceOverwrite)
         {
-            this.forceOverwrite = forceOverwrite;
             Block = new TransformManyBlock<IEnumerable<GroupedChunkSubKeys>, IEnumerable<ChunkData>>(
                 groupedChunkSubKeys =>
                 {
