@@ -196,7 +196,8 @@ namespace leveldb_sharp_std
 
         public static byte[] leveldb_get(IntPtr db,
                                          IntPtr readOptions,
-                                         byte[] key)
+                                         byte[] key,
+                                         out UIntPtr valueLength)
         {
            
 
@@ -204,7 +205,6 @@ namespace leveldb_sharp_std
             {
                 fixed (byte* p = key)
                 {
-                    UIntPtr valueLength;
                     string error;
                     var keyLength = (UIntPtr) key.Length;
                     IntPtr keyPtr = (IntPtr)p;

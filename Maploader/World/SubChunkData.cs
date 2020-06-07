@@ -7,6 +7,7 @@ namespace Maploader.World
     {
         public byte[] Key { get; set; }
         public byte[] Data { get; set; }
+        public int DataLength { get; set; }
         public UInt32 Crc32 { get; set; }
         public byte Index { get; set; }
         public bool FoundInDb { get; set; }
