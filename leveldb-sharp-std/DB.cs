@@ -62,7 +62,8 @@ namespace leveldb_sharp_std
 
         public byte[] this[byte[] key] {
             get {
-                return Get(null, key);
+                UIntPtr unusedLength;
+                return Get(null, key, out unusedLength);
             }
             set {
                 Put(null, key, value);
@@ -183,18 +184,18 @@ namespace leveldb_sharp_std
             Write(null, writeBatch);
         }
 
-        public byte[] Get(ReadOptions options, byte[] key)
+        public byte[] Get(ReadOptions options, byte[] key, out UIntPtr length)
         {
             CheckDisposed();
             if (options == null) {
                 options = new ReadOptions();
             }
-            return Native.leveldb_get(Handle, options.Handle, key);
+            return Native.leveldb_get(Handle, options.Handle, key, out length);
         }
 
-        public byte[] Get(byte[] key)
+        public byte[] Get(byte[] key, out UIntPtr length)
         {
-            return Get(null, key);
+            return Get(null, key, out length);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

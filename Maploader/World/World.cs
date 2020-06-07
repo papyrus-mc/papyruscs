@@ -47,16 +47,17 @@ namespace Maploader.World
             for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
             {
                 key[9] = subChunkIdx;
-
-                var data = db.Get(key);
+                UIntPtr length;     
+                var data = db.Get(key, out length);
                 if (data != null)
                 {
                     var subChunkData = new SubChunkData()
                     {
                         Index = subChunkIdx,
                         Data = data,
+                        DataLength = (int)length,
                         Key = key,
-                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data)
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data, 0, (int)length)
                     };
                     ret.SubChunks.Add(subChunkData);
                 }
@@ -100,8 +101,8 @@ namespace Maploader.World
             for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
             {
                 key[9] = subChunkIdx;
-
-                var data = db.Get(key);
+                UIntPtr length;
+                var data = db.Get(key, out length);
                 if (data != null)
                 {
                     subChunks[subChunkIdx] = data;
@@ -461,16 +462,17 @@ namespace Maploader.World
             foreach (var kvp in groupedChunkSubKeys.Subchunks)
             {
                 var key = kvp.Value;
-
-                var data = db.Get(key.Key);
+                UIntPtr length;
+                var data = db.Get(key.Key, out length);
                 if (data != null)
                 {
                     var subChunkData = new SubChunkData()
                     {
                         Index = kvp.Key,
                         Data = data,
+                        DataLength = (int)length,
                         Key = kvp.Value.Key,
-                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data, 0, (int)length),
                     };
                     ret.SubChunks.Add(subChunkData);
                 }
@@ -499,16 +501,17 @@ namespace Maploader.World
             foreach (var kvp in groupedChunkSubKeys)
             {
                 var key = kvp;
-
-                var data = db.Get(key.Key);
+                UIntPtr length;
+                var data = db.Get(key.Key, out length);
                 if (data != null)
                 {
                     var subChunkData = new SubChunkData()
                     {
                         Index = key.SubChunkId,
                         Data = data,
+                        DataLength = (int)length,
                         Key = key.Key,
-                       // Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                       // Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data, 0, (int)length),
                     };
                     ret.SubChunks.Add(subChunkData);
                 }
@@ -534,15 +537,17 @@ namespace Maploader.World
                 var key = CreateKey(x, z);
                 key[9] = (byte)kvp;
 
-                var data = db.Get(key);
+                UIntPtr length;
+                var data = db.Get(key, out length);
                 if (data != null)
                 {
                     var subChunkData = new SubChunkData()
                     {
                         Index = (byte)kvp,
                         Data = data,
+                        DataLength = (int)length,
                         Key = key,
-                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data),
+                        Crc32 = Force.Crc32.Crc32CAlgorithm.Compute(data, 0, (int)length),
                     };
                     ret.SubChunks.Add(subChunkData);
                 }
