@@ -17,6 +17,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:tallgrass", true},
             {"minecraft:waterlily", true},
             {"minecraft:torch", true},
+            {"minecraft:lantern", true},
             {"minecraft:lever", true},
             {"minecraft:redstone_torch", true},
             {"minecraft:sapling", true},
@@ -109,11 +110,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:light_weighted_pressure_plate", true},
             {"minecraft:cactus", true},
             {"minecraft:beetroot", true},
-            {"minecraft:nether_wart", true},
             {"minecraft:bell", true},
             {"minecraft:standing_banner", true},
 
-            { "minecraft:wooden_button", true},
+            {"minecraft:wooden_button", true},
             {"minecraft:spruce_button", true},
             {"minecraft:birch_button", true},
             {"minecraft:jungle_button", true},
@@ -131,6 +131,25 @@ namespace Maploader.Renderer.Texture
             {"minecraft:mob_spawner", true},
             {"minecraft:slime", true},
             {"minecraft:reeds", true},
+
+            // Nether
+            {"minecraft:nether_wart", true},
+            {"minecraft:soul_fire", true},
+            {"minecraft:soul_torch", true},
+            {"minecraft:soul_lantern", true},
+            {"minecraft:crimson_fungus", true},
+            {"minecraft:warped_fungus", true},
+            {"minecraft:weeping_vines_base", true},
+            {"minecraft:weeping_vines_bottom", true},
+            {"minecraft:twisting_vines_base", true},
+            {"minecraft:twisting_vines_bottom", true},
+            {"minecraft:crimson_roots", true},
+            {"minecraft:warped_roots", true},
+            {"minecraft:crimson_roots_pot", true},
+            {"minecraft:warped_roots_pot", true},
+            {"minecraft:nether_sprouts", true},
+            {"minecraft:chain1", true},
+            {"minecraft:chain2", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -671,7 +690,6 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stone_slab_top", data);
 
 
-
                 case "bone_block":
                     return GetTexture("bone_block_top", data);
 
@@ -757,6 +775,52 @@ namespace Maploader.Renderer.Texture
                     return GetTexture($"sweet_berry_bush_{data%4}", 0);
                 case "bee_nest":
                     return GetTexture("bee_nest_top", data);
+
+                // Nether update (1.16)
+                case "crimson_nylium":
+                    return GetTexture("crimson_nylium_top", data);
+                case "warped_nylium":
+                    return GetTexture("warped_nylium_top", data);
+                case "crimson_stem":
+                    return GetTexture("stripped_crimson_stem_top", data);
+                case "warped_stem":
+                    return GetTexture("stripped_warped_stem_top", data);
+                case "warped_fungus":
+                    return GetTexture("nether_shroom_blue", data);
+                case "crimson_fungus":
+                    return GetTexture("nether_shroom_red", data);
+                case "twisting_vines":
+                    return GetTexture("twisting_vines_base", data);
+                case "soul_fire":
+                    return GetTexture("soul_fire_0", data);
+
+                case "basalt":
+                    return GetTexture("basalt_top", data);
+                case "polished_basalt":
+                    return GetTexture("polished_basalt_top", data);
+
+                case "blackstone":
+                    return GetTexture("blackstone_top", data);
+                case "blackstone_slab":
+                    return GetTexture("blackstone_top", data);
+                case "blackstone_stairs":
+                    return GetTexture("blackstone_top", data);
+                case "blackstone_wall":
+                    return GetTexture("blackstone_top", data);
+
+                case "polished_blackstone_slab":
+                    return GetTexture("polished_blackstone", data);
+                case "polished_blackstone_stairs":
+                    return GetTexture("polished_blackstone", data);
+                case "polished_blackstone_wall":
+                    return GetTexture("polished_blackstone", data);
+
+                case "polished_blackstone_brick_slab":
+                    return GetTexture("polished_blackstone_bricks", data);
+                case "polished_blackstone_brick_stairs":
+                    return GetTexture("polished_blackstone_bricks", data);
+                case "polished_blackstone_brick_wall":
+                    return GetTexture("polished_blackstone_bricks", data);
             }
 
             return null;
