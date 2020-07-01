@@ -430,13 +430,13 @@ namespace Maploader.World
                                 IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
                                 foreach(var subtag in enumTag)
                                 {
-                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction"))
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit"))
                                     {
                                         fNbt.Tags.NbtTag nonConstRef = subtag;
                                         int subtagvalue = GetTagValue(ref nonConstRef);
                                         dictParams.Add(subtag.Name, subtagvalue); 
                                     }
-                                    if(subtag.Name == "color")
+                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction"))
                                     {
                                         if(subtag.TagType == NbtTagType.String)
                                         {
@@ -607,6 +607,9 @@ namespace Maploader.World
         {
             switch (tag.TagType)
             {
+                case NbtTagType.Byte:
+                    return tag.ByteValue;
+
                 case NbtTagType.Int:
                     return tag.IntValue;
 
