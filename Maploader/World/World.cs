@@ -432,8 +432,7 @@ namespace Maploader.World
                                 {
                                     if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit"))
                                     {
-                                        fNbt.Tags.NbtTag nonConstRef = subtag;
-                                        int subtagvalue = GetTagValue(ref nonConstRef);
+                                        int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
                                     }
                                     if((subtag.Name == "color") || (subtag.Name == "lever_direction"))
@@ -446,7 +445,7 @@ namespace Maploader.World
                                 }
                             break;
                         case "val":
-                            int value = GetTagValue(ref tag);
+                            int value = GetTagValue(tag);
                             dictParams.Add(tag.Name, value); 
                             break;
                     }
@@ -603,7 +602,7 @@ namespace Maploader.World
             return ret;
         }
 
-        private static int GetTagValue (ref fNbt.Tags.NbtTag tag)
+        private static int GetTagValue (fNbt.Tags.NbtTag tag)
         {
             switch (tag.TagType)
             {
