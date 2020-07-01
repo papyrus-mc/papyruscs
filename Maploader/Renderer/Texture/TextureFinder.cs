@@ -574,7 +574,7 @@ namespace Maploader.Renderer.Texture
                 case "dried_kelp_block":
                     return GetTexture("dried_kelp_block_top", data);                
                 case "stained_hardened_clay":
-                    return GetTexture("stained_clay", data);
+                    return GetSubTextureColor("stained_clay", data);
 
 
 
@@ -1012,6 +1012,44 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
+        static private readonly Dictionary<string, int> ColorIndexes = new Dictionary<string, int>()
+        {
+            {"white",      0},
+            {"orange",     1},
+            {"magenta",    2},
+            {"light_blue", 3},
+            {"yellow",     4},
+            {"lime",       5},
+            {"pink",       6},
+            {"gray",       7},
+            {"silver",     8},
+            {"cyan",       9},
+            {"purple",     10},
+            {"blue",       11},
+            {"brown",      12},
+            {"green",      13},
+            {"red",        14},
+            {"black",      15},
+            {"undyed",     16},
+        };
+
+        public TextureStack GetSubTextureColor (string texName, List<KeyValuePair<string, Object>> data)
+        {
+            int colorIndex = ColorIndexes.First().Value;
+
+            try
+            {
+                string color = (string)data.Find(x => x.Key == "color").Value;
+                colorIndex = ColorIndexes[color];
+            }
+            catch
+            {
+                Console.WriteLine("Cannot find color for" + texName);
+            }
+
+            return GetTexture(texName, colorIndex);
+        }
+
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
         public bool Debug { get; set; }
 
@@ -1097,17 +1135,18 @@ namespace Maploader.Renderer.Texture
             if (texturesJson.ContainsKey(name))
             {
                 var texture = texturesJson[name];
-                texturePath = texture.Subtextures[0].Path;
+                texturePath = texture.Subtextures.First().Path;
                 foreach(var tagProp in data)
                 {
                     if(tagProp.Key == "val")
                     {
                         int intValue = (int)tagProp.Value;
-                        if (texture.Subtextures.Count <= intValue || intValue < 0)
+                        try
                         {
-                            //Console.WriteLine("Index out of bounds during GetTexture for {0}", name);
-                            texturePath = texture.Subtextures.First().Path;
+                            texturePath = texture.Subtextures[intValue].Path;
                         }
+                        catch{}
+                        break;
                     }
                 }
             }
