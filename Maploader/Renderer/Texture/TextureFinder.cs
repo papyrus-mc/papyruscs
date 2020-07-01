@@ -1072,12 +1072,12 @@ namespace Maploader.Renderer.Texture
                     case "up_north_south":
                         // Intentional fall-through
                         trans = new TextureTranslation(new Rect(7, 3, 2, 9), new Rect(7, 6, 2, 9));
-                        rot = RotateFlip.RotateNoneFlipNone;
+                        rot = RotateFlip.Rotate180FlipNone;
                         try
                         {
                             if((int)data["open_bit"] == 1)
                             {
-                                rot = RotateFlip.Rotate180FlipNone;
+                                rot = RotateFlip.RotateNoneFlipNone;
                             }
                         }
                         catch {}
@@ -1094,12 +1094,12 @@ namespace Maploader.Renderer.Texture
                     case "up_east_west":
                         // Intentional fall-through
                         trans = new TextureTranslation(new Rect(7, 3, 2, 9), new Rect(7, 6, 2, 9));
-                        rot = RotateFlip.Rotate270FlipNone;
+                        rot = RotateFlip.Rotate90FlipNone;
                         try
                         {
                             if((int)data["open_bit"] == 1)
                             {
-                                rot = RotateFlip.Rotate90FlipNone;
+                                rot = RotateFlip.Rotate270FlipNone;
                             }
                         }
                         catch {}
