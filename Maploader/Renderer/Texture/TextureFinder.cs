@@ -1156,7 +1156,6 @@ namespace Maploader.Renderer.Texture
                             texturePath = texture.Subtextures[intValue].Path;
                         }
                         catch{}
-                        break;
                     }
                     if(blockProperties.Key == "color")
                     {
@@ -1172,7 +1171,25 @@ namespace Maploader.Renderer.Texture
                         {
                             Console.WriteLine("Cannot find color for" + name);
                         }
-                        break;
+                    }
+                    if(blockProperties.Key == "facing_direction")
+                    {
+                        int direction = (int)data["facing_direction"];
+                        switch (direction)
+                        {
+                            case 2:
+                                rot = RotateFlip.Rotate180FlipNone;
+                                break;
+                            case 3:
+                                rot = RotateFlip.RotateNoneFlipNone;
+                                break;
+                            case 4:
+                                rot = RotateFlip.Rotate90FlipNone;
+                                break;
+                            case 5:
+                                rot = RotateFlip.Rotate270FlipNone;
+                                break;
+                        }
                     }
                 }
             }
@@ -1184,14 +1201,14 @@ namespace Maploader.Renderer.Texture
 
         private int LegacyGetOldDataValue (Dictionary<string, Object> data)
         {
-            int result;
-            try
+            int result = 0;
+            if(data.ContainsKey("val"))
             {
-                result = (int)data["val"];
-            }
-            catch
-            {
-                result = 0;
+                try
+                {
+                    result = (int)data["val"];
+                }
+                catch {}
             }
             return result;
         }
