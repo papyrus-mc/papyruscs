@@ -29,7 +29,7 @@ namespace Maploader.World
 
     public class BlockData
     {
-        public BlockData(string id, List<KeyValuePair<string, Object>> data)
+        public BlockData(string id, Dictionary<string, Object> data)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             Data = data;
@@ -39,7 +39,7 @@ namespace Maploader.World
         [NotNull]
         public string Id { get; set; }
 
-        public List<KeyValuePair<string, Object>> Data { get; set; }
+        public Dictionary<string, Object> Data { get; set; }
 
         public int Version { get; set; }
 

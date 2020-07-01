@@ -146,7 +146,7 @@ namespace Maploader.Renderer.Texture
             this.graphics = graphics;
         }
 
-        public TextureStack FindTexturePath(string name, List<KeyValuePair<string, Object>> data, int x, int z, int y)
+        public TextureStack FindTexturePath(string name, Dictionary<string, Object> data, int x, int z, int y)
         {
             name = name.Replace("minecraft:", "");
 
@@ -166,7 +166,7 @@ namespace Maploader.Renderer.Texture
 
 
 
-        private TextureStack GetSubstitution(string name, List<KeyValuePair<string, Object>> data, int x, int z, int y)
+        private TextureStack GetSubstitution(string name, Dictionary<string, Object> data, int x, int z, int y)
         {
             // For debugging purposes
 
@@ -833,7 +833,7 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderWallSign(List<KeyValuePair<string, Object>> data, string texture)
+        private TextureStack RenderWallSign(Dictionary<string, Object> data, string texture)
         {
             var t = GetTexture(texture, 0).Translate(
                 new Rect(0, 7, 14, 2),
@@ -888,7 +888,7 @@ namespace Maploader.Renderer.Texture
             );
         }
 
-        private TextureStack RenderFrame(List<KeyValuePair<string, Object>> data, string texture)
+        private TextureStack RenderFrame(Dictionary<string, Object> data, string texture)
         {
             var t = GetTexture(texture, 0).Translate(
                 new Rect(0, 7, 14, 2),
@@ -909,7 +909,7 @@ namespace Maploader.Renderer.Texture
             return t;
         }
 
-        private TextureStack RenderButton(List<KeyValuePair<string, Object>> data, string texture)
+        private TextureStack RenderButton(Dictionary<string, Object> data, string texture)
         {
             int legacyData = LegacyGetOldDataValue(data);
             var t = GetTexture(texture, 0).Translate(
@@ -944,7 +944,7 @@ namespace Maploader.Renderer.Texture
             }
         }
 
-        private TextureStack RenderFenceGate(List<KeyValuePair<string, Object>> data, string texture)
+        private TextureStack RenderFenceGate(Dictionary<string, Object> data, string texture)
         {
             int legacyData = LegacyGetOldDataValue(data);
             if ((legacyData & 8) == 8)
@@ -1012,13 +1012,13 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderTripwireHook(List<KeyValuePair<string, Object>> data, string texture)
+        private TextureStack RenderTripwireHook(Dictionary<string, Object> data, string texture)
         {
             var t = GetTexture(texture);
 
             try
             {
-                int dir = (int)data.Find(x => x.Key == "direction").Value;
+                int dir = (int)data["direction"];
                 switch (dir)
                 {
                     case 0:
@@ -1135,22 +1135,22 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack GetTexture(string name, int data = 0, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
         {
-            var lsData = new List<KeyValuePair<string, Object>>();
-            lsData.Add(new KeyValuePair<string, Object>("val", data));
-            return GetTexture(name, lsData, translation, rot);
+            var dictData = new Dictionary<string, Object>();
+            dictData.Add("val", data);
+            return GetTexture(name, dictData, translation, rot);
         }
-        private TextureStack GetTexture(string name, List<KeyValuePair<string, Object>> data, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
+        private TextureStack GetTexture(string name, Dictionary<string, Object> data, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
         {
             string texturePath = null;
             if (texturesJson.ContainsKey(name))
             {
                 var texture = texturesJson[name];
                 texturePath = texture.Subtextures.First().Path;
-                foreach(var tagProp in data)
+                foreach(var blockProperties in data)
                 {
-                    if(tagProp.Key == "val")
+                    if(blockProperties.Key == "val")
                     {
-                        int intValue = (int)tagProp.Value;
+                        int intValue = (int)blockProperties.Value;
                         try
                         {
                             texturePath = texture.Subtextures[intValue].Path;
@@ -1158,13 +1158,13 @@ namespace Maploader.Renderer.Texture
                         catch{}
                         break;
                     }
-                    if(tagProp.Key == "color")
+                    if(blockProperties.Key == "color")
                     {
 
                         int colorIndex = ColorIndexes.First().Value;
                         try
                         {
-                            string color = (string)data.Find(x => x.Key == "color").Value;
+                            string color = (string)data["color"];
                             colorIndex = ColorIndexes[color];
                             texturePath = texture.Subtextures[colorIndex].Path;
                         }
@@ -1182,12 +1182,12 @@ namespace Maploader.Renderer.Texture
             return new TextureStack(texturePath, translation, rot);
         }
 
-        private int LegacyGetOldDataValue (List<KeyValuePair<string, Object>> data)
+        private int LegacyGetOldDataValue (Dictionary<string, Object> data)
         {
             int result;
             try
             {
-                result = (int)data.Find(x => x.Key == "val").Value;
+                result = (int)data["val"];
             }
             catch
             {

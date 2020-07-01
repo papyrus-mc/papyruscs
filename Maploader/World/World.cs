@@ -310,9 +310,9 @@ namespace Maploader.World
                             int y = position & 0xF;
                             int z = (position >> 4) & 0xF;
                             
-                            var lsData = new List<KeyValuePair<string, Object>>();
-                            lsData.Add(new KeyValuePair<string, Object>("val", blockData));
-                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (lsData))
+                            var dictData = new Dictionary<string, Object>();
+                            dictData.Add("val", blockData);
+                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, dictData)
                             {
                                 Version = 0,
                             };
@@ -404,11 +404,11 @@ namespace Maploader.World
             }
         }
 
-        private static (string, List<KeyValuePair<string, Object>>) GetNbtVal(MemoryStream ms)
+        private static (string, Dictionary<string, Object>) GetNbtVal(MemoryStream ms)
         {
             string name = "";
             var nbt = new NbtReader(ms, false);
-            var lsParams = new List<KeyValuePair<string, object>>();
+            var dictParams = new Dictionary<string, Object>();
             
             nbt.ReadToFollowing();
             if (!nbt.IsCompound)
@@ -434,20 +434,20 @@ namespace Maploader.World
                                     {
                                         fNbt.Tags.NbtTag nonConstRef = subtag;
                                         int subtagvalue = GetTagValue(ref nonConstRef);
-                                        lsParams.Add(new KeyValuePair<string, Object>(subtag.Name, subtagvalue)); 
+                                        dictParams.Add(subtag.Name, subtagvalue); 
                                     }
                                     if(subtag.Name == "color")
                                     {
                                         if(subtag.TagType == NbtTagType.String)
                                         {
-                                            lsParams.Add(new KeyValuePair<string, Object>(subtag.Name, subtag.StringValue)); 
+                                            dictParams.Add(subtag.Name, subtag.StringValue); 
                                         }
                                     }
                                 }
                             break;
                         case "val":
                             int value = GetTagValue(ref tag);
-                            lsParams.Add(new KeyValuePair<string, Object>(tag.Name, value)); 
+                            dictParams.Add(tag.Name, value); 
                             break;
                     }
                 }
@@ -458,7 +458,7 @@ namespace Maploader.World
                 nbt.ReadToFollowing();
             }
 
-            return (name, lsParams);
+            return (name, dictParams);
 
         }
 
