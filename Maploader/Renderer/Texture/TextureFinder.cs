@@ -619,6 +619,9 @@ namespace Maploader.Renderer.Texture
                 case "tripwire_hook":
                     return RenderTripwireHook(data, "trip_wire_source");
 
+                case "lever":
+                    return RenderLever(data);
+
                 case "wall_sign":
                 case "darkoak_wall_sign":
                 case "spruce_wall_sign":
@@ -1056,6 +1059,59 @@ namespace Maploader.Renderer.Texture
             catch {}
 
             return GetTexture("piston_side", data);
+        }
+        private TextureStack RenderLever (Dictionary<string, Object> data)
+        {
+            RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+            TextureTranslation trans = null;
+            try
+            {
+                string dir = (string)data["lever_direction"];
+                switch (dir)
+                {
+                    case "up_north_south":
+                        // Intentional fall-through
+                        trans = new TextureTranslation(new Rect(7, 3, 2, 9), new Rect(7, 6, 2, 9));
+                        rot = RotateFlip.RotateNoneFlipNone;
+                        try
+                        {
+                            if((int)data["open_bit"] == 1)
+                            {
+                                rot = RotateFlip.Rotate180FlipNone;
+                            }
+                        }
+                        catch {}
+                        break;
+                    case "north":
+                        rot = RotateFlip.RotateNoneFlipNone;
+                        break;
+                    case "east":
+                        rot = RotateFlip.Rotate90FlipNone;
+                        break;
+                    case "south":
+                        rot = RotateFlip.Rotate180FlipNone;
+                        break;
+                    case "up_east_west":
+                        // Intentional fall-through
+                        trans = new TextureTranslation(new Rect(7, 3, 2, 9), new Rect(7, 6, 2, 9));
+                        rot = RotateFlip.Rotate270FlipNone;
+                        try
+                        {
+                            if((int)data["open_bit"] == 1)
+                            {
+                                rot = RotateFlip.Rotate90FlipNone;
+                            }
+                        }
+                        catch {}
+                        break;
+                    case "west":
+                        rot = RotateFlip.Rotate270FlipNone;
+                        break;
+                }
+            }
+            catch {}
+
+            return GetTexture("lever", data, trans, rot);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
