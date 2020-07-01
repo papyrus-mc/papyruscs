@@ -574,7 +574,7 @@ namespace Maploader.Renderer.Texture
                 case "dried_kelp_block":
                     return GetTexture("dried_kelp_block_top", data);                
                 case "stained_hardened_clay":
-                    return GetSubTextureColor("stained_clay", data);
+                    return GetTexture("stained_clay", data);
 
 
 
@@ -1012,44 +1012,6 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        static private readonly Dictionary<string, int> ColorIndexes = new Dictionary<string, int>()
-        {
-            {"white",      0},
-            {"orange",     1},
-            {"magenta",    2},
-            {"light_blue", 3},
-            {"yellow",     4},
-            {"lime",       5},
-            {"pink",       6},
-            {"gray",       7},
-            {"silver",     8},
-            {"cyan",       9},
-            {"purple",     10},
-            {"blue",       11},
-            {"brown",      12},
-            {"green",      13},
-            {"red",        14},
-            {"black",      15},
-            {"undyed",     16},
-        };
-
-        public TextureStack GetSubTextureColor (string texName, List<KeyValuePair<string, Object>> data)
-        {
-            int colorIndex = ColorIndexes.First().Value;
-
-            try
-            {
-                string color = (string)data.Find(x => x.Key == "color").Value;
-                colorIndex = ColorIndexes[color];
-            }
-            catch
-            {
-                Console.WriteLine("Cannot find color for" + texName);
-            }
-
-            return GetTexture(texName, colorIndex);
-        }
-
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
         public bool Debug { get; set; }
 
@@ -1123,6 +1085,27 @@ namespace Maploader.Renderer.Texture
             return new TextureStack(texturePath, null, RotateFlip.RotateNoneFlipNone);
         }
 
+        static private readonly Dictionary<string, int> ColorIndexes = new Dictionary<string, int>()
+        {
+            {"white",      0},
+            {"orange",     1},
+            {"magenta",    2},
+            {"light_blue", 3},
+            {"yellow",     4},
+            {"lime",       5},
+            {"pink",       6},
+            {"gray",       7},
+            {"silver",     8},
+            {"cyan",       9},
+            {"purple",     10},
+            {"blue",       11},
+            {"brown",      12},
+            {"green",      13},
+            {"red",        14},
+            {"black",      15},
+            {"undyed",     16},
+        };
+
         private TextureStack GetTexture(string name, int data = 0, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
         {
             var lsData = new List<KeyValuePair<string, Object>>();
@@ -1146,6 +1129,22 @@ namespace Maploader.Renderer.Texture
                             texturePath = texture.Subtextures[intValue].Path;
                         }
                         catch{}
+                        break;
+                    }
+                    if(tagProp.Key == "color")
+                    {
+
+                        int colorIndex = ColorIndexes.First().Value;
+                        try
+                        {
+                            string color = (string)data.Find(x => x.Key == "color").Value;
+                            colorIndex = ColorIndexes[color];
+                            texturePath = texture.Subtextures[colorIndex].Path;
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Cannot find color for" + name);
+                        }
                         break;
                     }
                 }
