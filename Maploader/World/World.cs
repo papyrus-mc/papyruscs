@@ -309,8 +309,10 @@ namespace Maploader.World
                             int x = (position >> 8) & 0xF;
                             int y = position & 0xF;
                             int z = (position >> 4) & 0xF;
-
-                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (blockData))
+                            
+                            var lsData = new List<KeyValuePair<string, Object>>();
+                            lsData.Add(new KeyValuePair<string, Object>("val", blockData));
+                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (lsData))
                             {
                                 Version = 0,
                             };
@@ -402,11 +404,12 @@ namespace Maploader.World
             }
         }
 
-        private static (string, int) GetNbtVal(MemoryStream ms)
+        private static (string, List<KeyValuePair<string, Object>>) GetNbtVal(MemoryStream ms)
         {
-            int value = 0;
             string name = "";
             var nbt = new NbtReader(ms, false);
+            var lsParams = new List<KeyValuePair<string, object>>();
+            
             nbt.ReadToFollowing();
             if (!nbt.IsCompound)
                 throw new Exception("Could not read nbt");
@@ -414,24 +417,39 @@ namespace Maploader.World
             if (nbt.ReadToDescendant("name"))
             {
                 name = nbt.ReadValueAs<string>();
-            }
-            if (nbt.ReadToNextSibling("val"))
-            {
-                switch (nbt.TagType)
-                {
-                    case NbtTagType.Int:
-                        value = nbt.ReadValueAs<int>();
-                        break;
 
-                    case NbtTagType.Short:
-                        value = nbt.ReadValueAs<short>();
-                        break;
-                    case NbtTagType.Long:
-                        value = (int)nbt.ReadValueAs<long>();
-                        break;
-                    default:
-                        Console.WriteLine("could not comprehend val");
-                        break;
+                nbt.ReadToNextSibling();
+                while(nbt.TagType != NbtTagType.End)
+                {
+                    fNbt.Tags.NbtTag tag = nbt.ReadAsTag();
+                    switch(tag.Name)
+                    {
+                        case "version":
+                            continue;
+                        case "states":
+                                IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
+                                foreach(var subtag in enumTag)
+                                {
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction"))
+                                    {
+                                        fNbt.Tags.NbtTag nonConstRef = subtag;
+                                        int subtagvalue = GetTagValue(ref nonConstRef);
+                                        lsParams.Add(new KeyValuePair<string, Object>(subtag.Name, subtagvalue)); 
+                                    }
+                                    if(subtag.Name == "color")
+                                    {
+                                        if(subtag.TagType == NbtTagType.String)
+                                        {
+                                            lsParams.Add(new KeyValuePair<string, Object>(subtag.Name, subtag.StringValue)); 
+                                        }
+                                    }
+                                }
+                            break;
+                        case "val":
+                            int value = GetTagValue(ref tag);
+                            lsParams.Add(new KeyValuePair<string, Object>(tag.Name, value)); 
+                            break;
+                    }
                 }
             }
 
@@ -440,7 +458,7 @@ namespace Maploader.World
                 nbt.ReadToFollowing();
             }
 
-            return (name, value);
+            return (name, lsParams);
 
         }
 
@@ -583,6 +601,24 @@ namespace Maploader.World
             }
 
             return ret;
+        }
+
+        private static int GetTagValue (ref fNbt.Tags.NbtTag tag)
+        {
+            switch (tag.TagType)
+            {
+                case NbtTagType.Int:
+                    return tag.IntValue;
+
+                case NbtTagType.Short:
+                    return  tag.ShortValue;
+
+                case NbtTagType.Long:
+                    return  (int)tag.LongValue;
+
+                default:
+                    return 0;
+            }
         }
     }
 }

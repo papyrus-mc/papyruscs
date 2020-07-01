@@ -1,5 +1,6 @@
 ﻿using System;
 using JetBrains.Annotations;
+using System.Collections.Generic;
 
 namespace Maploader.World
 {
@@ -28,7 +29,7 @@ namespace Maploader.World
 
     public class BlockData
     {
-        public BlockData(string id, long data)
+        public BlockData(string id, List<KeyValuePair<string, Object>> data)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             Data = data;
@@ -38,7 +39,7 @@ namespace Maploader.World
         [NotNull]
         public string Id { get; set; }
 
-        public long Data { get; set; }
+        public List<KeyValuePair<string, Object>> Data { get; set; }
 
         public int Version { get; set; }
 
@@ -50,7 +51,7 @@ namespace Maploader.World
         public void Reset()
         {
             Id = "minecraft:air";
-            Data = 0;
+            Data.Clear();
             Version = 0;
         }
     }
