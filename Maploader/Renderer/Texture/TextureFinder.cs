@@ -651,12 +651,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("comparator_up", data);
 
                 case "pistonArmCollision":
+                return GetTexture("piston_top_normal", data);
                 case "piston":
-                    return GetTexture("piston_top_normal", data);
+                    return RenderPiston(data, "normal");
                 case "stickyPistonArmCollision":
-                    // Intentional fall-through
-                case "sticky_piston":
                     return GetTexture("piston_top_sticky", data);
+                case "sticky_piston":
+                    return RenderPiston(data, "sticky");
                 case "jukebox":
                     return GetTexture("jukebox_top", data);
                 case "stonecutter_block":
@@ -1037,6 +1038,24 @@ namespace Maploader.Renderer.Texture
             }
 
             return t;
+        }
+
+        private TextureStack RenderPiston (Dictionary<string, Object> data, string prefix)
+        {
+            try
+            {
+                int dir = (int)data["facing_direction"];
+                switch (dir)
+                {
+                    case 0:
+                        return GetTexture("piston_bottom", data);
+                    case 1:
+                        return GetTexture("piston_top_" + prefix, data);
+                }
+            }
+            catch {}
+
+            return GetTexture("piston_side", data);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
