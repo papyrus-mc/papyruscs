@@ -617,7 +617,7 @@ namespace Maploader.Renderer.Texture
                 case "tripWire":
                     return GetTexture("trip_wire", data);
                 case "tripwire_hook":
-                    return GetTexture("trip_wire_source", data);
+                    return RenderTripwireHook(data, "trip_wire_source");
 
                 case "wall_sign":
                 case "darkoak_wall_sign":
@@ -1010,6 +1010,33 @@ namespace Maploader.Renderer.Texture
             }
 
             return null;
+        }
+
+        private TextureStack RenderTripwireHook(List<KeyValuePair<string, Object>> data, string texture)
+        {
+            var t = GetTexture(texture);
+
+            try
+            {
+                int dir = (int)data.Find(x => x.Key == "direction").Value;
+                switch (dir)
+                {
+                    case 0:
+                        return t.Rotate(RotateFlip.Rotate180FlipNone);
+                    case 1:
+                        return t.Rotate(RotateFlip.Rotate270FlipNone);
+                    case 2:
+                        return t.Rotate(RotateFlip.RotateNoneFlipNone);
+                    case 3:
+                        return t.Rotate(RotateFlip.Rotate90FlipNone);
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Invalid Tripwire hook direction");
+            }
+
+            return t;
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
