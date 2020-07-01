@@ -652,7 +652,11 @@ namespace Maploader.Renderer.Texture
 
                 case "pistonArmCollision":
                 case "piston":
-                    return GetTexture("piston_top", data);
+                    return GetTexture("piston_top_normal", data);
+                case "stickyPistonArmCollision":
+                    // Intentional fall-through
+                case "sticky_piston":
+                    return GetTexture("piston_top_sticky", data);
                 case "jukebox":
                     return GetTexture("jukebox_top", data);
                 case "stonecutter_block":
@@ -670,10 +674,6 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("redstone_lamp_off", data);
                 case "lit_redstone_lamp":
                     return GetTexture("redstone_lamp_on", data);
-
-                case "sticky_piston":
-                    return GetTexture("piston_top_sticky", data);
-
 
                 case "undyed_shulker_box":
                     return GetTexture("undyed_shulker_box_top", data);
