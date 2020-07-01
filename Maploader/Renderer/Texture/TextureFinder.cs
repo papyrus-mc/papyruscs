@@ -17,6 +17,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:tallgrass", true},
             {"minecraft:waterlily", true},
             {"minecraft:torch", true},
+            {"minecraft:underwater_torch", true},
+            {"minecraft:colored_torch_bp", true},
+            {"minecraft:colored_torch_rg", true},
+            {"minecraft:light_block", true},
             {"minecraft:lever", true},
             {"minecraft:redstone_torch", true},
             {"minecraft:tripWire", true},
@@ -48,8 +52,12 @@ namespace Maploader.Renderer.Texture
             {"minecraft:ladder", true },
             {"minecraft:glass", true },
             {"minecraft:stained_glass", true },
+            {"minecraft:hard_glass", true },
+            {"minecraft:hard_stained_glass", true },
             {"minecraft:glass_pane", true },
             {"minecraft:stained_glass_pane", true },
+            {"minecraft:hard_glass_pane", true },
+            {"minecraft:hard_stained_glass_pane", true },
             {"minecraft:rail", true },
             {"minecraft:golden_rail", true },
             {"minecraft:detector_rail", true },
@@ -272,10 +280,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("smooth_sandstone");
 
                 case "red_sandstone_stairs":
+                    return GetTexture("redsandstone_top");
+                case "smooth_red_sandstone_stairs":
                     return GetTexture("smooth_red_sandstone");
-
                 case "purpur_stairs":
                     return GetTexture("purpur_block_top");   
+                case "red_nether_brick_stairs":
+                    return GetTexture("red_nether_brick");   
                 case "end_brick_stairs":
                     return GetTexture("end_bricks", data);   
                 case "smooth_quartz_stairs":
@@ -378,9 +389,17 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("mushroom_brown", data);
                 case "mossy_cobblestone":
                     return GetTexture("cobblestone_mossy", data);
+                case "hard_glass":
+                    // Intentional fall-through
+                case "hard_stained_glass":
+                    return GetTexture("stained_glass", data);
                 case "glass_pane":
+                    // Intentional fall-through
+                case "hard_glass_pane":
                     return GetTexture("glass_pane_top", data);
                 case "stained_glass_pane":
+                    // Intentional fall-through
+                case "hard_stained_glass_pane":
                     return GetTexture("stained_glass_pane_top", data);
                 case "redstone_torch":
                     return GetTexture("redstone_torch_on", data);
@@ -545,8 +564,13 @@ namespace Maploader.Renderer.Texture
                 case "carved_pumpkin":
                     return GetTexture("pumpkin_top", data);
                 case "torch":
+                    // Intentional fall-through
+                case "underwater_torch":
+                    // Intentional fall-through
+                case "colored_torch_bp":
+                    // Intentional fall-through
+                case "colored_torch_rg":
                     return GetTexture("torch_on", data);
-
                 case "crafting_table":
                     return GetTexture("crafting_table_top", data);
                 case "brick_block":
@@ -752,6 +776,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("polished_granite", data);
                 case "diorite_stairs":
                     return GetTexture("diorite", data);
+                case "andesite_stairs":
+                    return GetTexture("andesite", data);
                 case "granite_stairs":
                     return GetTexture("granite", data);
                 /* LEAVES */
@@ -821,6 +847,11 @@ namespace Maploader.Renderer.Texture
               
                 case "coral_fan_hang":
                     return GetTexture("coral_fan_hang_a", data);
+                case "coral_fan_hang2":
+                    return GetTexture("coral_fan_hang_b", data);
+                case "coral_fan_hang3":
+                    return GetTexture("coral_fan_hang_c", data);
+                    
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
                 case "grindstone":
@@ -832,6 +863,12 @@ namespace Maploader.Renderer.Texture
                 }
                 case "bee_nest":
                     return GetTexture("bee_nest_top", data);
+                case "beehive":
+                    return GetTexture("beehive_top", data);
+                case "glowingobsidian":
+                    return GetTexture("glowing_obsidian", data);
+                case "netherreactor":
+                    return GetTexture("reactor_core", data);
             }
 
             return null;
@@ -1019,25 +1056,33 @@ namespace Maploader.Renderer.Texture
         private TextureStack RenderTripwireHook(Dictionary<string, Object> data, string texture)
         {
             var t = GetTexture(texture);
-
+            int dir = 2;
             try
             {
-                int dir = (int)data["direction"];
-                switch (dir)
-                {
-                    case 0:
-                        return t.Rotate(RotateFlip.Rotate180FlipNone);
-                    case 1:
-                        return t.Rotate(RotateFlip.Rotate270FlipNone);
-                    case 2:
-                        return t.Rotate(RotateFlip.RotateNoneFlipNone);
-                    case 3:
-                        return t.Rotate(RotateFlip.Rotate90FlipNone);
-                }
+                dir = (int)data["direction"];
             }
             catch
             {
-                Console.WriteLine("Invalid Tripwire hook direction");
+                try
+                {
+                    dir = (int)data["val"];
+                }
+                catch
+                {
+                    Console.WriteLine("Invalid Tripwire hook direction");
+                }
+            }
+
+            switch (dir)
+            {
+                case 0:
+                    return t.Rotate(RotateFlip.Rotate180FlipNone);
+                case 1:
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
+                case 2:
+                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
+                case 3:
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
             }
 
             return t;
@@ -1244,7 +1289,7 @@ namespace Maploader.Renderer.Texture
                         }
                         catch
                         {
-                            Console.WriteLine("Cannot find color for" + name);
+                            Console.WriteLine("Cannot find color for " + name);
                         }
                     }
                     if(blockProperties.Key == "facing_direction")
