@@ -864,6 +864,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("bee_nest_top", data);
                 case "beehive":
                     return GetTexture("beehive_top", data);
+                case "honey_block":
+                    return GetTexture("honey_top", data);
                 case "glowingobsidian":
                     return GetTexture("glowing_obsidian", data);
                 case "netherreactor":
