@@ -447,7 +447,7 @@ namespace Maploader.Renderer.Texture
                 case "composter":
                     return GetTexture("composter_bottom", 0);
                 case "campfire":
-                    return GetTexture("campfire_top_on", 0).Translate(0, 0, 16, 16);
+                    return GetTexture("campfire_log_lit", 0).Translate(0, 0, 16, 16);
                 case "ender_chest":
                     return GetTexture("ender_chest_inventory_top", data);
                 case "anvil":
