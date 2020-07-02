@@ -868,6 +868,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("glowing_obsidian", data);
                 case "netherreactor":
                     return GetTexture("reactor_core", data);
+                case "chain_command_block":
+                    return GetTexture("command_block_chain_front", data);
             }
 
             return null;
