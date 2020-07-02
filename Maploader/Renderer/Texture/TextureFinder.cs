@@ -20,7 +20,6 @@ namespace Maploader.Renderer.Texture
             {"minecraft:underwater_torch", true},
             {"minecraft:colored_torch_bp", true},
             {"minecraft:colored_torch_rg", true},
-            {"minecraft:light_block", true},
             {"minecraft:lever", true},
             {"minecraft:redstone_torch", true},
             {"minecraft:tripWire", true},
@@ -851,7 +850,7 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("coral_fan_hang_b", data);
                 case "coral_fan_hang3":
                     return GetTexture("coral_fan_hang_c", data);
-                    
+
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
                 case "grindstone":
