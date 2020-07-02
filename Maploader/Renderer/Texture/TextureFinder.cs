@@ -872,6 +872,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("reactor_core", data);
                 case "chain_command_block":
                     return GetTexture("command_block_chain_front", data);
+                case "repeating_command_block":
+                    return GetTexture("command_block_repeating_front", data);
             }
 
             return null;
