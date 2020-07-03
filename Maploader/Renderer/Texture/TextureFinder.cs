@@ -150,6 +150,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:nether_sprouts", true},
             {"minecraft:chain1", true},
             {"minecraft:chain2", true},
+            {"minecraft:warped_door", true},
+            {"minecraft:crimson_door", true},
+            {"minecraft:warped_wall_sign", true},
+            {"minecraft:crimson_wall_sign", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -821,6 +825,15 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("polished_blackstone_bricks", data);
                 case "polished_blackstone_brick_wall":
                     return GetTexture("polished_blackstone_bricks", data);
+
+                case "warped_door":
+                    return GetTexture("warped_door_top", data);
+                case "crimson_door":
+                    return GetTexture("crimson_door_top", data);
+                case "warped_wall_sign":
+                    return RenderWallSign(data, name.Replace("wall_", ""));
+                case "crimson_wall_sign":
+                    return RenderWallSign(data, name.Replace("wall_", ""));
             }
 
             return null;
