@@ -45,7 +45,7 @@ namespace Maploader.World
 
             var coord = CreateKey(x, y, z);
 
-            if (data.Data < 0)
+            if (data.Data.Count < 0)
                 Console.WriteLine();
 
             //if (data.Id == "minecraft:mob_spawner")

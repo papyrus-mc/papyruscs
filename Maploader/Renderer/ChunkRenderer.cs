@@ -251,6 +251,10 @@ namespace Maploader.Renderer
 
                 foreach (var block in blocksToRender)
                 {
+                    if(SkipSpecialBlockRender(block.Block))
+                    {
+                        continue;
+                    }
                     var textures =
                         textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z, block.Y);
                     if (textures == null)
@@ -340,6 +344,15 @@ namespace Maploader.Renderer
                     break;
                 }
             }
+        }
+
+        private static readonly List<string> SpecialBlockList = new List<string>
+        {
+            "minecraft:light_block"
+        };
+        private static bool SkipSpecialBlockRender (BlockData block)
+        {
+            return SpecialBlockList.Contains(block.Id);
         }
     }
 }

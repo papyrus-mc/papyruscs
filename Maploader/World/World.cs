@@ -309,8 +309,10 @@ namespace Maploader.World
                             int x = (position >> 8) & 0xF;
                             int y = position & 0xF;
                             int z = (position >> 4) & 0xF;
-
-                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, (blockData))
+                            
+                            var dictData = new Dictionary<string, Object>();
+                            dictData.Add("val", blockData);
+                            BlockData b = new BlockData(Table.Lookups[Table.CreateKey(blockId, 0)].name, dictData)
                             {
                                 Version = 0,
                             };
@@ -402,11 +404,12 @@ namespace Maploader.World
             }
         }
 
-        private static (string, int) GetNbtVal(MemoryStream ms)
+        private static (string, Dictionary<string, Object>) GetNbtVal(MemoryStream ms)
         {
-            int value = 0;
             string name = "";
             var nbt = new NbtReader(ms, false);
+            var dictParams = new Dictionary<string, Object>();
+            
             nbt.ReadToFollowing();
             if (!nbt.IsCompound)
                 throw new Exception("Could not read nbt");
@@ -414,24 +417,38 @@ namespace Maploader.World
             if (nbt.ReadToDescendant("name"))
             {
                 name = nbt.ReadValueAs<string>();
-            }
-            if (nbt.ReadToNextSibling("val"))
-            {
-                switch (nbt.TagType)
-                {
-                    case NbtTagType.Int:
-                        value = nbt.ReadValueAs<int>();
-                        break;
 
-                    case NbtTagType.Short:
-                        value = nbt.ReadValueAs<short>();
-                        break;
-                    case NbtTagType.Long:
-                        value = (int)nbt.ReadValueAs<long>();
-                        break;
-                    default:
-                        Console.WriteLine("could not comprehend val");
-                        break;
+                nbt.ReadToNextSibling();
+                while(nbt.TagType != NbtTagType.End)
+                {
+                    fNbt.Tags.NbtTag tag = nbt.ReadAsTag();
+                    switch(tag.Name)
+                    {
+                        case "version":
+                            continue;
+                        case "states":
+                                IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
+                                foreach(var subtag in enumTag)
+                                {
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit"))
+                                    {
+                                        int subtagvalue = GetTagValue(subtag);
+                                        dictParams.Add(subtag.Name, subtagvalue); 
+                                    }
+                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction"))
+                                    {
+                                        if(subtag.TagType == NbtTagType.String)
+                                        {
+                                            dictParams.Add(subtag.Name, subtag.StringValue); 
+                                        }
+                                    }
+                                }
+                            break;
+                        case "val":
+                            int value = GetTagValue(tag);
+                            dictParams.Add(tag.Name, value); 
+                            break;
+                    }
                 }
             }
 
@@ -440,7 +457,7 @@ namespace Maploader.World
                 nbt.ReadToFollowing();
             }
 
-            return (name, value);
+            return (name, dictParams);
 
         }
 
@@ -583,6 +600,27 @@ namespace Maploader.World
             }
 
             return ret;
+        }
+
+        private static int GetTagValue (fNbt.Tags.NbtTag tag)
+        {
+            switch (tag.TagType)
+            {
+                case NbtTagType.Byte:
+                    return tag.ByteValue;
+
+                case NbtTagType.Int:
+                    return tag.IntValue;
+
+                case NbtTagType.Short:
+                    return  tag.ShortValue;
+
+                case NbtTagType.Long:
+                    return  (int)tag.LongValue;
+
+                default:
+                    return 0;
+            }
         }
     }
 }
