@@ -2,18 +2,73 @@ Chat: [![Discord](https://img.shields.io/discord/569841820092203011.svg?logo=dis
 Windows: [![Build status](https://ci.appveyor.com/api/projects/status/tfspbbi72bx73qg8?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs) <br>
 Linux: [![Build status](https://ci.appveyor.com/api/projects/status/xo9ew31l49hayjcm?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs-ytqjm) <br>
 
+# Papyrus
+
+A Minecraft: Bedrock Edition map renderer.
+
+Papayrus renders a top-down map of every already explored chunk.
+It works on Windows and on Linux, and it outputs HTML and images suitable for displaying on the web.
+
+* [Intro](#intro)
+* [Setup](#setup)
+* [Usage](#usage)
+* [Building](#building)
+* [Contributing](#contribute-xor-support)
+* [What's new - the changelog](#changelog)
+* [Other notes](#other-notes)
+
+## Intro
+Papyrus is a tool to render Minecraft: Bedrock Edition (MCBE) worlds on the web.
+It's written in C# and powered by .NET Core.
+You can view an example [here](http://papyrus.gwsa.de/).
+
+There are several tools which work for Java Edition.
+MCBE worlds don't use the Anvil format like in the Java Edition.
+Mojang chose a [modified version](https://github.com/Mojang/leveldb-mcpe) of Google's [LevelDB](http://leveldb.org/) to save MCBE maps.
+Papyrus reads these worlds and assembles a render of every pre-generated chunk.
+
+
 ## Contribute xor support
-If you want to help improving Papyrus please consider forking the repository.
+If you want to help improving Papyrus please consider forking the repository, making your changes, and proposing a PR.
 
 Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.me/mjungnickelpapyrus)
 
+## Setup
+
+### Easy mode - Windows
+- Grab the Windows [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
+- Unpack the zip file.
+- Then follow the [usage instructions](#usage).
+
+### Easy mode - Linux
+- Grab the Linux [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
+- Make sure that your graphics libs are up-to-date.
+On Ubuntu/Debian, that looks like:
+```
+sudo apt-get update
+sudo apt-get install libgdiplus
+sudo apt-get install libc6-dev
+```
+- Make the `PapyrusCs` binary executable:
+```chmod +x PapyrusCs```
+- Then follow the [usage instructions](#usage).
+
+### Hard mode - build it yourself
+
+See the [building](#building) instructions.
 
 ## Usage
-For Linux: give the extracted PapyrusCs file execution rights! See installation notes above. 
 
-For Windows: you can now start the papyruscs.exe in interactive mode. Just start it, it will try to find your local minecraft maps.
+PapyrusCs is a command-line tool.
+Supported flags are shown here.
+`--world` and `--output` are required; the rest are optional.
 
 ```papyruscs --world "My World/db" --output "C:\papyrus"```
+
+On Windows, you can now start `papyruscs.exe` in interactive mode.
+Run without any arguments, and it will try to find your local minecraft maps.
+
+The rest of the parameters are listed if you run with `--help`:
 
 ```
 
@@ -101,7 +156,32 @@ Copyright (C) 2020 Markus Jungnickel
 
 ```
 
+
+## Building
+Papyrus runs on .NET Core 3.0+.
+First, make sure you have [.NET Core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0) on your development machine.
+
+To compile for Windows, either use a recent Visual Studio or run:
+```dotnet publish PapyrusCs -c Release --self-contained --runtime win-x64```
+
+To compile for Linux run:
+```dotnet publish PapyrusCs -c Debug --self-contained --runtime linux-x64```
+
+### Additional dependencies
+PapyrusCs depends on a few external libraries with some custom changes.
+The source for the modified versions is included in this repository.
+All needed dependencies are already included in this repository or automatically downloaded via NuGet.
+
+- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project used a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
+- [imageformats](https://github.com/dbrant/imageformats): This project uses a modified version of image formats TgaReader
+[license](https://github.com/mjungnickel18/papyruscs/blob/master/Imports/ImageFormats-std/license.md)
+- [leveldb-mcpe](https://github.com/Mojang/leveldb-mcpe): This project uses the leveldb native library for windows64 and linux64. [license](https://github.com/Mojang/leveldb-mcpe/blob/master/LICENSE)
+
+### Updating the textures
 The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
+
+
+## Changelog
 
 ## Version 0.5.0 - So many things
 Update to .NET Core 3.1
@@ -222,63 +302,12 @@ Example
 -f jpg -q 20
 ```
 
-## papyrus.cs
-Papyrus is a tool to render Minecraft: Bedrock Edition (from now on referenced as "MCBE") worlds using Leaflet. It is written in C# and powered by .NET Core 2.2.
-It currently runs only under windows, but support for linux is planned.
+## Other notes
 
-You can view an example [here](http://papyrus.gwsa.de/).
-
-## Introduction
-Since MCBE worlds don't use the Anvil format like in the Java Edition, but rather a by Mojang [modified version](https://github.com/Mojang/leveldb-mcpe) of Google's [LevelDB](http://leveldb.org/) to save, the goal of Papyrus is to read these worlds and assemble a render of every pre-generated chunk.
-
-## Features
-- Render a top-down map of every already explored chunk
-- Windows and Linux Support
-
-#### Planned
-
-- Isometric renders
-
-## Installation
-Otherwise, just grab one of the [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
-Just unpack the zip-file.
-
-### Linux
-Make sure that your graphics libs are up-to-date: (Syntax may vary in other distros) 
-```
-sudo apt-get update
-sudo apt-get install libgdiplus
-sudo apt-get install libc6-dev
-```
-
-And give PapyrusCs execution rights:
-```chmod +x PapyrusCs```
-
-For own compilation:
-Requires [.NET Core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0). You may need to install [additional dependencies](https://github.com/mjungnickel18/papyruscs#additional-dependencies).
-
-
-
-## Compilation
-To compile for windows use either Visual Studio or run:
-```dotnet publish PapyrusCs -c Release --self-contained --runtime win-x64```
-
-To compile for Linux run:
-```dotnet publish PapyrusCs -c Debug --self-contained --runtime linux-x64```
-
-## Additional dependencies
-- [level-db-sharp](https://github.com/meebey/leveldb-sharp): This project used a modified version of leveldb-sharp. [license](https://github.com/mjungnickel18/papyruscs/blob/master/leveldb-sharp-std/license.md)
-- [imageformats](https://github.com/dbrant/imageformats): This project uses a modified version of image formats TgaReader
-[license](https://github.com/mjungnickel18/papyruscs/blob/master/Imports/ImageFormats-std/license.md)
-- [leveldb-mcpe](https://github.com/Mojang/leveldb-mcpe): This project uses the leveldb native library for windows64 and linux64. [license](https://github.com/Mojang/leveldb-mcpe/blob/master/LICENSE)
-
-The source for the modified versions is included in this repository.
-All needed depencies are already included in this repository or automatically downloaded via NuGet.
-
-## Special thanks to...
+### Special thanks to...
 ... [clarkx86](https://github.com/clarkx86) for his team work and idea giving and his port in node.js.
 
-## Disclaimer
+### Disclaimer
 Papyrus is in no way affiliated with Mojang or Minecraft.
 
 Contact: [papyrus@gwsa.de](mailto:papyrus@gwsa.de?subject=GitHub%20Papyrus)
