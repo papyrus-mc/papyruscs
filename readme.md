@@ -38,6 +38,7 @@ Want to buy me a coffee (I love coffee)? [Donate via PayPal ♥](https://paypal.
 ### Easy mode - Windows
 - Grab the Windows [pre-built binaries](https://github.com/mjungnickel18/papyruscs/releases).
 - Unpack the zip file.
+- Optional: [update the textures](#updating-the-textures)
 - Then follow the [usage instructions](#usage).
 
 ### Easy mode - Linux
@@ -51,11 +52,20 @@ sudo apt-get install libc6-dev
 ```
 - Make the `PapyrusCs` binary executable:
 ```chmod +x PapyrusCs```
+- Optional: [update the textures](#updating-the-textures)
 - Then follow the [usage instructions](#usage).
 
 ### Hard mode - build it yourself
 
 See the [building](#building) instructions.
+
+### Updating the textures
+Papyrus comes with some of the required textures, but recent MCBE releases may have added more.
+You can update with a texture pack in order to generate everything just right.
+
+The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
+Extract `textures/terrain_texture.json` and `textures/blocks/*` from that zip.
+Wherever you unzipped Papyrus, replace its `textures/` directory with what you got from the resource pack.
 
 ## Usage
 
@@ -176,9 +186,6 @@ All needed dependencies are already included in this repository or automatically
 - [imageformats](https://github.com/dbrant/imageformats): This project uses a modified version of image formats TgaReader
 [license](https://github.com/mjungnickel18/papyruscs/blob/master/Imports/ImageFormats-std/license.md)
 - [leveldb-mcpe](https://github.com/Mojang/leveldb-mcpe): This project uses the leveldb native library for windows64 and linux64. [license](https://github.com/Mojang/leveldb-mcpe/blob/master/LICENSE)
-
-### Updating the textures
-The vanilla resource pack with the default textures can be downloaded from [here](https://aka.ms/resourcepacktemplate).
 
 
 ## Changelog
