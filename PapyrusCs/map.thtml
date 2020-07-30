@@ -271,7 +271,7 @@
                     runtimeLayer.setVisible(
                       runtimeLayer.metaLayerKey == layerKey ||
                       runtimeLayer.metaLayerKey == "players_" + layerKey.substr(0, 4)
-                    ); // show image layer and player layers for the dimension
+                    ); // show image layer, and player layer based on dimension
                   });
 
                   const oldFocusGroup = currentSelectedLayer.substr(0, 4);
@@ -365,12 +365,13 @@
 
       if (typeof(playersData) !== "undefined") {
         var playerFeatures = [[], [], []];
+        // array for each dimension
+
         for (var playerIndex in playersData.players) {
             var player = playersData.players[playerIndex];
 
-            if (!player.visible) {
-                continue;
-            }
+            if (!player.visible) { continue; }
+            // hide players not visible
 
             var style = new ol.style.Style({
                 text: new ol.style.Text({
@@ -392,6 +393,7 @@
             playerFeature.setStyle(style);
 
             playerFeatures[player.dimensionId].push(playerFeature);
+            // add to the correct array/layer for the dimension
         }
 
         for (var dimensionId = 0; dimensionId < 3; dimensionId++) {
@@ -404,7 +406,12 @@
           });
 
           vectorLayer.metaLayerKey = "players_dim" + dimensionId;
-          if (dimensionId != 0) { vectorLayer.values_.visible = false; }
+
+          if (dimensionId != 0) {
+            // initially display only overworld players
+            vectorLayer.values_.visible = false;
+          }
+
           map.addLayer(vectorLayer);
         }
       }
