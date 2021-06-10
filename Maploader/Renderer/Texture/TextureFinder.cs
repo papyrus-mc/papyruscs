@@ -1034,6 +1034,8 @@ namespace Maploader.Renderer.Texture
                 case "flowering_azalea":
                     return GetTexture("flowering_azalea_top", data);
 
+                case "lightning_rod":
+                    return RenderTripwireHook(data, "lightning_rod");
             }
 
             return null;
@@ -1220,22 +1222,30 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderTripwireHook(Dictionary<string, Object> data, string texture)
         {
+            string[] directionKeys = 
+            {
+                "facing_direction",
+                "direction",
+                "val"
+            };
+
             var t = GetTexture(texture);
             int dir = 2;
-            try
+            bool keyFound = false;
+
+            foreach(string key in directionKeys)
             {
-                dir = (int)data["direction"];
+                if(data.ContainsKey(key))
+                {
+                    dir = (int)data[key];
+                    keyFound = true;
+                    break;
+                }
             }
-            catch
+            
+            if(keyFound == false)
             {
-                try
-                {
-                    dir = (int)data["val"];
-                }
-                catch
-                {
-                    Console.WriteLine("Invalid Tripwire hook direction");
-                }
+                Console.WriteLine("Invalid " + texture +" direction");
             }
 
             switch (dir)
