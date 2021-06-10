@@ -163,6 +163,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:crimson_door", true},
             {"minecraft:warped_wall_sign", true},
             {"minecraft:crimson_wall_sign", true},
+
+            // Caves & Cliffs Update: Part 1
+            {"minecraft:glow_item_frame", true},
+            {"minecraft:lightning_rod", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -951,6 +955,85 @@ namespace Maploader.Renderer.Texture
                     return RenderWallSign(data, name.Replace("wall_", ""));
                 case "crimson_wall_sign":
                     return RenderWallSign(data, name.Replace("wall_", ""));
+
+
+                // Caves & Cliffs Update: Part 1 (1.17)
+                case "waxed_oxidized_cut_copper_stairs":
+                case "oxidized_cut_copper_stairs":
+                case "oxidized_cut_copper_slab":
+                case "waxed_oxidized_cut_copper_slab":
+                case "waxed_oxidized_cut_copper":
+                    return GetTexture("oxidized_cut_copper", data);
+                case "waxed_weathered_cut_copper_stairs":
+                case "weathered_cut_copper_stairs":
+                case "weathered_cut_copper_slab":
+                case "waxed_weathered_cut_copper_slab":
+                case "waxed_weathered_cut_copper":
+                    return GetTexture("weathered_cut_copper", data);
+                case "waxed_exposed_cut_copper_stairs":
+                case "exposed_cut_copper_stairs":
+                case "exposed_cut_copper_slab":
+                case "waxed_exposed_cut_copper_slab":
+                case "waxed_exposed_cut_copper":
+                    return GetTexture("exposed_cut_copper", data);
+                case "waxed_cut_copper_stairs":
+                case "cut_copper_stairs":
+                case "cut_copper_slab":
+                case "waxed_cut_copper_slab":
+                case "waxed_cut_copper":
+                    return GetTexture("cut_copper", data);
+                case "waxed_oxidized_copper":
+                    return GetTexture("oxidized_copper", data);
+                case "waxed_weathered_copper":
+                    return GetTexture("weathered_copper", data);
+                case "waxed_exposed_copper":
+                    return GetTexture("exposed_copper", data);
+                case "waxed_copper":
+                    return GetTexture("copper_block", data);
+
+                case "cobbled_deepslate_wall":
+                    return GetTexture("cobbled_deepslate", data).Translate(5, 5, 6, 6);
+                case "deepslate_tile_wall":
+                    return GetTexture("deepslate_tiles", data).Translate(5, 5, 6, 6);
+                case "polished_deepslate_wall":
+                    return GetTexture("polished_deepslate", data).Translate(5, 5, 6, 6);
+                case "deepslate_brick_wall":
+                    return GetTexture("deepslate_bricks", data).Translate(5, 5, 6, 6);
+                case "cobbled_deepslate_stairs":
+                    return GetTexture("cobbled_deepslate", data);
+                case "deepslate_tile_stairs":
+                    return GetTexture("deepslate_tiles", data);
+                case "polished_deepslate_stairs":
+                    return GetTexture("polished_deepslate", data);
+                case "deepslate_brick_slab":
+                    return GetTexture("deepslate_bricks", data);
+                case "deepslate_tile_slab":
+                    return GetTexture("deepslate_tiles", data);
+                case "polished_deepslate_slab":
+                    return GetTexture("polished_deepslate", data);
+                case "cobbled_deepslate_slab":
+                    return GetTexture("cobbled_deepslate", data);
+                case "deepslate_brick_stairs":
+                    return GetTexture("deepslate_bricks", data);
+                case "infested_deepslate":
+                    return GetTexture("deepslate", data);
+                
+                
+                case "glow_frame":
+                    return GetTexture("glow_item_frame", data);
+                case "small_dripleaf_block":
+                    return GetTexture("small_dripleaf_top", data);
+                case "moss_carpet":
+                    return GetTexture("moss_block", data);
+                case "big_dripleaf":
+                    return GetTexture("big_dripleaf_top", data);
+                case "pointed_dripstone":
+                    return GetTexture("pointed_dripstone_tip", data); // TODO fix up/down orientation
+                case "azalea":
+                    return GetTexture("azalea_leaves", data);
+                case "flowering_azalea":
+                    return GetTexture("flowering_azalea_top", data);
+
             }
 
             return null;
