@@ -1045,8 +1045,7 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("flowering_azalea_top", data);
 
                 case "lightning_rod":
-                    Rect[] translate = {new Rect(0,0,4,16), new Rect(6,1,4,15)};
-                    return RenderTripwireHook(data, "lightning_rod", translate);
+                    return GetTexture("lightning_rod", data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
             }
 
             return null;
