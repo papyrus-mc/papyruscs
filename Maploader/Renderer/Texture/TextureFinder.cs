@@ -167,6 +167,16 @@ namespace Maploader.Renderer.Texture
             // Caves & Cliffs Update: Part 1
             {"minecraft:glow_item_frame", true},
             {"minecraft:lightning_rod", true},
+            {"minecraft:small_dripleaf_block", true},
+            {"minecraft:big_dripleaf", true},
+            {"minecraft:pointed_dripstone", true},
+            {"minecraft:hanging_roots", true},
+            {"minecraft:amethyst_cluster", true},
+            {"minecraft:budding_amethyst", true},
+            {"minecraft:large_amethyst_bud", true},
+            {"minecraft:medium_amethyst_bud", true},
+            {"minecraft:small_amethyst_bud", true}
+
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -1035,7 +1045,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("flowering_azalea_top", data);
 
                 case "lightning_rod":
-                    return RenderTripwireHook(data, "lightning_rod");
+                    Rect[] translate = {new Rect(0,0,4,16), new Rect(6,1,4,15)};
+                    return RenderTripwireHook(data, "lightning_rod", translate);
             }
 
             return null;
@@ -1220,7 +1231,7 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderTripwireHook(Dictionary<string, Object> data, string texture)
+        private TextureStack RenderTripwireHook(Dictionary<string, Object> data, string texture, Rect[] translate = null)
         {
             string[] directionKeys = 
             {
@@ -1230,6 +1241,19 @@ namespace Maploader.Renderer.Texture
             };
 
             var t = GetTexture(texture);
+
+            if(null != translate)
+            {
+                try
+                {
+                    t.Translate(translate[0], translate[1]);
+                }
+                catch (System.Exception)
+                {
+                    Console.WriteLine("Invalid translate parameters for " + texture);
+                }
+            }
+
             int dir = 2;
             bool keyFound = false;
 
