@@ -182,7 +182,8 @@ namespace Maploader.Renderer.Texture
             {"minecraft:deepslate_brick_wall", true},
             {"minecraft:azalea_leaves", true},
             {"minecraft:tinted_glass", true},
-            {"minecraft:glow_lichen", true}
+            {"minecraft:glow_lichen", true},
+            {"minecraft:glow_frame", true}
             
         };
 
@@ -1040,7 +1041,7 @@ namespace Maploader.Renderer.Texture
                 
                 
                 case "glow_frame":
-                    return GetTexture("glow_item_frame", data);
+                    return RenderGlowItemFrame(data);
                 case "small_dripleaf_block":
                     return GetTexture("small_dripleaf_top", data);
                 case "moss_carpet":
@@ -1414,6 +1415,8 @@ namespace Maploader.Renderer.Texture
                 {
                     tex.Translate(new Rect(11, 0, 16, 1), new Rect(0, 0, 0, 0));
 
+                    // Orientation data is not necessarily true
+                    // But case values are the right orientation bits for side-facing item
                     switch(dir)
                     {
                         case 4:
@@ -1459,6 +1462,41 @@ namespace Maploader.Renderer.Texture
             }
 
             return GetTexture(filename, data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
+        }
+
+        private TextureStack RenderGlowItemFrame (Dictionary<string, Object> data)
+        {
+            string filename = "glow_item_frame";
+
+            try
+            {
+                int dir = (int)data["facing_direction"];
+
+                if((dir != 0) && (dir != 1))
+                {
+                    var t = GetTexture(filename, 0).Translate(
+                        new Rect(0, 7, 14, 2),
+                        new Rect(1, 0, 14, 2)
+                    );
+                    switch(dir)
+                    {
+                    case 2:
+                        return t.Rotate(RotateFlip.Rotate180FlipNone);
+                    case 3:
+                        return t.Rotate(RotateFlip.RotateNoneFlipNone);
+                    case 4:
+                        return t.Rotate(RotateFlip.Rotate90FlipNone);
+                    case 5:
+                        return t.Rotate(RotateFlip.Rotate270FlipNone);
+                    }
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid " + filename +" direction");
+            }
+
+            return GetTexture(filename, data);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
