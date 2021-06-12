@@ -1400,7 +1400,8 @@ namespace Maploader.Renderer.Texture
             }
             catch {}
 
-            return GetTexture("pointed_dripstone_tip", 0);
+            int usingPointingDownTex = 0;
+            return GetTexture("pointed_dripstone_tip", usingPointingDownTex);
         }
 
         private TextureStack RenderGlowLichen (Dictionary<string, Object> data)
