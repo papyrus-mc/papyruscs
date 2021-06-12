@@ -1044,7 +1044,7 @@ namespace Maploader.Renderer.Texture
                 case "glow_frame":
                     return RenderGlowItemFrame(data);
                 case "small_dripleaf_block":
-                    return GetTexture("small_dripleaf_top", data);
+                    return RenderSmallDripleaf(data);
                 case "moss_carpet":
                     return GetTexture("moss_block", data);
                 case "big_dripleaf":
@@ -1543,6 +1543,27 @@ namespace Maploader.Renderer.Texture
             catch 
             {
                 Console.WriteLine("Invalid " + filename +" direction");
+            }
+
+            return t;
+        }
+
+        private TextureStack RenderSmallDripleaf (Dictionary<string, Object> data)
+        {
+            int dir = (int)data["direction"];
+
+            TextureStack t = GetTexture("small_dripleaf_top", data);
+
+            switch (dir)
+            {
+                case 0:
+                    return t.Rotate(RotateFlip.Rotate180FlipNone);
+                case 1:
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
+                case 2:
+                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
+                case 3:
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
             }
 
             return t;
