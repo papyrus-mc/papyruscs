@@ -181,7 +181,8 @@ namespace Maploader.Renderer.Texture
             {"minecraft:polished_deepslate_wall", true},
             {"minecraft:deepslate_brick_wall", true},
             {"minecraft:azalea_leaves", true},
-            {"minecraft:tinted_glass", true}
+            {"minecraft:tinted_glass", true},
+            {"minecraft:glow_lichen", true}
             
         };
 
@@ -1055,6 +1056,9 @@ namespace Maploader.Renderer.Texture
 
                 case "lightning_rod":
                     return GetTexture("lightning_rod", data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
+
+                case "glow_lichen":
+                    return RenderGlowLichen(data);
             }
 
             return null;
@@ -1389,6 +1393,52 @@ namespace Maploader.Renderer.Texture
             catch {}
 
             return GetTexture("pointed_dripstone_tip", 0);
+        }
+
+        private TextureStack RenderGlowLichen (Dictionary<string, Object> data)
+        {
+            // TODO fix render depending on orientation data.
+            // For now not displaying when side facing and I'm fine with that.
+            // Will still display when top/bottom facing.
+            string filename = "glow_lichen";
+            try
+            {
+                int dir = (int)data["multi_face_direction_bits"];
+                TextureStack tex = GetTexture(filename, 0);
+                TextureTranslation trans = null;
+                RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+
+                // value of 1 is top-facing
+                // value of 2 is bottom-facing
+                if((dir != 1) && (dir != 2))
+                {
+                    tex.Translate(new Rect(11, 0, 16, 1), new Rect(0, 0, 0, 0));
+
+                    switch(dir)
+                    {
+                        case 4:
+                            rot = RotateFlip.Rotate90FlipNone;
+                        break;
+                        case 8:
+                            rot = RotateFlip.Rotate270FlipNone;
+                        break;
+                        case 16:
+                            rot = RotateFlip.Rotate180FlipNone;
+                        break;
+                        case 32:
+
+                        break;
+                    }
+                }
+
+                return tex;
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid " + filename +" direction");
+            }
+
+            return GetTexture(filename, 0);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
