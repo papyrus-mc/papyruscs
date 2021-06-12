@@ -1459,9 +1459,20 @@ namespace Maploader.Renderer.Texture
             {
                 int dir = (int)data["facing_direction"];
 
-                if((dir == 0) || (dir == 1))
+                switch(dir)
                 {
-                    return GetTexture(filename, data).Translate(new Rect(0,0,4,4), new Rect(6,6,4,4));
+                    case 0:
+                        // intentional fall-through
+                    case 1:
+                        return GetTexture(filename, data).Translate(new Rect(0,0,4,4), new Rect(6,6,4,4));
+                    case 2:
+                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.RotateNoneFlipNone);
+                    case 3:
+                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.Rotate180FlipNone);
+                    case 4:
+                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.Rotate270FlipNone);
+                    case 5:
+                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.Rotate90FlipNone);
                 }
             }
             catch 
