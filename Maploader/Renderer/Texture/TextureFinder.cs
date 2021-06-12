@@ -175,8 +175,14 @@ namespace Maploader.Renderer.Texture
             {"minecraft:budding_amethyst", true},
             {"minecraft:large_amethyst_bud", true},
             {"minecraft:medium_amethyst_bud", true},
-            {"minecraft:small_amethyst_bud", true}
-
+            {"minecraft:small_amethyst_bud", true},
+            {"minecraft:cobbled_deepslate_wall", true},
+            {"minecraft:deepslate_tile_wall", true},
+            {"minecraft:polished_deepslate_wall", true},
+            {"minecraft:deepslate_brick_wall", true},
+            {"minecraft:azalea_leaves", true},
+            {"minecraft:tinted_glass", true}
+            
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -1027,6 +1033,9 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("deepslate_bricks", data);
                 case "infested_deepslate":
                     return GetTexture("deepslate", data);
+
+                case "lit_deepslate_redstone_ore":
+                    return GetTexture("deepslate_redstone_ore", data);
                 
                 
                 case "glow_frame":
@@ -1038,7 +1047,7 @@ namespace Maploader.Renderer.Texture
                 case "big_dripleaf":
                     return GetTexture("big_dripleaf_top", data);
                 case "pointed_dripstone":
-                    return GetTexture("pointed_dripstone_tip", data); // TODO fix up/down orientation
+                    return RenderDripstone(data);
                 case "azalea":
                     return GetTexture("azalea_leaves", data);
                 case "flowering_azalea":
@@ -1355,6 +1364,31 @@ namespace Maploader.Renderer.Texture
             catch {}
 
             return GetTexture("lever", data, trans, rot);
+        }
+
+        private TextureStack RenderDripstone (Dictionary<string, Object> data)
+        {
+            string filename = "pointed_dripstone_tip";
+            try
+            {
+                int hanging = (int)data["hanging"];
+                // Thickness data is useless. Only render tip
+                //string thickness = (string)data["dripstone_thickness"];
+
+                RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+                if(hanging != 0)
+                {
+                    rot = RotateFlip.Rotate180FlipNone;
+                }
+                
+                TextureTranslation trans = new TextureTranslation(new Rect(4, 0, 7, 11), new Rect(4, 2, 7, 11));
+
+                int usePointingUpTex = 1;
+                return GetTexture(filename, usePointingUpTex, trans, rot);
+            }
+            catch {}
+
+            return GetTexture("pointed_dripstone_tip", 0);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();

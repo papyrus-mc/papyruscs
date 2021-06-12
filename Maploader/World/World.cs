@@ -442,6 +442,15 @@ namespace Maploader.World
                                             dictParams.Add(subtag.Name, subtag.StringValue); 
                                         }
                                     }
+                                    if(subtag.Name == "dripstone_thickness")
+                                    {
+                                        dictParams.Add(subtag.Name, subtag.StringValue); 
+                                    }
+                                    if(subtag.Name == "hanging")
+                                    {
+                                        int subtagvalue = GetTagValue(subtag);
+                                        dictParams.Add(subtag.Name, subtagvalue); 
+                                    }
                                 }
                             break;
                         case "val":
