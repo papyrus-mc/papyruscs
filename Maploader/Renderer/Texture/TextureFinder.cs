@@ -1055,7 +1055,7 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("flowering_azalea_top", data);
 
                 case "lightning_rod":
-                    return GetTexture("lightning_rod", data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
+                    return RenderLightningRod(data);
 
                 case "glow_lichen":
                     return RenderGlowLichen(data);
@@ -1439,6 +1439,26 @@ namespace Maploader.Renderer.Texture
             }
 
             return GetTexture(filename, 0);
+        }
+
+        private TextureStack RenderLightningRod (Dictionary<string, Object> data)
+        {
+            string filename = "lightning_rod";
+            try
+            {
+                int dir = (int)data["facing_direction"];
+
+                if((dir == 0) || (dir == 1))
+                {
+                    return GetTexture(filename, data).Translate(new Rect(0,12,4,4), new Rect(6,6,4,4));
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid " + filename +" direction");
+            }
+
+            return GetTexture(filename, data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
