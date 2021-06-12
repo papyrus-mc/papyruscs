@@ -181,6 +181,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:polished_deepslate_wall", true},
             {"minecraft:deepslate_brick_wall", true},
             {"minecraft:azalea_leaves", true},
+            {"minecraft:azalea_leaves_flowered", true},
             {"minecraft:tinted_glass", true},
             {"minecraft:glow_lichen", true},
             {"minecraft:glow_frame", true}
@@ -1051,7 +1052,7 @@ namespace Maploader.Renderer.Texture
                 case "pointed_dripstone":
                     return RenderDripstone(data);
                 case "azalea":
-                    return GetTexture("azalea_leaves", data);
+                    return GetTexture("azalea_top", data);
                 case "flowering_azalea":
                     return GetTexture("flowering_azalea_top", data);
 
