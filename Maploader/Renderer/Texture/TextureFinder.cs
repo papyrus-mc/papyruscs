@@ -1061,6 +1061,15 @@ namespace Maploader.Renderer.Texture
 
                 case "glow_lichen":
                     return RenderGlowLichen(data);
+
+                case "amethyst_cluster":
+                    return RenderAmethystCluster(data);
+                case "large_amethyst_bud":
+                    return GetTexture("large_amethyst_bud", data);
+                case "medium_amethyst_bud":
+                    return GetTexture("medium_amethyst_bud", data);
+                case "small_amethyst_bud":
+                    return GetTexture("small_amethyst_bud", data);
             }
 
             return null;
@@ -1498,6 +1507,34 @@ namespace Maploader.Renderer.Texture
             }
 
             return GetTexture(filename, data);
+        }
+
+        private TextureStack RenderAmethystCluster (Dictionary<string, Object> data)
+        {
+            string filename = "amethyst_cluster";
+            TextureStack t = GetTexture(filename, data);
+            try
+            {
+                int dir = (int)data["facing_direction"];
+
+                switch(dir)
+                {
+                case 2:
+                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
+                case 3:
+                    return t.Rotate(RotateFlip.Rotate180FlipNone);
+                case 4:
+                    return t.Rotate(RotateFlip.Rotate270FlipNone);
+                case 5:
+                    return t.Rotate(RotateFlip.Rotate90FlipNone);
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid " + filename +" direction");
+            }
+
+            return t;
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
