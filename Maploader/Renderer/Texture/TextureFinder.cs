@@ -1063,13 +1063,10 @@ namespace Maploader.Renderer.Texture
                     return RenderGlowLichen(data);
 
                 case "amethyst_cluster":
-                    return RenderAmethystCluster(data);
                 case "large_amethyst_bud":
-                    return GetTexture("large_amethyst_bud", data);
                 case "medium_amethyst_bud":
-                    return GetTexture("medium_amethyst_bud", data);
                 case "small_amethyst_bud":
-                    return GetTexture("small_amethyst_bud", data);
+                    return RenderAmethystCluster(name, data);
             }
 
             return null;
@@ -1463,7 +1460,7 @@ namespace Maploader.Renderer.Texture
 
                 if((dir == 0) || (dir == 1))
                 {
-                    return GetTexture(filename, data).Translate(new Rect(0,12,4,4), new Rect(6,6,4,4));
+                    return GetTexture(filename, data).Translate(new Rect(0,0,4,4), new Rect(6,6,4,4));
                 }
             }
             catch 
@@ -1509,9 +1506,8 @@ namespace Maploader.Renderer.Texture
             return GetTexture(filename, data);
         }
 
-        private TextureStack RenderAmethystCluster (Dictionary<string, Object> data)
+        private TextureStack RenderAmethystCluster (string filename, Dictionary<string, Object> data)
         {
-            string filename = "amethyst_cluster";
             TextureStack t = GetTexture(filename, data);
             try
             {
@@ -1519,6 +1515,20 @@ namespace Maploader.Renderer.Texture
 
                 switch(dir)
                 {
+                case 0:
+                    t.Rotate(RotateFlip.Rotate180FlipNone);
+                    goto case 1;
+                case 1:
+                    switch(filename)
+                    {
+                    case "small_amethyst_bud":
+                        return t.Translate(new Rect(3,11, 10, 5), new Rect(3, 5, 10, 5));
+                    case "medium_amethyst_bud":
+                        return t.Translate(new Rect(3,9, 10, 7), new Rect(3, 4, 10, 5));
+                    case "large_amethyst_bud":
+                        return t.Translate(new Rect(2,6, 12, 10), new Rect(2, 2, 12, 10));
+                    }
+                    break;
                 case 2:
                     return t.Rotate(RotateFlip.RotateNoneFlipNone);
                 case 3:
