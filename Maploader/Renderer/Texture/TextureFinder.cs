@@ -980,25 +980,33 @@ namespace Maploader.Renderer.Texture
                 case "waxed_oxidized_cut_copper_stairs":
                 case "oxidized_cut_copper_stairs":
                 case "oxidized_cut_copper_slab":
+                case "oxidized_double_cut_copper_slab":
                 case "waxed_oxidized_cut_copper_slab":
+                case "waxed_oxidized_double_cut_copper_slab":
                 case "waxed_oxidized_cut_copper":
                     return GetTexture("oxidized_cut_copper", data);
                 case "waxed_weathered_cut_copper_stairs":
                 case "weathered_cut_copper_stairs":
                 case "weathered_cut_copper_slab":
+                case "weathered_double_cut_copper_slab":
                 case "waxed_weathered_cut_copper_slab":
+                case "waxed_weathered_double_cut_copper_slab":
                 case "waxed_weathered_cut_copper":
                     return GetTexture("weathered_cut_copper", data);
                 case "waxed_exposed_cut_copper_stairs":
                 case "exposed_cut_copper_stairs":
                 case "exposed_cut_copper_slab":
+                case "exposed_double_cut_copper_slab":
                 case "waxed_exposed_cut_copper_slab":
+                case "waxed_exposed_double_cut_copper_slab":
                 case "waxed_exposed_cut_copper":
                     return GetTexture("exposed_cut_copper", data);
                 case "waxed_cut_copper_stairs":
                 case "cut_copper_stairs":
                 case "cut_copper_slab":
+                case "double_cut_copper_slab":
                 case "waxed_cut_copper_slab":
+                case "waxed_double_cut_copper_slab":
                 case "waxed_cut_copper":
                     return GetTexture("cut_copper", data);
                 case "waxed_oxidized_copper":
@@ -1019,20 +1027,20 @@ namespace Maploader.Renderer.Texture
                 case "deepslate_brick_wall":
                     return GetTexture("deepslate_bricks", data).Translate(5, 5, 6, 6);
                 case "cobbled_deepslate_stairs":
+                case "cobbled_deepslate_slab":
+                case "cobbled_deepslate_double_slab":
                     return GetTexture("cobbled_deepslate", data);
                 case "deepslate_tile_stairs":
+                case "deepslate_tile_slab":
+                case "deepslate_tile_double_slab":
                     return GetTexture("deepslate_tiles", data);
                 case "polished_deepslate_stairs":
+                case "polished_deepslate_slab":
+                case "polished_deepslate_double_slab":
                     return GetTexture("polished_deepslate", data);
                 case "deepslate_brick_slab":
-                    return GetTexture("deepslate_bricks", data);
-                case "deepslate_tile_slab":
-                    return GetTexture("deepslate_tiles", data);
-                case "polished_deepslate_slab":
-                    return GetTexture("polished_deepslate", data);
-                case "cobbled_deepslate_slab":
-                    return GetTexture("cobbled_deepslate", data);
                 case "deepslate_brick_stairs":
+                case "deepslate_brick_double_slab":
                     return GetTexture("deepslate_bricks", data);
                 case "infested_deepslate":
                     return GetTexture("deepslate", data);
@@ -1384,8 +1392,6 @@ namespace Maploader.Renderer.Texture
             try
             {
                 int hanging = (int)data["hanging"];
-                // Thickness data is useless. Only render tip
-                //string thickness = (string)data["dripstone_thickness"];
 
                 RotateFlip rot = RotateFlip.RotateNoneFlipNone;
                 if(hanging != 0)
