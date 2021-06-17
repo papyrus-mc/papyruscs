@@ -184,7 +184,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:azalea_leaves_flowered", true},
             {"minecraft:tinted_glass", true},
             {"minecraft:glow_lichen", true},
-            {"minecraft:glow_frame", true}
+            {"minecraft:glow_frame", true},
+            {"minecraft:cave_vines", true},
+            {"minecraft:cave_vines_head_with_berries", true},
+            {"minecraft:cave_vines_body_with_berries", true}
             
         };
 
@@ -1075,6 +1078,12 @@ namespace Maploader.Renderer.Texture
                 case "medium_amethyst_bud":
                 case "small_amethyst_bud":
                     return RenderAmethystCluster(name, data);
+
+                case "cave_vines":
+                    return GetTexture("cave_vines_head", data);
+                case "cave_vines_head_with_berries":
+                case "cave_vines_body_with_berries":
+                    return GetTexture("cave_vines_head", 1);
             }
 
             return null;
