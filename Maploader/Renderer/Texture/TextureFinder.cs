@@ -211,6 +211,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:crimson_trapdoor", true},
             // {"minecraft:tinted_glass", true},  // better effect without
             {"minecraft:glow_frame", true},
+            {"minecraft:sea_pickle", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -483,9 +484,9 @@ namespace Maploader.Renderer.Texture
                 case "unpowered_repeater":
                     return GetTexture("repeater_up", data);
                 case "daylight_detector":
-                    return GetTexture("daylight_detector_top", data);
+                    return GetTexture("daylight_detector_top", 0);
                 case "daylight_detector_inverted":
-                    return GetTexture("daylight_detector_top", data);
+                    return GetTexture("daylight_detector_top", 1);
                 case "dispenser":
                 {
                     int legacyData = LegacyGetOldDataValue(data);
@@ -1200,9 +1201,17 @@ namespace Maploader.Renderer.Texture
                 case "glow_frame":
                     // TODO: fix
                     return RenderFrame(data, "sign");
+                case "lantern":
+                    // TODO: support ceiling
+                    return RenderLantern(data, "lantern");
+                case "soul_lantern":
+                    return RenderLantern(data, "soul_lantern");
+                case "sea_pickle":
+                    // TODO: number of pickles
+                    return GetTexture("sea_pickle", data).Translate(
+                        new Rect(0, 0, 4, 11), // 11 might not be the right number
+                        new Rect(6, 5, 4, 11));
 
-                // TODO: fix lantern/soul lantern textures
-                // TODO: fix pickle textures
                 // TODO: fix string textures
             }
 
@@ -1498,6 +1507,13 @@ namespace Maploader.Renderer.Texture
         private TextureStack RenderWall (Dictionary<string, Object> data, string name)
         {
             return GetTexture(name, data).Translate(5, 5, 6, 6);
+        }
+
+        private TextureStack RenderLantern (Dictionary<string, Object> data, string name)
+        {
+            return GetTexture(name, data).Translate(
+                        new Rect(0, 0, 6, 9),
+                        new Rect(5, 7, 6, 9));
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
