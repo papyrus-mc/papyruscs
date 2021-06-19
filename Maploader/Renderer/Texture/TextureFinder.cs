@@ -166,6 +166,9 @@ namespace Maploader.Renderer.Texture
 
             // 1.17
             {"minecraft:amethyst_cluster", true},
+            {"minecraft:large_amethyst_bud", true},
+            {"minecraft:medium_amethyst_bud", true},
+            {"minecraft:small_amethyst_bud", true},
             {"minecraft:azalea_leaves", true},
             {"minecraft:azalea_leaves_flowered", true},
             {"minecraft:big_dripleaf", true},
@@ -183,7 +186,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:deepslate_tile_wall", true},
             {"minecraft:pointed_dripstone", true},
             {"minecraft:polished_deepslate_wall", true},
-            {"minecraft:small_dripleaf_top", true},
+            {"minecraft:small_dripleaf_block", true},
             {"minecraft:warped_button", true},
             {"minecraft:warped_fence", true},
             {"minecraft:warped_fence_gate", true},
@@ -196,6 +199,18 @@ namespace Maploader.Renderer.Texture
             {"minecraft:blackstone_wall", true},
             {"minecraft:polished_blackstone_wall", true},
             {"minecraft:polished_blackstone_brick_wall", true},
+            {"minecraft:cobbled_deepslate_wall", true},
+            {"minecraft:nether_brick_fence", true},
+            {"minecraft:coral", true},
+            {"minecraft:coral_fan", true},
+            {"minecraft:coral_fan_dead", true},
+            {"minecraft:coral_fan_hang", true},
+            {"minecraft:coral_fan_hang2", true},
+            {"minecraft:coral_fan_hang3", true},
+            {"minecraft:warped_trapdoor", true},
+            {"minecraft:crimson_trapdoor", true},
+            // {"minecraft:tinted_glass", true},  // better effect without
+            {"minecraft:glow_frame", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -263,6 +278,7 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("cake_top",0);
                 case "bed":
                 {
+                    // TODO: fix bed textures and head/foot
                     int legacyData = LegacyGetOldDataValue(data);
                     switch (legacyData & 0xF7)
                     {
@@ -945,8 +961,12 @@ namespace Maploader.Renderer.Texture
                 case "warped_nylium":
                     return GetTexture("warped_nylium_top", data);
                 case "crimson_stem":
+                    return GetTexture("crimson_log_top", data);
+                case "stripped_crimson_stem":
                     return GetTexture("stripped_crimson_stem_top", data);
                 case "warped_stem":
+                    return GetTexture("warped_stem_top", data);
+                case "stripped_warped_stem":
                     return GetTexture("stripped_warped_stem_top", data);
                 case "warped_fungus":
                     return GetTexture("nether_shroom_blue", data);
@@ -1008,7 +1028,7 @@ namespace Maploader.Renderer.Texture
                 case "bookshelf":
                     return GetTexture("planks");
                 case "chain":
-                    // TODO: rotation
+                    // TODO: rotation, centring
                     return GetTexture("chain1");
                 case "calcite":
                     return GetTexture("calcite");
@@ -1124,7 +1144,7 @@ namespace Maploader.Renderer.Texture
                 case "warped_fence_gate":
                     return RenderFenceGate(data, "warped_planks");
                 case "warped_hyphae":
-                    return GetTexture("warped_log_side");
+                    return GetTexture("warped_stem_side");
                 case "warped_pressure_plate":
                     return GetTexture("warped_planks", 0).Translate(1, 1, 14, 14);
                 case "warped_standing_sign":
@@ -1177,6 +1197,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("weathered_cut_copper");
                 case "weathered_double_cut_copper_slab":
                     return GetTexture("weathered_cut_copper");
+                case "glow_frame":
+                    // TODO: fix
+                    return RenderFrame(data, "sign");
+
+                // TODO: fix lantern/soul lantern textures
+                // TODO: fix pickle textures
+                // TODO: fix string textures
             }
 
             return null;
