@@ -163,6 +163,39 @@ namespace Maploader.Renderer.Texture
             {"minecraft:crimson_door", true},
             {"minecraft:warped_wall_sign", true},
             {"minecraft:crimson_wall_sign", true},
+
+            // 1.17
+            {"minecraft:amethyst_cluster", true},
+            {"minecraft:azalea_leaves", true},
+            {"minecraft:azalea_leaves_flowered", true},
+            {"minecraft:big_dripleaf", true},
+            {"minecraft:cave_vines", true},
+            {"minecraft:cave_vines_body_with_berries", true},
+            {"minecraft:cave_vines_head_with_berries", true},
+            {"minecraft:chain", true},
+            {"minecraft:chorus_plant", true},
+            {"minecraft:crimson_button", true},
+            {"minecraft:crimson_fence", true},
+            {"minecraft:crimson_fence_gate", true},
+            {"minecraft:crimson_pressure_plate", true},
+            {"minecraft:crimson_standing_sign", true},
+            {"minecraft:deepslate_brick_wall", true},
+            {"minecraft:deepslate_tile_wall", true},
+            {"minecraft:pointed_dripstone", true},
+            {"minecraft:polished_deepslate_wall", true},
+            {"minecraft:small_dripleaf_top", true},
+            {"minecraft:warped_button", true},
+            {"minecraft:warped_fence", true},
+            {"minecraft:warped_fence_gate", true},
+            {"minecraft:warped_pressure_plate", true},
+            {"minecraft:warped_standing_sign", true},
+            {"minecraft:weeping_vines", true},
+            {"minecraft:cocoa", true},
+            {"minecraft:lightning_rod", true},
+            {"minecraft:polished_blackstone_button", true},
+            {"minecraft:blackstone_wall", true},
+            {"minecraft:polished_blackstone_wall", true},
+            {"minecraft:polished_blackstone_brick_wall", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -200,9 +233,10 @@ namespace Maploader.Renderer.Texture
         {
             // For debugging purposes
 
-            if (Debug)
+            if (name != "grass")
             {
-                Console.WriteLine($"{x} {z} {y}: {name},{data}");
+                String datastring = string.Join(", ", data.Select(kvp => kvp.Key + ": " + kvp.Value.ToString()));
+                Console.WriteLine($"{x} {z} {y}: {name}, {datastring}");
             }
 
 
@@ -210,13 +244,14 @@ namespace Maploader.Renderer.Texture
             switch (name)
             {
                 case "cobblestone_wall":
-                    return GetTexture("cobblestone_wall", data).Translate(5, 5, 6, 6);
+                    return RenderWall(data, "cobblestone_wall");
 
                 case "bubble_column":
-                    return "textures/blocks/water_placeholder";
                 case "water":
+                case "flowing_water":
                     return "textures/blocks/water_placeholder";
                 case "lava":
+                case "flowing_lava":
                     return "textures/blocks/lava_placeholder";
                 case "fire":
                     return "textures/blocks/fire_0_placeholder";
@@ -482,6 +517,7 @@ namespace Maploader.Renderer.Texture
                 }
 
                 case "smoker":
+                case "lit_smoker":
                     return GetTexture("smoker_top");
                 case "barrel":
                 {
@@ -535,17 +571,17 @@ namespace Maploader.Renderer.Texture
                     return RenderFrame(data, "sign");
 
                 case "standing_sign":
-                    return RenderSign("sign");
+                    return RenderSign(data, "sign");
                 case "spruce_standing_sign":
-                    return RenderSign("spruce_sign");
+                    return RenderSign(data, "spruce_sign");
                 case "birch_standing_sign":
-                    return RenderSign("birch_sign");
+                    return RenderSign(data, "birch_sign");
                 case "jungle_standing_sign":
-                    return RenderSign("acacia_sign");
+                    return RenderSign(data, "jungle_sign");
                 case "acacia_standing_sign":
-                    return RenderSign("jungle_sign");
+                    return RenderSign(data, "acacia_sign");
                 case "darkoak_standing_sign":
-                    return RenderSign("darkoak_sign");
+                    return RenderSign(data, "darkoak_sign");
 
                 case "fence_gate":
                     return RenderFenceGate(data, "planks");
@@ -622,11 +658,14 @@ namespace Maploader.Renderer.Texture
                 case "stained_hardened_clay":
                     return GetTexture("stained_clay", data);
 
-
-
-
                 case "end_portal_frame":
-                    return GetTexture("endframe_top");
+                    RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+                    switch (LegacyGetOldDataValue(data)) {
+                        case 1: rot = RotateFlip.Rotate90FlipNone; break;
+                        case 2: rot = RotateFlip.Rotate180FlipNone; break;
+                        case 3: rot = RotateFlip.Rotate270FlipNone; break;
+                    }
+                    return GetTexture("endframe_top", 0, null, rot);
 
                 case "wooden_door":
                     return GetTexture("door_upper");
@@ -659,7 +698,7 @@ namespace Maploader.Renderer.Texture
                     return RenderButton(data, "jungle_planks");
                 case "wall_banner":
                 case "standing_banner":
-                    return RenderSign("sign");
+                    return RenderSign(data, "sign");
                 case "tripWire":
                     return GetTexture("trip_wire", data);
                 case "tripwire_hook":
@@ -674,6 +713,8 @@ namespace Maploader.Renderer.Texture
                 case "birch_wall_sign":
                 case "jungle_wall_sign":
                 case "acacia_wall_sign":
+                case "warped_wall_sign":
+                case "crimson_wall_sign":
                     return RenderWallSign(data, name.Replace("wall_", ""));
 
                 case "melon_block":
@@ -709,9 +750,10 @@ namespace Maploader.Renderer.Texture
                     return RenderPiston(data, "sticky");
                 case "jukebox":
                     return GetTexture("jukebox_top", data);
-                case "stonecutter_block":
                 case "stonecutter":
                     return GetTexture("stonecutter_top", data);
+                case "stonecutter_block":
+                    return GetTexture("stonecutter2_top", data);
                 case "loom":
                     return GetTexture("loom_top", data);
                 case "smithing_table":
@@ -927,30 +969,214 @@ namespace Maploader.Renderer.Texture
                 case "blackstone_stairs":
                     return GetTexture("blackstone_top", data);
                 case "blackstone_wall":
-                    return GetTexture("blackstone_top", data);
+                    return RenderWall(data, "blackstone_top");
 
                 case "polished_blackstone_slab":
                     return GetTexture("polished_blackstone", data);
                 case "polished_blackstone_stairs":
                     return GetTexture("polished_blackstone", data);
                 case "polished_blackstone_wall":
-                    return GetTexture("polished_blackstone", data);
+                    return RenderWall(data, "polished_blackstone");
 
                 case "polished_blackstone_brick_slab":
                     return GetTexture("polished_blackstone_bricks", data);
                 case "polished_blackstone_brick_stairs":
                     return GetTexture("polished_blackstone_bricks", data);
                 case "polished_blackstone_brick_wall":
-                    return GetTexture("polished_blackstone_bricks", data);
+                    return RenderWall(data, "polished_blackstone_bricks");
 
                 case "warped_door":
                     return GetTexture("warped_door_top", data);
                 case "crimson_door":
                     return GetTexture("crimson_door_top", data);
-                case "warped_wall_sign":
-                    return RenderWallSign(data, name.Replace("wall_", ""));
-                case "crimson_wall_sign":
-                    return RenderWallSign(data, name.Replace("wall_", ""));
+
+                // 1.17 + 1.16 fixes
+                case "ancient_debris":
+                    return GetTexture("ancient_debris_top");
+                case "azalea":
+                    return GetTexture("azalea_top");
+                case "beacon":
+                    // TODO: add shell + base
+                    return GetTexture("beacon");
+                case "big_dripleaf":
+                    return GetTexture("big_dripleaf_top");
+                case "blackstone_double_slab":
+                    return GetTexture("blackstone");
+                case "blast_furnace":
+                case "lit_blast_furnace":
+                    return GetTexture("blast_furnace_top");
+                case "bookshelf":
+                    return GetTexture("planks");
+                case "chain":
+                    // TODO: rotation
+                    return GetTexture("chain1");
+                case "calcite":
+                    return GetTexture("calcite");
+                case "cave_vines":
+                case "cave_vines_body_with_berries":
+                case "cave_vines_head_with_berries":
+                    // TODO: separate out and fix
+                    return GetTexture("cave_vines_body");
+                case "chorus_flower":
+                    return GetTexture("chorus_flower");
+                case "cobbled_deepslate_double_slab":
+                case "cobbled_deepslate_slab":
+                case "cobbled_deepslate_stairs":
+                    return GetTexture("cobbled_deepslate");
+                case "cobbled_deepslate_wall":
+                    return RenderWall(data, "cobbled_deepslate");
+                case "crimson_button":
+                    return RenderButton(data, "crimson_planks");
+                case "crimson_double_slab":
+                case "crimson_slab":
+                case "crimson_stairs":
+                    return GetTexture("crimson_planks");
+                case "crimson_fence":
+                    return GetTexture("crimson_planks", data, new TextureTranslation(
+                            new Rect(5, 5, 6, 6),
+                            new Rect(0, 0, 16, 16)));
+                case "crimson_fence_gate":
+                    return RenderFenceGate(data, "crimson_planks");
+                case "crimson_hyphae":
+                    return GetTexture("crimson_log_side");
+                case "crimson_pressure_plate":
+                    return GetTexture("crimson_planks", 0).Translate(1, 1, 14, 14);
+                case "crimson_standing_sign":
+                    return RenderSign(data, "crimson_sign");
+                case "cut_copper_slab":
+                case "cut_copper_stairs":
+                case "double_cut_copper_slab":
+                    return GetTexture("cut_copper");
+                case "deepslate":
+                    return GetTexture("deepslate_top");
+                case "deepslate_brick_double_slab":
+                case "deepslate_brick_slab":
+                case "deepslate_brick_stairs":
+                    return GetTexture("deepslate_bricks");
+                case "deepslate_brick_wall":
+                    return RenderWall(data, "deepslate_bricks");
+                case "deepslate_tile_double_slab":
+                case "deepslate_tile_slab":
+                case "deepslate_tile_stairs":
+                    return GetTexture("deepslate_tiles");
+                case "deepslate_tile_wall":
+                    return RenderWall(data, "deepslate_tiles");
+                case "exposed_cut_copper_slab":
+                case "exposed_cut_copper_stairs":
+                case "exposed_double_cut_copper_slab":
+                    return GetTexture("exposed_cut_copper");
+                case "flowering_azalea":
+                    return GetTexture("flowering_azalea_top");
+                case "infested_deepslate":
+                    return GetTexture("deepslate_top");
+                case "lava_cauldron":
+                    // TODO: add lava
+                    return GetTexture("cauldron_top");
+                case "lit_deepslate_redstone_ore":
+                    return GetTexture("deepslate_redstone_ore");
+                case "lodestone":
+                    return GetTexture("lodestone_top");
+                case "moss_carpet":
+                case "moss_block":
+                    return GetTexture("moss_block");
+                case "oxidized_cut_copper_slab":
+                case "oxidized_cut_copper_stairs":
+                case "oxidized_double_cut_copper_slab":
+                    return GetTexture("oxidized_cut_copper");
+                case "pointed_dripstone":
+                    return GetTexture("pointed_dripstone_base", data);
+                case "polished_blackstone_button":
+                    return RenderButton(data, "polished_blackstone");
+                case "polished_blackstone_double_slab":
+                    return GetTexture("polished_blackstone");
+                case "polished_blackstone_pressure_plate":
+                    return GetTexture("polished_blackstone", 0).Translate(1, 1, 14, 14);
+                case "polished_deepslate_double_slab":
+                case "polished_deepslate_slab":
+                case "polished_deepslate_stairs":
+                    return GetTexture("polished_deepslate");
+                case "polished_deepslate_wall":
+                    return RenderWall(data, "polished_deepslate");
+                case "polished_blackstone_brick_double_slab":
+                    return GetTexture("polished_blackstone_bricks");
+                case "respawn_anchor":
+                    return GetTexture("respawn_anchor_top").Translate(0, 0, 16, 16);
+                case "small_dripleaf_block":
+                    return GetTexture("small_dripleaf_top");
+                case "soul_campfire":
+                    return GetTexture("soul_campfire_log_lit", 0).Translate(0, 0, 16, 16);
+                case "stripped_crimson_hyphae":
+                    return GetTexture("stripped_crimson_stem_side");
+                case "stripped_warped_hyphae":
+                    return GetTexture("stripped_warped_stem_side");
+                case "target":
+                    return GetTexture("target_top");
+                case "warped_button":
+                    return RenderButton(data, "warped_planks");
+                case "warped_double_slab":
+                case "warped_slab":
+                case "warped_stairs":
+                    return GetTexture("warped_planks");
+                case "warped_fence":
+                    return GetTexture("warped_planks", data, new TextureTranslation(
+                            new Rect(5, 5, 6, 6),
+                            new Rect(0, 0, 16, 16)));
+                case "warped_fence_gate":
+                    return RenderFenceGate(data, "warped_planks");
+                case "warped_hyphae":
+                    return GetTexture("warped_log_side");
+                case "warped_pressure_plate":
+                    return GetTexture("warped_planks", 0).Translate(1, 1, 14, 14);
+                case "warped_standing_sign":
+                    return RenderSign(data, "warped_sign");
+                case "weeping_vines":
+                    return GetTexture("weeping_vines_base");
+                case "waxed_copper":
+                    return GetTexture("copper_block");
+                case "waxed_cut_copper":
+                    return GetTexture("cut_copper");
+                case "waxed_cut_copper_slab":
+                    return GetTexture("cut_copper");
+                case "waxed_cut_copper_stairs":
+                    return GetTexture("cut_copper");
+                case "waxed_double_cut_copper_slab":
+                    return GetTexture("cut_copper");
+                case "waxed_exposed_copper":
+                    return GetTexture("exposed_copper");
+                case "waxed_exposed_cut_copper":
+                    return GetTexture("exposed_cut_copper");
+                case "waxed_exposed_cut_copper_slab":
+                    return GetTexture("exposed_cut_copper");
+                case "waxed_exposed_cut_copper_stairs":
+                    return GetTexture("exposed_cut_copper");
+                case "waxed_exposed_double_cut_copper_slab":
+                    return GetTexture("exposed_cut_copper");
+                case "waxed_oxidized_copper":
+                    return GetTexture("oxidized_copper");
+                case "waxed_oxidized_cut_copper":
+                    return GetTexture("oxidized_cut_copper");
+                case "waxed_oxidized_cut_copper_slab":
+                    return GetTexture("oxidized_cut_copper");
+                case "waxed_oxidized_cut_copper_stairs":
+                    return GetTexture("oxidized_cut_copper");
+                case "waxed_oxidized_double_cut_copper_slab":
+                    return GetTexture("oxidized_cut_copper");
+                case "waxed_weathered_copper":
+                    return GetTexture("weathered_copper");
+                case "waxed_weathered_cut_copper":
+                    return GetTexture("weathered_cut_copper");
+                case "waxed_weathered_cut_copper_slab":
+                    return GetTexture("weathered_cut_copper");
+                case "waxed_weathered_cut_copper_stairs":
+                    return GetTexture("weathered_cut_copper");
+                case "waxed_weathered_double_cut_copper_slab":
+                    return GetTexture("weathered_cut_copper");
+                case "weathered_cut_copper_slab":
+                    return GetTexture("weathered_cut_copper");
+                case "weathered_cut_copper_stairs":
+                    return GetTexture("weathered_cut_copper");
+                case "weathered_double_cut_copper_slab":
+                    return GetTexture("weathered_cut_copper");
             }
 
             return null;
@@ -1003,8 +1229,9 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderSign(string texture)
+        private TextureStack RenderSign(Dictionary<string, Object> data, string texture)
         {
+            // TODO: rotation
             return GetTexture(texture, 0).Translate(
                 new Rect(0, 7, 14, 2),
                 new Rect(1, 7, 14, 2)
@@ -1239,6 +1466,11 @@ namespace Maploader.Renderer.Texture
             catch {}
 
             return GetTexture("lever", data, trans, rot);
+        }
+
+        private TextureStack RenderWall (Dictionary<string, Object> data, string name)
+        {
+            return GetTexture(name, data).Translate(5, 5, 6, 6);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
