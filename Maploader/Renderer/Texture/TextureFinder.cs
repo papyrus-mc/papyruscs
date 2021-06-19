@@ -249,7 +249,7 @@ namespace Maploader.Renderer.Texture
         {
             // For debugging purposes
 
-            if (name != "grass")
+            if (Debug)
             {
                 String datastring = string.Join(", ", data.Select(kvp => kvp.Key + ": " + kvp.Value.ToString()));
                 Console.WriteLine($"{x} {z} {y}: {name}, {datastring}");
