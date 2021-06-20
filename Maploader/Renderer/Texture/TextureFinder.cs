@@ -1407,43 +1407,23 @@ namespace Maploader.Renderer.Texture
                 case 0:
                     return GetTexture(texture, 0)
                                .Translate(
-                                    new Rect(0, 7, 10, 2),
-                                    new Rect(7, 0, 10, 2))
-                               .Rotate(RotateFlip.Rotate90FlipNone)
+                                    new Rect(0, 7, 2, 9))
                            + GetTexture(texture, 0)
                                .Translate(
-                                    new Rect(0, 7, 10, 2),
-                                    new Rect(7, 12, 10, 2))
-                               .Rotate(RotateFlip.Rotate90FlipNone);
+                                    new Rect(14, 7, 2, 9));
                     case 2:
                     return GetTexture(texture, 0)
                                .Translate(
-                                    new Rect(0, 7, 10, 2),
-                                    new Rect(7, 0, 10, 2))
-                               .Rotate(RotateFlip.Rotate270FlipNone)
+                                    new Rect(0, 0, 2, 9))
                            + GetTexture(texture, 0)
                                .Translate(
-                                    new Rect(0, 7, 10, 2),
-                                    new Rect(7, 12, 10, 2))
-                               .Rotate(RotateFlip.Rotate270FlipNone);
+                                    new Rect(14, 0, 2, 9));
                     case 1:
-                    return GetTexture(texture, 0)
-                               .Translate(
-                                    new Rect(0, 7, 10, 2),
-                                    new Rect(7, 0, 10, 2))
-                               .Rotate(RotateFlip.Rotate180FlipNone)
-                            + GetTexture(texture, 0)
-                                .Translate(
-                                    new Rect(0, 7, 10, 2),
-                                    new Rect(7, 12, 10, 2))
-                                .Rotate(RotateFlip.Rotate180FlipNone);
+                        return GetTexture(texture, 0).Translate(new Rect(0, 0, 9, 2))
+                                + GetTexture(texture, 0).Translate(new Rect(0, 14, 9, 2));
                     case 3:
-                    return GetTexture(texture, 0).Translate(
-                                new Rect(0, 7, 10, 2),
-                                new Rect(7, 0, 10, 2))
-                           + GetTexture(texture, 0).Translate(
-                                new Rect(0, 7, 10, 2),
-                                new Rect(7, 12, 10, 2));
+                        return GetTexture(texture, 0).Translate(new Rect(7, 0, 9, 2))
+                            + GetTexture(texture, 0).Translate(new Rect(7, 14, 9, 2));
                 }
             }
             else
@@ -1455,7 +1435,7 @@ namespace Maploader.Renderer.Texture
                         return GetTexture(texture, 0).Translate(new Rect(0, 7, 16, 2));
                     case 1:
                     case 3:
-                        return GetTexture(texture, 0).Translate(new Rect(0, 7, 16, 2)).Rotate(RotateFlip.Rotate90FlipNone);
+                        return GetTexture(texture, 0).Translate(new Rect(7, 0, 2, 16));
                 }
             }
 
