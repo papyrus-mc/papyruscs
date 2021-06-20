@@ -435,7 +435,7 @@ namespace Maploader.World
                                         int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
                                     }
-                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction"))
+                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type"))
                                     {
                                         if(subtag.TagType == NbtTagType.String)
                                         {

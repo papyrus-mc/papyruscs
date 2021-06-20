@@ -1855,6 +1855,24 @@ namespace Maploader.Renderer.Texture
             {"undyed",     16},
         };
 
+        static private readonly Dictionary<string, int> CobblestoneWallIndexes = new Dictionary<string, int>()
+        {
+            {"cobblestone",       0},
+            {"mossy_cobblestone", 1},
+            {"granite",           2},
+            {"diorite",           3},
+            {"andesite",          4},
+            {"sandstone",         5},
+            {"brick",             6},
+            {"stone_brick",       7},
+            {"mossy_stone_brick", 8},
+            {"nether_brick",      9},
+            {"end_brick",        10},
+            {"prismarine",       11},
+            {"red_sandstone",    12},
+            {"red_nether_brick", 13},
+        };
+
         private TextureStack GetTexture(string name, int data = 0, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
         {
             var dictData = new Dictionary<string, Object>();
@@ -1892,6 +1910,20 @@ namespace Maploader.Renderer.Texture
                         catch
                         {
                             Console.WriteLine("Cannot find color for " + name);
+                        }
+                    }
+                    if(blockProperties.Key == "wall_block_type")
+                    {
+                        int wallBlockIndex = CobblestoneWallIndexes.First().Value;
+                        try
+                        {
+                            string wallBlock = (string)data["wall_block_type"];
+                            wallBlockIndex = CobblestoneWallIndexes[wallBlock];
+                            texturePath = texture.Subtextures[wallBlockIndex].Path;
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Cannot find wall type for " + name);
                         }
                     }
                     if(blockProperties.Key == "facing_direction")
