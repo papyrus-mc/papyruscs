@@ -430,12 +430,12 @@ namespace Maploader.World
                                 IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
                                 foreach(var subtag in enumTag)
                                 {
-                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits"))
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits") || (subtag.Name == "stripped_bit") || (subtag.Name == "wall_post_bit"))
                                     {
                                         int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
                                     }
-                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type"))
+                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type") || (subtag.Name == "wood_type") || (subtag.Name == "pillar_axis") || (subtag.Name == "old_log_type") || (subtag.Name == "new_log_type") || subtag.Name.StartsWith("wall_connection_type_"))
                                     {
                                         if(subtag.TagType == NbtTagType.String)
                                         {
