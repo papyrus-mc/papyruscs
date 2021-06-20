@@ -1278,27 +1278,25 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderButton(Dictionary<string, Object> data, string texture)
         {
-            int legacyData = LegacyGetOldDataValue(data);
+            int direction = (int)data["facing_direction"];
             var t = GetTexture(texture, 0).Translate(
                 new Rect(6, 6, 4, 3),
                 new Rect(6, 0, 4, 3)
             );
-            if ((legacyData & 8) == 8)
+            // if ((direction & 8) == 8)
+            // {
+            //     // Per https://minecraft.gamepedia.com/Button : 0x8	If this bit is set, the button is currently active
+            //     //  Active/Unactive, on the scale rendering, doesn't matter, so remove that bit
+            //     direction = direction ^ 8;
+            // }
+            switch (direction)
             {
-                // Per https://minecraft.gamepedia.com/Button : 0x8	If this bit is set, the button is currently active
-                //  Active/Unactive, on the scale rendering, doesn't matter, so remove that bit
-                legacyData = legacyData ^ 8;
-            }
-            switch (legacyData)
-            {
-                
                 case 1:
                     return t.Translate(
                         new Rect(6, 6, 4, 4),
                         new Rect(6, 6, 4, 4));
                 case 2:
                     return t.Rotate(RotateFlip.Rotate180FlipNone);
-              
                 case 3:
                     return t.Rotate(RotateFlip.RotateNoneFlipNone);
                 case 4:
@@ -1313,67 +1311,66 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderFenceGate(Dictionary<string, Object> data, string texture)
         {
-            int legacyData = LegacyGetOldDataValue(data);
-            if ((legacyData & 8) == 8)
+            int direction = (int)data["direction"];
+            int open_bit = (int)data["open_bit"];
+
+            if (open_bit != 0)
             {
-                // Per https://minecraft.gamepedia.com/Fence_Gate : 0x8	If 1, the gate is lowered by three pixels, to accommodate attaching more cleanly with normal and mossy Cobblestone Walls
-                //  3 pixels, on the scale rendering, doesn't matter, so remove that bit
-                legacyData = legacyData ^ 8;
-            }
-            switch (legacyData)
+                switch (direction)
             {
                 case 0:
-                case 2:
-                    return GetTexture(texture, 0).Translate(new Rect(0, 6, 16, 4));
-                case 1:
-                case 3:
-                    return GetTexture(texture, 0).Translate(new Rect(0, 6, 16, 4)).Rotate(RotateFlip.Rotate90FlipNone);
-
-                case 4:
                     return GetTexture(texture, 0)
                                .Translate(
                                    new Rect(0, 6, 10, 4),
                                    new Rect(6, 0, 10, 4))
                                .Rotate(RotateFlip.Rotate90FlipNone)
-
                            + GetTexture(texture, 0)
                                .Translate(
                                    new Rect(0, 6, 10, 4),
                                    new Rect(6, 12, 10, 4))
                                .Rotate(RotateFlip.Rotate90FlipNone);
-                case 6:
+                    case 2:
                     return GetTexture(texture, 0)
                                .Translate(
                                    new Rect(0, 6, 10, 4),
                                    new Rect(6, 0, 10, 4))
                                .Rotate(RotateFlip.Rotate270FlipNone)
-
                            + GetTexture(texture, 0)
                                .Translate(
                                    new Rect(0, 6, 10, 4),
                                    new Rect(6, 12, 10, 4))
                                .Rotate(RotateFlip.Rotate270FlipNone);
-                case 5:
+                    case 1:
                     return GetTexture(texture, 0)
                                .Translate(
                                 new Rect(0, 6, 10, 4),
                                 new Rect(6, 0, 10, 4))
                                .Rotate(RotateFlip.Rotate180FlipNone)
-
                             + GetTexture(texture, 0)
                                 .Translate(
                                 new Rect(0, 6, 10, 4),
                                 new Rect(6, 12, 10, 4))
                                 .Rotate(RotateFlip.Rotate180FlipNone);
-                        
-                case 7:
+                    case 3:
                     return GetTexture(texture, 0).Translate(
                                new Rect(0, 6, 10, 4),
                                new Rect(6, 0, 10, 4))
                            + GetTexture(texture, 0).Translate(
                                new Rect(0, 6, 10, 4),
                                new Rect(6, 12, 10, 4));
-
+                }
+            }
+            else
+            {
+                switch (direction)
+                {
+                    case 0:
+                    case 2:
+                        return GetTexture(texture, 0).Translate(new Rect(0, 6, 16, 4));
+                    case 1:
+                    case 3:
+                        return GetTexture(texture, 0).Translate(new Rect(0, 6, 16, 4)).Rotate(RotateFlip.Rotate90FlipNone);
+                }
             }
 
             return null;
