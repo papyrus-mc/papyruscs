@@ -1219,7 +1219,11 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderWallSign(Dictionary<string, Object> data, string texture)
+        private TextureStack RenderWallSign (Dictionary<string, Object> data, string texture)
+        {
+            return RenderWallSign(texture, data);
+        }
+        private TextureStack RenderWallSign (string texture, Dictionary<string, Object> data)
         {
             var t = GetTexture(texture, 0).Translate(
                 new Rect(0, 7, 14, 2),
@@ -1244,8 +1248,11 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-
-        private TextureStack RenderRail(int data, string texture)
+        private TextureStack RenderRail (int data, string texture)
+        {
+            return RenderRail(texture, data);
+        }
+        private TextureStack RenderRail (string texture, int data)
         {
             switch (data)
             {
@@ -1266,7 +1273,11 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderSign(Dictionary<string, Object> data, string texture)
+        private TextureStack RenderSign (Dictionary<string, Object> data, string texture)
+        {
+            return RenderSign(texture, data);
+        }
+        private TextureStack RenderSign(string texture, Dictionary<string, Object> data)
         {
             // TODO: rotation
             return GetTexture(texture, 0).Translate(
@@ -1275,7 +1286,11 @@ namespace Maploader.Renderer.Texture
             );
         }
 
-        private TextureStack RenderButton(Dictionary<string, Object> data, string texture)
+        private TextureStack RenderButton (Dictionary<string, Object> data, string texture)
+        {
+            return RenderItemFrame(texture, data);
+        }
+        private TextureStack RenderButton(string texture, Dictionary<string, Object> data)
         {
             int direction = (int)data["facing_direction"];
             var t = GetTexture(texture, 0).Translate(
@@ -1308,7 +1323,11 @@ namespace Maploader.Renderer.Texture
             }
         }
 
-        private TextureStack RenderFenceGate(Dictionary<string, Object> data, string texture)
+        private TextureStack RenderFenceGate (Dictionary<string, Object> data, string texture)
+        {
+            return RenderFenceGate(texture, data);
+        }
+        private TextureStack RenderFenceGate (string texture, Dictionary<string, Object> data)
         {
             int direction = (int)data["direction"];
             int open_bit = (int)data["open_bit"];
@@ -1433,6 +1452,10 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderPiston (Dictionary<string, Object> data, string prefix)
         {
+            return RenderPiston(prefix, data);
+        }
+        private TextureStack RenderPiston (string prefix, Dictionary<string, Object> data)
+        {
             try
             {
                 int dir = (int)data["facing_direction"];
@@ -1448,6 +1471,7 @@ namespace Maploader.Renderer.Texture
 
             return GetTexture("piston_side", data);
         }
+
         private TextureStack RenderLever (Dictionary<string, Object> data)
         {
             RotateFlip rot = RotateFlip.RotateNoneFlipNone;
@@ -1502,14 +1526,22 @@ namespace Maploader.Renderer.Texture
             return GetTexture("lever", data, trans, rot);
         }
 
-        private TextureStack RenderWall (Dictionary<string, Object> data, string name)
+        private TextureStack RenderWall (Dictionary<string, Object> data, string texture)
         {
-            return GetTexture(name, data).Translate(5, 5, 6, 6);
+            return RenderWall(texture, data);
+        }
+        private TextureStack RenderWall (string texture, Dictionary<string, Object> data)
+        {
+            return GetTexture(texture, data).Translate(5, 5, 6, 6);
         }
 
-        private TextureStack RenderLantern (Dictionary<string, Object> data, string name)
+        private TextureStack RenderLantern (Dictionary<string, Object> data, string texture)
         {
-            return GetTexture(name, data).Translate(
+            return RenderLantern(texture, data);
+        }
+        private TextureStack RenderLantern (string texture, Dictionary<string, Object> data)
+        {
+            return GetTexture(texture, data).Translate(
                         new Rect(0, 0, 6, 9),
                         new Rect(5, 7, 6, 9));
         }
@@ -1617,7 +1649,11 @@ namespace Maploader.Renderer.Texture
             return GetTexture(filename, data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
         }
 
-        private TextureStack RenderItemFrame (Dictionary<string, Object> data, string filename)
+        private TextureStack RenderItemFrame (Dictionary<string, Object> data, string texture)
+        {
+            return RenderItemFrame(texture, data);
+        }
+        private TextureStack RenderItemFrame (string texture, Dictionary<string, Object> data)
         {
             try
             {
@@ -1625,7 +1661,7 @@ namespace Maploader.Renderer.Texture
 
                 if((dir != 0) && (dir != 1))
                 {
-                    var t = GetTexture(filename, 0).Translate(
+                    var t = GetTexture(texture, 0).Translate(
                         new Rect(0, 7, 14, 2),
                         new Rect(1, 0, 14, 2)
                     );
@@ -1644,15 +1680,19 @@ namespace Maploader.Renderer.Texture
             }
             catch 
             {
-                Console.WriteLine("Invalid " + filename +" direction");
+                Console.WriteLine("Invalid " + texture + " direction");
             }
 
-            return GetTexture(filename, data);
+            return GetTexture(texture, data);
         }
 
-        private TextureStack RenderAmethystCluster (string filename, Dictionary<string, Object> data)
+        private TextureStack RenderAmethystCluster (Dictionary<string, Object> data, string texture)
         {
-            TextureStack t = GetTexture(filename, data);
+            return RenderAmethystCluster(texture, data);
+        }
+        private TextureStack RenderAmethystCluster (string texture, Dictionary<string, Object> data)
+        {
+            TextureStack t = GetTexture(texture, data);
             try
             {
                 int dir = (int)data["facing_direction"];
@@ -1663,7 +1703,7 @@ namespace Maploader.Renderer.Texture
                     t.Rotate(RotateFlip.Rotate180FlipNone);
                     goto case 1;
                 case 1:
-                    switch(filename)
+                    switch(texture)
                     {
                     case "small_amethyst_bud":
                         return t.Translate(new Rect(3,11, 10, 5), new Rect(3, 5, 10, 5));
@@ -1685,7 +1725,7 @@ namespace Maploader.Renderer.Texture
             }
             catch 
             {
-                Console.WriteLine("Invalid " + filename +" direction");
+                Console.WriteLine("Invalid " + texture + " direction");
             }
 
             return t;
@@ -1712,13 +1752,13 @@ namespace Maploader.Renderer.Texture
             return t;
         }
 
-        private TextureStack RenderPressurePlate (Dictionary<string, Object> data, string name)
+        private TextureStack RenderPressurePlate (Dictionary<string, Object> data, string texture)
         {
-            return RenderPressurePlate(name, data);
+            return RenderPressurePlate(texture, data);
         }
-        private TextureStack RenderPressurePlate (string name, Dictionary<string, Object> data)
+        private TextureStack RenderPressurePlate (string texture, Dictionary<string, Object> data)
         {
-            return GetTexture(name).Translate(1, 1, 14, 14);
+            return GetTexture(texture).Translate(1, 1, 14, 14);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
