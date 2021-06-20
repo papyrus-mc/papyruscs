@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -590,7 +590,7 @@ namespace Maploader.Renderer.Texture
                     ;
 
                 case "frame":
-                    return RenderFrame(data, "sign");
+                    return RenderItemFrame(data, "itemframe_background");
 
                 case "standing_sign":
                     return RenderSign(data, "sign");
@@ -1184,7 +1184,7 @@ namespace Maploader.Renderer.Texture
                 
                 
                 case "glow_frame":
-                    return RenderGlowItemFrame(data);
+                    return RenderItemFrame(data, "glow_item_frame");
                 case "small_dripleaf_block":
                     return RenderSmallDripleaf(data);
                 case "moss_carpet":
@@ -1274,27 +1274,6 @@ namespace Maploader.Renderer.Texture
                 new Rect(0, 7, 14, 2),
                 new Rect(1, 7, 14, 2)
             );
-        }
-
-        private TextureStack RenderFrame(Dictionary<string, Object> data, string texture)
-        {
-            var t = GetTexture(texture, 0).Translate(
-                new Rect(0, 7, 14, 2),
-                new Rect(1, 0, 14, 2)
-            );
-            switch (LegacyGetOldDataValue(data))
-            {
-                case 0:
-                    return t.Rotate(RotateFlip.Rotate270FlipNone);
-                case 1:
-                    return t.Rotate(RotateFlip.Rotate90FlipNone);
-                case 3:
-                    return t.Rotate(RotateFlip.Rotate180FlipNone);
-                case 2:
-                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
-            }
-
-            return t;
         }
 
         private TextureStack RenderButton(Dictionary<string, Object> data, string texture)
@@ -1642,10 +1621,8 @@ namespace Maploader.Renderer.Texture
             return GetTexture(filename, data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
         }
 
-        private TextureStack RenderGlowItemFrame (Dictionary<string, Object> data)
+        private TextureStack RenderItemFrame (Dictionary<string, Object> data, string filename)
         {
-            string filename = "glow_item_frame";
-
             try
             {
                 int dir = (int)data["facing_direction"];
