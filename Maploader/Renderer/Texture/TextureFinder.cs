@@ -570,24 +570,23 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("cactus_top", data).Translate(1, 1, 14, 14);
 
                 case "dark_oak_pressure_plate":
-                    return GetTexture("dark_oak_planks", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("dark_oak_planks", data);
                 case "birch_pressure_plate":
-                    return GetTexture("birch_planks", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("birch_planks", data);
                 case "jungle_pressure_plate":
-                    return GetTexture("jungle_planks", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("jungle_planks", data);
                 case "acacia_pressure_plate":
-                    return GetTexture("acacia_planks", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("acacia_planks", data);
                 case "wooden_pressure_plate":
-                    return GetTexture("planks", data).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("planks", data);
                 case "spruce_pressure_plate":
-                    return GetTexture("spruce_planks", data).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("spruce_planks", data);
                 case "light_weighted_pressure_plate":
-                    return GetTexture("gold_block", data).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("gold_block", data);
                 case "heavy_weighted_pressure_plate":
-                    return GetTexture("iron_block", data).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("iron_block", data);
                 case "stone_pressure_plate":
-                    return GetTexture("stone", data).Translate(1, 1, 14, 14);
-                    ;
+                    return RenderPressurePlate("stone", data);
 
                 case "frame":
                     return RenderItemFrame(data, "itemframe_background");
@@ -1051,7 +1050,7 @@ namespace Maploader.Renderer.Texture
                 case "crimson_hyphae":
                     return GetTexture("crimson_log_side");
                 case "crimson_pressure_plate":
-                    return GetTexture("crimson_planks", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("crimson_planks", data);
                 case "crimson_standing_sign":
                     return RenderSign(data, "crimson_sign");
                 case "lava_cauldron":
@@ -1064,7 +1063,7 @@ namespace Maploader.Renderer.Texture
                 case "polished_blackstone_double_slab":
                     return GetTexture("polished_blackstone");
                 case "polished_blackstone_pressure_plate":
-                    return GetTexture("polished_blackstone", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("polished_blackstone", data);
                 case "polished_blackstone_brick_double_slab":
                     return GetTexture("polished_blackstone_bricks");
                 case "respawn_anchor":
@@ -1092,7 +1091,7 @@ namespace Maploader.Renderer.Texture
                 case "warped_hyphae":
                     return GetTexture("warped_stem_side");
                 case "warped_pressure_plate":
-                    return GetTexture("warped_planks", 0).Translate(1, 1, 14, 14);
+                    return RenderPressurePlate("warped_planks", data);
                 case "warped_standing_sign":
                     return RenderSign(data, "warped_sign");
                 case "weeping_vines":
@@ -1711,6 +1710,15 @@ namespace Maploader.Renderer.Texture
             }
 
             return t;
+        }
+
+        private TextureStack RenderPressurePlate (Dictionary<string, Object> data, string name)
+        {
+            return RenderPressurePlate(name, data);
+        }
+        private TextureStack RenderPressurePlate (string name, Dictionary<string, Object> data)
+        {
+            return GetTexture(name).Translate(1, 1, 14, 14);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
