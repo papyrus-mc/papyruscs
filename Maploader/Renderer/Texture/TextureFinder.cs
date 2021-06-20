@@ -1345,7 +1345,7 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderButton (Dictionary<string, Object> data, string texture)
         {
-            return RenderItemFrame(texture, data);
+            return RenderButton(texture, data);
         }
         private TextureStack RenderButton(string texture, Dictionary<string, Object> data)
         {
