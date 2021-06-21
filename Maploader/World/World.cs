@@ -430,7 +430,7 @@ namespace Maploader.World
                                 IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
                                 foreach(var subtag in enumTag)
                                 {
-                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits") || (subtag.Name == "stripped_bit") || (subtag.Name == "wall_post_bit"))
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits") || (subtag.Name == "stripped_bit") || (subtag.Name == "wall_post_bit") || (subtag.Name == "button_pressed_bit"))
                                     {
                                         int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
