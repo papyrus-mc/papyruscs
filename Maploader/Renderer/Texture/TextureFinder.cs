@@ -380,12 +380,7 @@ namespace Maploader.Renderer.Texture
                 case "carpet":
                     return GetTexture("wool", data);
                 case "hay_block":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "hayblock_top" : "hayblock_side", 0, null, rotation);
-                }
+                    return RenderPillar("hayblock_top", "hayblock_side", data);
                 case "hopper":
                     return GetTexture("hopper_inside", data)
                            + GetTexture("hopper_top", data);
@@ -754,16 +749,12 @@ namespace Maploader.Renderer.Texture
 
                 case "purpur_block":
                 {
-                    int index = 0;
                     switch ((string)data.GetValueOrDefault("chisel_type", "default"))
                     {
                         case "lines":
-                            index = 2; break;
+                            data["val"] = 2; break;
                     }
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "purpur_block_top" : "purpur_block_side", index, null, rotation);
+                    return RenderPillar("purpur_block_top", "purpur_block_side", data);
                 }
 
                 case "turtle_egg":
@@ -826,12 +817,7 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
 
                 case "bone_block":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "bone_block_top" : "bone_block_side", 0, null, rotation);
-                }
+                    return RenderPillar("bone_block_top", "bone_block_side", data);
 
                 case "mycelium":
                     return GetTexture("mycelium_top", data);
@@ -892,72 +878,34 @@ namespace Maploader.Renderer.Texture
                 {
                     int plankIndex = WoodIndexes[(string)data.GetValueOrDefault("wood_type", "oak")];
                     int strippedBit = (int)data.GetValueOrDefault("stripped_bit", 0);
-                    RotateFlip rotation =
-                        (string)data.GetValueOrDefault("pillar_axis", "y") == "x"
-                        ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture("wood", plankIndex * 2 + strippedBit, null, rotation);
+                    data["val"] = plankIndex * 2 + strippedBit;
+                    return RenderPillar("wood", data);
                 }
 
                 case "stripped_jungle_log":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_jungle_log_top" : "stripped_jungle_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_jungle_log_top", "stripped_jungle_log_side", data);
                 case "stripped_spruce_log":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_spruce_log_top" : "stripped_spruce_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_spruce_log_top", "stripped_spruce_log_side", data);
                 case "stripped_birch_log":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_birch_log_top" : "stripped_birch_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_birch_log_top", "stripped_birch_log_side", data);
                 case "stripped_dark_oak_log":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_dark_oak_log_top" : "stripped_dark_oak_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_dark_oak_log_top", "stripped_dark_oak_log_side", data);
                 case "stripped_oak_log":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_oak_log_top" : "stripped_oak_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_oak_log_top", "stripped_oak_log_side", data);
                 case "stripped_acacia_log":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_acacia_log_top" : "stripped_acacia_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_acacia_log_top", "stripped_acacia_log_side", data);
 
                 case "enchanting_table":
                     return GetTexture("enchanting_table_top", data);
                 case "log":
                 {
-                    int plankIndex = WoodIndexes[(string)data.GetValueOrDefault("old_log_type", "oak")];
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "log_top" : "log_side", plankIndex, null, rotation);
+                    data["val"] = WoodIndexes[(string)data.GetValueOrDefault("old_log_type", "oak")];
+                    return RenderPillar("log_top", "log_side", data);
                 }
                 case "log2":
                 {
-                    int plankIndex = WoodIndexes[(string)data.GetValueOrDefault("new_log_type", "acacia")];
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "log_top2" : "log_side2", plankIndex - 4, null, rotation);
+                    data["val"] = WoodIndexes[(string)data.GetValueOrDefault("new_log_type", "acacia")] - 4;
+                    return RenderPillar("log_top2", "log_side2", data);
                 }
               
                 case "coral_fan_hang":
@@ -997,33 +945,13 @@ namespace Maploader.Renderer.Texture
                 case "warped_nylium":
                     return GetTexture("warped_nylium_top", data);
                 case "crimson_stem":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "crimson_log_top" : "crimson_log_side", data, null, rotation);
-                }
+                    return RenderPillar("crimson_log_top", "crimson_log_side", data);
                 case "stripped_crimson_stem":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_crimson_stem_top" : "stripped_crimson_stem_side", data, null, rotation);
-                }
+                    return RenderPillar("stripped_crimson_stem_top", "stripped_crimson_stem_side", data);
                 case "warped_stem":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "warped_stem_top" : "warped_stem_side", data, null, rotation);
-                }
+                    return RenderPillar("warped_stem_top", "warped_stem_side", data);
                 case "stripped_warped_stem":
-                {
-                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
-                    RotateFlip rotation =
-                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture(axis == "y" ? "stripped_warped_stem_top" : "stripped_warped_stem_side", data, null, rotation);
-                }
+                    return RenderPillar("stripped_warped_stem_top", "stripped_warped_stem_side", data);
                 case "warped_fungus":
                     return GetTexture("nether_shroom_blue", data);
                 case "crimson_fungus":
@@ -1097,12 +1025,7 @@ namespace Maploader.Renderer.Texture
                 case "crimson_fence_gate":
                     return RenderFenceGate(data, "crimson_planks");
                 case "crimson_hyphae":
-                {
-                    RotateFlip rotation =
-                        (string)data.GetValueOrDefault("pillar_axis", "y") == "x"
-                        ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture("crimson_log_side", 0, null, rotation);
-                }
+                    return RenderPillar("crimson_log_side", data);
                 case "crimson_pressure_plate":
                     return RenderPressurePlate("crimson_planks", data);
                 case "crimson_standing_sign":
@@ -1125,19 +1048,9 @@ namespace Maploader.Renderer.Texture
                 case "soul_campfire":
                     return GetTexture("soul_campfire_log_lit", 0).Translate(0, 0, 16, 16);
                 case "stripped_crimson_hyphae":
-                {
-                    RotateFlip rotation =
-                        (string)data.GetValueOrDefault("pillar_axis", "y") == "x"
-                        ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture("stripped_crimson_stem_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_crimson_stem_side", data);
                 case "stripped_warped_hyphae":
-                {
-                    RotateFlip rotation =
-                        (string)data.GetValueOrDefault("pillar_axis", "y") == "x"
-                        ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture("stripped_warped_stem_side", 0, null, rotation);
-                }
+                    return RenderPillar("stripped_warped_stem_side", data);
                 case "target":
                     return GetTexture("target_top");
                 case "warped_button":
@@ -1151,12 +1064,7 @@ namespace Maploader.Renderer.Texture
                 case "warped_fence_gate":
                     return RenderFenceGate(data, "warped_planks");
                 case "warped_hyphae":
-                {
-                    RotateFlip rotation =
-                        (string)data.GetValueOrDefault("pillar_axis", "y") == "x"
-                        ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
-                    return GetTexture("warped_stem_side", 0, null, rotation);
-                }
+                    return RenderPillar("warped_stem_side", data);
                 case "warped_pressure_plate":
                     return RenderPressurePlate("warped_planks", data);
                 case "warped_standing_sign":
@@ -1829,6 +1737,18 @@ namespace Maploader.Renderer.Texture
         private TextureStack RenderPressurePlate (string texture, Dictionary<string, Object> data)
         {
             return GetTexture(texture).Translate(1, 1, 14, 14);
+        }
+
+        private TextureStack RenderPillar (string texture_both, Dictionary<string, Object> data)
+        {
+            return RenderPillar(texture_both, texture_both, data);
+        }
+        private TextureStack RenderPillar (string texture_top, string texture_side, Dictionary<string, Object> data)
+        {
+            string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
+            RotateFlip rotation =
+                axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
+            return GetTexture(axis == "y" ? texture_top : texture_side, data, null, rotation);
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
