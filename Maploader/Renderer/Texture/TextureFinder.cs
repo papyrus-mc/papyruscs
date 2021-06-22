@@ -748,7 +748,18 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("sea_lantern", data);
 
                 case "purpur_block":
-                    return GetTexture("purpur_block_side", data);
+                {
+                    int index = 0;
+                    switch ((string)data.GetValueOrDefault("chisel_type", "default"))
+                    {
+                        case "lines":
+                            index = 2; break;
+                    }
+                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
+                    RotateFlip rotation =
+                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
+                    return GetTexture(axis == "y" ? "purpur_block_top" : "purpur_block_side", index, null, rotation);
+                }
 
                 case "turtle_egg":
                         return GetTexture("turtle_egg", 0).Translate(
@@ -797,27 +808,17 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("sandstone_top", data);
 
                 case "stone_slab":
-                    return GetTexture("stone_slab_top", data);
-
-                case "stone_slab2":
-                    return GetTexture("stone_slab_top_2", data);
-                case "double_stone_slab2":
-                    return GetTexture("stone_slab_top_2", data);
-                case "stone_slab3":
-
-                    return GetTexture("stone_slab_top_3", data);
-                case "double_stone_slab3":
-                    return GetTexture("stone_slab_top_3", data);
-
-                case "stone_slab4":
-                    return GetTexture("stone_slab_top_4", data);
-                case "double_stone_slab4":
-                    return GetTexture("stone_slab_top_4", data);
-
-
                 case "double_stone_slab":
-                    return GetTexture("stone_slab_top", data);
-
+                    return GetTexture("stone_slab_top", StoneSlabIndexes[1][(string)data["stone_slab_type"]]);
+                case "stone_slab2":
+                case "double_stone_slab2":
+                    return GetTexture("stone_slab_top_2", StoneSlabIndexes[2][(string)data["stone_slab_type_2"]]);
+                case "stone_slab3":
+                case "double_stone_slab3":
+                    return GetTexture("stone_slab_top_3", StoneSlabIndexes[3][(string)data["stone_slab_type_3"]]);
+                case "stone_slab4":
+                case "double_stone_slab4":
+                    return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
 
                 case "bone_block":
                     return GetTexture("bone_block_top", data);
@@ -1941,6 +1942,47 @@ namespace Maploader.Renderer.Texture
             {"jungle",   3},
             {"acacia",   4},
             {"dark_oak", 5},
+        };
+
+        static private readonly Dictionary<int, Dictionary<string, int>> StoneSlabIndexes = new Dictionary<int, Dictionary<string, int>>()
+        {
+            {1, new Dictionary<string, int>() {
+                {"smooth_stone", 0},
+                {"sandstone", 1},
+                // {"planks"?, 2},
+                {"cobblestone", 3},
+                {"brick", 4},
+                {"stone_brick", 5},
+                {"quartz", 6},
+                {"nether_brick", 7},
+            }},
+            {2, new Dictionary<string, int>() {
+                {"red_sandstone", 0},
+                {"purpur", 1},
+                {"prismarine_rough", 2},
+                {"prismarine_dark", 3},
+                {"prismarine_brick", 4},
+                {"mossy_cobblestone", 5},
+                {"smooth_sandstone", 6},
+                {"red_nether_brick", 7},
+            }},
+            {3, new Dictionary<string, int>() {
+                {"end_stone_brick", 0},
+                {"smooth_red_sandstone", 1},
+                {"polished_andesite", 2},
+                {"andesite", 3},
+                {"diorite", 4},
+                {"polished_diorite", 5},
+                {"granite", 6},
+                {"polished_granite", 7},
+            }},
+            {4, new Dictionary<string, int>() {
+                {"mossy_stone_brick", 0},
+                {"smooth_quartz", 1},
+                {"stone", 2},
+                {"cut_sandstone", 3},
+                {"cut_red_sandstone", 4},
+            }},
         };
 
         private TextureStack GetTexture(string name, int data = 0, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)

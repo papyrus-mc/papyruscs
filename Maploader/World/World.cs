@@ -435,7 +435,7 @@ namespace Maploader.World
                                         int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
                                     }
-                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type") || (subtag.Name == "wood_type") || (subtag.Name == "pillar_axis") || (subtag.Name == "old_log_type") || (subtag.Name == "new_log_type") || subtag.Name.StartsWith("wall_connection_type_"))
+                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type") || (subtag.Name == "wood_type") || (subtag.Name == "pillar_axis") || (subtag.Name == "old_log_type") || (subtag.Name == "new_log_type") || subtag.Name.StartsWith("wall_connection_type_") || (subtag.Name == "chisel_type") || subtag.Name.StartsWith("stone_slab_type"))
                                     {
                                         if(subtag.TagType == NbtTagType.String)
                                         {
