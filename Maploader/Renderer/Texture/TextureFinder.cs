@@ -380,7 +380,12 @@ namespace Maploader.Renderer.Texture
                 case "carpet":
                     return GetTexture("wool", data);
                 case "hay_block":
-                    return GetTexture("hayblock_top", data);
+                {
+                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
+                    RotateFlip rotation =
+                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
+                    return GetTexture(axis == "y" ? "hayblock_top" : "hayblock_side", 0, null, rotation);
+                }
                 case "hopper":
                     return GetTexture("hopper_inside", data)
                            + GetTexture("hopper_top", data);
@@ -821,8 +826,12 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
 
                 case "bone_block":
-                    return GetTexture("bone_block_top", data);
-
+                {
+                    string axis = (string)data.GetValueOrDefault("pillar_axis", "y");
+                    RotateFlip rotation =
+                        axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
+                    return GetTexture(axis == "y" ? "bone_block_top" : "bone_block_side", 0, null, rotation);
+                }
 
                 case "mycelium":
                     return GetTexture("mycelium_top", data);
