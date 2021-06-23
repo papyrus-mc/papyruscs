@@ -281,7 +281,10 @@ namespace Maploader.Renderer.Texture
                 case "lectern":
                     return "textures/blocks/lectern_top";
                 case "cake":
-                    return GetTexture("cake_top",0);
+                {
+                    int bites = (int)data.GetValueOrDefault("bite_counter", 0);
+                    return GetTexture("cake_top", 0).Translate(1 + 2*bites, 1, 14 - 2*bites, 14);
+                }
                 case "bed":
                 {
                     // TODO: fix bed textures and head/foot
@@ -829,13 +832,13 @@ namespace Maploader.Renderer.Texture
                 /* LEAVES */
                 case "leaves":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    return GetTexture("leaves_carried", legacyData & 0xF7);
+                    int val = WoodIndexes[(string)data.GetValueOrDefault("old_leaf_type", "oak")];
+                    return GetTexture("leaves_carried", val);
                 }
                 case "leaves2":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    return GetTexture("leaves_carried2", legacyData & 0xF7);
+                    int val = WoodIndexes[(string)data.GetValueOrDefault("new_leaf_type", "acacia")] - 4;
+                    return GetTexture("leaves_carried2", val);
                 }
 
 
