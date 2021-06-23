@@ -1081,6 +1081,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("sea_pickle", data).Translate(
                         new Rect(0, 0, 4, 11), // 11 might not be the right number
                         new Rect(6, 5, 4, 11));
+                case "sponge":
+                    return GetTexture("sponge", (string)data["sponge_type"] == "wet" ? 1 : 0);
                 // TODO: fix string textures
 
                 // Caves & Cliffs Update: Part 1 (1.17)
