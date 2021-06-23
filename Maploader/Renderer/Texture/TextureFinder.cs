@@ -28,9 +28,6 @@ namespace Maploader.Renderer.Texture
             {"minecraft:sapling", true},
             {"minecraft:bamboo_sapling", true},
             {"minecraft:double_plant", true },
-            {"minecraft:double_plant_grass", true },
-            {"minecraft:double_plant_bottom", true },
-            {"minecraft:double_plant_top", true },
             {"minecraft:hopper", true },
             {"minecraft:vine", true },
             {"minecraft:yellow_flower", true },
@@ -193,6 +190,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:coral_fan_hang2", true},
             {"minecraft:coral_fan_hang3", true},
             {"minecraft:sea_pickle", true},
+            {"minecraft:wither_rose", true},
 
             // Caves & Cliffs Update: Part 1
             {"minecraft:lightning_rod", true},
@@ -387,19 +385,20 @@ namespace Maploader.Renderer.Texture
                 case "hopper":
                     return GetTexture("hopper_inside", data)
                            + GetTexture("hopper_top", data);
+
+                case "red_flower":
+                    return GetTexture("red_flower", RedFlowerIndexes[(string)data.GetValueOrDefault("flower_type", "poppy")]);
                 case "double_plant":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch (legacyData & 0x8)
-                    {
-                        case 8:
+                    int legacyData = DoublePlantIndexes[(string)data.GetValueOrDefault("double_plant_type", "sunflower")];
+                    if ((int)data.GetValueOrDefault("upper_block_bit", 0) == 0)
+                        return GetTexture("double_plant_bottom", legacyData & 0xF7);
+                    else
                             return GetTexture("double_plant_carried", legacyData & 0xF7);
-                        case 0:
-                            return GetTexture("double_plant_bottom", legacyData & 0xF7);
                     }
+                case "waterlily":
+                    return GetTexture("waterlily_carried");
 
-                    return null;
-                }
                 case "tnt":
                     return GetTexture("tnt_top");
                 case "rail":
@@ -454,59 +453,86 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stained_glass_pane_top", data);
                 case "redstone_torch":
                     return GetTexture("redstone_torch_on", data);
+                case "unlit_redstone_torch":
+                    return GetTexture("redstone_torch_off", data);
                 case "redstone_wire":
                     return GetTexture("redstone_dust_cross", data);
                 case "lit_redstone_ore":
                     return GetTexture("redstone_ore", data);
                 case "unpowered_repeater":
-                    return GetTexture("repeater_up", data);
+                {
+                    RotateFlip rotation = RotateFlip.RotateNoneFlipNone;
+                    switch ((int)data["direction"])
+                    {
+                        case 0:
+                            rotation = RotateFlip.RotateNoneFlipNone; break;
+                        case 1:
+                            rotation = RotateFlip.Rotate90FlipNone; break;
+                        case 2:
+                            rotation = RotateFlip.Rotate180FlipNone; break;
+                        case 3:
+                            rotation = RotateFlip.Rotate270FlipNone; break;
+                    }
+                    return GetTexture("repeater_up", 0, null, rotation);
+                }
+                case "powered_repeater":
+                {
+                    RotateFlip rotation = RotateFlip.RotateNoneFlipNone;
+                    switch ((int)data["direction"])
+                    {
+                        case 0:
+                            rotation = RotateFlip.RotateNoneFlipNone; break;
+                        case 1:
+                            rotation = RotateFlip.Rotate90FlipNone; break;
+                        case 2:
+                            rotation = RotateFlip.Rotate180FlipNone; break;
+                        case 3:
+                            rotation = RotateFlip.Rotate270FlipNone; break;
+                    }
+                    return GetTexture("repeater_up", 1, null, rotation);
+                }
                 case "daylight_detector":
                     return GetTexture("daylight_detector_top", 0);
                 case "daylight_detector_inverted":
                     return GetTexture("daylight_detector_top", 1);
                 case "dispenser":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch ((BlockFace) legacyData)
+                    switch ((BlockFace) data["facing_direction"])
                     {
                         case BlockFace.Up:
                             return GetTexture("dispenser_front_vertical");
                         default:
-                            return GetTexture("dispenser_top", legacyData);
+                            return GetTexture("dispenser_top");
                     }
                 }
-
                 case "observer":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch ((BlockFace) legacyData)
+                    int powered = (int)data.GetValueOrDefault("powered_bit", 0);
+                    switch ((BlockFace) data["facing_direction"])
                     {
                         case BlockFace.Down:
-                            return GetTexture("observer_south");
+                            return GetTexture("observer_south", powered);
                         case BlockFace.Up:
-                            return GetTexture("observer_north");
+                            return GetTexture("observer_north", powered);
                         case BlockFace.North:
-                            return GetTexture("observer_top", 0, null, RotateFlip.Rotate180FlipNone);
+                            return GetTexture("observer_top", powered, null, RotateFlip.Rotate180FlipNone);
                         case BlockFace.South:
-                            return GetTexture("observer_top");
+                            return GetTexture("observer_top", powered);
                         case BlockFace.West:
-                            return GetTexture("observer_top", 0, null, RotateFlip.Rotate90FlipNone);
+                            return GetTexture("observer_top", powered, null, RotateFlip.Rotate90FlipNone);
                         case BlockFace.East:
-                            return GetTexture("observer_top", 0, null, RotateFlip.Rotate270FlipNone);
+                            return GetTexture("observer_top", powered, null, RotateFlip.Rotate270FlipNone);
                     }
-
-                    return GetTexture("observer_top", legacyData);
+                    return GetTexture("observer_top");
                 }
-
                 case "dropper":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch ((BlockFace) legacyData)
+                    switch ((BlockFace) data["facing_direction"])
                     {
                         case BlockFace.Up:
                             return GetTexture("dropper_front_vertical");
                         default:
-                            return GetTexture("dropper_top", legacyData);
+                            return GetTexture("dropper_top");
                     }
                 }
 
@@ -768,8 +794,10 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("undyed_shulker_box_top", data);
 
                 case "red_sandstone":
+                    // sand_stone_type makes no difference to top
                     return GetTexture("redsandstone_top", data);
                 case "sandstone":
+                    // sand_stone_type makes no difference to top
                     return GetTexture("sandstone_top", data);
 
                 case "stone_slab":
@@ -801,12 +829,6 @@ namespace Maploader.Renderer.Texture
                         new Rect(6, 0, 4, 16),
                         new Rect(0, 0, 4, 16)
                     ));
-
-                case "powered_repeater":
-                    return GetTexture("repeater_up", data);
-
-                case "unlit_redstone_torch":
-                    return GetTexture("redstone_torch_off", data);
 
                 case "lit_furnace":
                     return GetTexture("redstone_torch_off", data);
@@ -864,8 +886,6 @@ namespace Maploader.Renderer.Texture
                 case "stripped_acacia_log":
                     return RenderPillar("stripped_acacia_log_top", "stripped_acacia_log_side", data);
 
-                case "enchanting_table":
-                    return GetTexture("enchanting_table_top", data);
                 case "log":
                 {
                     data["val"] = WoodIndexes[(string)data.GetValueOrDefault("old_log_type", "oak")];
@@ -877,6 +897,15 @@ namespace Maploader.Renderer.Texture
                     return RenderPillar("log_top2", "log_side2", data);
                 }
               
+                case "sapling":
+                {
+                    int val = WoodIndexes[(string)data.GetValueOrDefault("sapling_type")];
+                    return GetTexture("sapling", val);
+                }
+
+                case "enchanting_table":
+                    return GetTexture("enchanting_table_top", data);
+
                 case "coral_fan_hang":
                     return GetTexture("coral_fan_hang_a", data);
                 case "coral_fan_hang2":
@@ -888,11 +917,34 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("scaffolding_top", data);
                 case "grindstone":
                     return GetTexture("grindstone_pivot", data);
+
+                case "beetroot":
+                {
+                    int growth = (int)data.GetValueOrDefault("growth", 0) % 8;
+                    return GetTexture("beetroot", GrowthEightToFour[growth]);
+                }
+                case "carrots":
+                {
+                    int growth = (int)data.GetValueOrDefault("growth", 0) % 8;
+                    return GetTexture("carrots", GrowthEightToFour[growth]);
+                }
+                case "potatoes":
+                {
+                    int growth = (int)data.GetValueOrDefault("growth", 0) % 8;
+                    return GetTexture("potatoes", GrowthEightToFour[growth]);
+                }
                 case "sweet_berry_bush":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    return GetTexture($"sweet_berry_bush_{legacyData%4}");
+                    int growth = (int)data.GetValueOrDefault("growth", 0);
+                    if (growth > 3) growth = 3;
+                    return GetTexture($"sweet_berry_bush_{growth}");
                 }
+                case "wheat":
+                {
+                    int growth = (int)data.GetValueOrDefault("growth", 0);
+                    return GetTexture("wheat", growth);
+                }
+
                 case "bee_nest":
                     return GetTexture("bee_nest_top", data);
                 case "beehive":
@@ -1013,7 +1065,7 @@ namespace Maploader.Renderer.Texture
                 case "polished_blackstone_brick_double_slab":
                     return GetTexture("polished_blackstone_bricks");
                 case "respawn_anchor":
-                    return GetTexture("respawn_anchor_top").Translate(0, 0, 16, 16);
+                    return GetTexture("respawn_anchor_top", (int)data["respawn_anchor_charge"]).Translate(0, 0, 16, 16);
                 case "soul_campfire":
                     return GetTexture("soul_campfire_log_lit", 0).Translate(0, 0, 16, 16);
                 case "stripped_crimson_hyphae":
@@ -1052,6 +1104,18 @@ namespace Maploader.Renderer.Texture
                         new Rect(6, 5, 4, 11));
                 case "sponge":
                     return GetTexture("sponge", (string)data["sponge_type"] == "wet" ? 1 : 0);
+                case "stone":
+                {
+                    int index = StoneIndexes[(string)data.GetValueOrDefault("stone_type", "stone")];
+                    return GetTexture("stone", index);
+                }
+                case "sand":
+                {
+                    string sand_type = (string)data.GetValueOrDefault("sand_type", "normal");
+                    return GetTexture("sand", sand_type == "red" ? 1 : 0);
+                }
+                case "vine":
+                    return GetTexture("vine_carried");
                 // TODO: fix string textures
 
                 // Caves & Cliffs Update: Part 1 (1.17)
@@ -1884,6 +1948,54 @@ namespace Maploader.Renderer.Texture
                 {"cut_sandstone", 3},
                 {"cut_red_sandstone", 4},
             }},
+        };
+
+        static private readonly Dictionary<string, int> StoneIndexes = new Dictionary<string, int>()
+        {
+            {"stone",           0},
+            {"granite",         1},
+            {"granite_smooth",  2},
+            {"diorite",         3},
+            {"diorite_smooth",  4},
+            {"andesite",        5},
+            {"andesite_smooth", 6},
+        };
+
+        static private readonly Dictionary<int, int> GrowthEightToFour = new Dictionary<int, int>()
+        {
+            {0, 0},
+            {1, 0},
+            {2, 1},
+            {3, 1},
+            {4, 2},
+            {5, 2},
+            {6, 2},
+            {7, 3},
+        };
+
+        static private readonly Dictionary<string, int> RedFlowerIndexes = new Dictionary<string, int>()
+        {
+            {"poppy",               0},
+            {"orchid",              1},
+            {"allium",              2},
+            {"houstonia",           3},
+            {"tulip_red",           4},
+            {"tulip_orange",        5},
+            {"tulip_white",         6},
+            {"tulip_pink",          7},
+            {"oxeye",               8},
+            {"cornflower",          9},
+            {"lily_of_the_valley", 10},
+        };
+
+        static private readonly Dictionary<string, int> DoublePlantIndexes = new Dictionary<string, int>()
+        {
+            {"sunflower", 0},
+            {"syringa",   1},
+            {"grass",     2},
+            {"fern",      3},
+            {"rose",      4},
+            {"paeonia",   5},
         };
 
         private TextureStack GetTexture(string name, int data = 0, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
