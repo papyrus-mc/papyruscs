@@ -430,12 +430,12 @@ namespace Maploader.World
                                 IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
                                 foreach(var subtag in enumTag)
                                 {
-                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits") || (subtag.Name == "stripped_bit") || (subtag.Name == "wall_post_bit") || (subtag.Name == "button_pressed_bit"))
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits") || (subtag.Name == "stripped_bit") || (subtag.Name == "wall_post_bit") || (subtag.Name == "button_pressed_bit") || (subtag.Name == "rail_direction") || (subtag.Name == "rail_data_bit"))
                                     {
                                         int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
                                     }
-                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type") || (subtag.Name == "wood_type") || (subtag.Name == "pillar_axis") || (subtag.Name == "old_log_type") || (subtag.Name == "new_log_type") || subtag.Name.StartsWith("wall_connection_type_") || (subtag.Name == "chisel_type") || subtag.Name.StartsWith("stone_slab_type"))
+                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type") || (subtag.Name == "wood_type") || (subtag.Name == "pillar_axis") || (subtag.Name == "old_log_type") || (subtag.Name == "new_log_type") || subtag.Name.StartsWith("wall_connection_type_") || (subtag.Name == "chisel_type") || subtag.Name.StartsWith("stone_slab_type") || (subtag.Name == "sponge_type"))
                                     {
                                         if(subtag.TagType == NbtTagType.String)
                                         {

@@ -401,59 +401,25 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("tnt_top");
                 case "rail":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch (legacyData)
+                    switch ((int)data.GetValueOrDefault("rail_direction", 0))
                     {
-                        case 0:
-                            return GetTexture("rail_normal", legacyData);
-                        case 1:
-                            return GetTexture("rail_normal", legacyData).Rotate(RotateFlip.Rotate90FlipNone);
-                        case 2:
-                            return GetTexture("rail_normal", legacyData).Rotate(RotateFlip.Rotate90FlipNone);
-                        case 3:
-                            return GetTexture("rail_normal", legacyData).Rotate(RotateFlip.Rotate90FlipNone);
-                        case 4:
-                            return GetTexture("rail_normal", legacyData);
-                        case 5:
-                            return GetTexture("rail_normal", legacyData);
                         case 6:
-                            return GetTexture("rail_normal_turned", legacyData);
+                            return GetTexture("rail_normal_turned");
                         case 7:
-                            return GetTexture("rail_normal_turned", legacyData).Rotate(RotateFlip.Rotate90FlipNone);
+                            return GetTexture("rail_normal_turned").Rotate(RotateFlip.Rotate90FlipNone);
                         case 8:
-                            return GetTexture("rail_normal_turned", legacyData).Rotate(RotateFlip.Rotate180FlipNone);
+                            return GetTexture("rail_normal_turned").Rotate(RotateFlip.Rotate180FlipNone);
                         case 9:
-                            return GetTexture("rail_normal_turned", legacyData).Rotate(RotateFlip.Rotate270FlipNone);
+                            return GetTexture("rail_normal_turned").Rotate(RotateFlip.Rotate270FlipNone);
                     }
-
-                    return null;
+                    return RenderRail("rail_normal", data);
                 }
                 case "golden_rail":
-                {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    if ((legacyData & 8) == 8)
-                        return RenderRail(legacyData & 0xF7, "rail_golden_powered");
-                    else
-                        return RenderRail(legacyData, "rail_golden");
-                }
+                    return RenderRail("rail_golden", "rail_golden_powered", data);
                 case "activator_rail":
-                {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    if ((legacyData & 8) == 8)
-                        return RenderRail(legacyData & 0xF7, "rail_activator");
-                    else
-                        return RenderRail(legacyData, "rail_activator");
-                }
-
-
+                    return RenderRail("rail_activator", "rail_activator_powered", data);
                 case "detector_rail":
-                {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    if ((legacyData & 8) == 8)
-                        return RenderRail(legacyData & 0xF7, "rail_detector_powered");
-                    else
-                        return RenderRail(legacyData, "rail_detector");
-                }
+                    return RenderRail("rail_detector", "rail_detector_powered", data);
 
                 case "monster_egg":
                 {
@@ -1225,13 +1191,14 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderRail (int data, string texture)
+        private TextureStack RenderRail (string texture_off, string texture_on, Dictionary<string, Object> data)
         {
+            string texture = (int)data.GetValueOrDefault("rail_data_bit", 0) == 0 ? texture_off : texture_on;
             return RenderRail(texture, data);
         }
-        private TextureStack RenderRail (string texture, int data)
+        private TextureStack RenderRail (string texture, Dictionary<string, Object> data)
         {
-            switch (data)
+            switch ((int)data.GetValueOrDefault("rail_direction", 0))
             {
                 case 0:
                     return GetTexture(texture, data);
