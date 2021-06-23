@@ -461,35 +461,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("redstone_ore", data);
                 case "unpowered_repeater":
                 {
-                    RotateFlip rotation = RotateFlip.RotateNoneFlipNone;
-                    switch ((int)data["direction"])
-                    {
-                        case 0:
-                            rotation = RotateFlip.RotateNoneFlipNone; break;
-                        case 1:
-                            rotation = RotateFlip.Rotate90FlipNone; break;
-                        case 2:
-                            rotation = RotateFlip.Rotate180FlipNone; break;
-                        case 3:
-                            rotation = RotateFlip.Rotate270FlipNone; break;
-                    }
-                    return GetTexture("repeater_up", 0, null, rotation);
+                    int dir = ((int)data.GetValueOrDefault("direction") + 2) % 4;
+                    return GetTexture("repeater_up", 0, null, RotateFromDirection(dir));
                 }
                 case "powered_repeater":
                 {
-                    RotateFlip rotation = RotateFlip.RotateNoneFlipNone;
-                    switch ((int)data["direction"])
-                    {
-                        case 0:
-                            rotation = RotateFlip.RotateNoneFlipNone; break;
-                        case 1:
-                            rotation = RotateFlip.Rotate90FlipNone; break;
-                        case 2:
-                            rotation = RotateFlip.Rotate180FlipNone; break;
-                        case 3:
-                            rotation = RotateFlip.Rotate270FlipNone; break;
-                    }
-                    return GetTexture("repeater_up", 1, null, rotation);
+                    int dir = ((int)data.GetValueOrDefault("direction") + 2) % 4;
+                    return GetTexture("repeater_up", 1, null, RotateFromDirection(dir));
                 }
                 case "daylight_detector":
                     return GetTexture("daylight_detector_top", 0);
@@ -563,7 +541,17 @@ namespace Maploader.Renderer.Texture
                 case "ender_chest":
                     return GetTexture("ender_chest_inventory_top", data);
                 case "anvil":
-                    return GetTexture("anvil_top_damaged_x", data);
+                {
+                    int damage = 0;
+                    switch ((string)data["damage"])
+                    {
+                        case "slightly_damaged":
+                            damage = 1; break;
+                        case "very_damaged":
+                            damage = 2; break;
+                    }
+                    return GetTexture("anvil_top_damaged_x", damage, null, RotateFromDirection(data));
+                }
                 case "cactus":
                     return GetTexture("cactus_top", data).Translate(1, 1, 14, 14);
 
@@ -1427,17 +1415,7 @@ namespace Maploader.Renderer.Texture
                 Console.WriteLine("Invalid " + texture +" direction");
             }
 
-            switch (dir)
-            {
-                case 0:
-                    return t.Rotate(RotateFlip.Rotate180FlipNone);
-                case 1:
-                    return t.Rotate(RotateFlip.Rotate270FlipNone);
-                case 2:
-                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
-                case 3:
-                    return t.Rotate(RotateFlip.Rotate90FlipNone);
-            }
+            t.Rotate(RotateFromDirection(dir));
 
             return t;
         }
@@ -1747,22 +1725,8 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderSmallDripleaf (Dictionary<string, Object> data)
         {
-            int dir = (int)data["direction"];
-
             TextureStack t = GetTexture("small_dripleaf_top", data);
-
-            switch (dir)
-            {
-                case 0:
-                    return t.Rotate(RotateFlip.Rotate180FlipNone);
-                case 1:
-                    return t.Rotate(RotateFlip.Rotate270FlipNone);
-                case 2:
-                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
-                case 3:
-                    return t.Rotate(RotateFlip.Rotate90FlipNone);
-            }
-
+            t.Rotate(RotateFromDirection(data));
             return t;
         }
 
@@ -1785,6 +1749,26 @@ namespace Maploader.Renderer.Texture
             RotateFlip rotation =
                 axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
             return GetTexture(axis == "y" ? texture_top : texture_side, data, null, rotation);
+        }
+
+        private RotateFlip RotateFromDirection (Dictionary<string, Object> data)
+        {
+            return RotateFromDirection((int)data["direction"]);
+        }
+        private RotateFlip RotateFromDirection (int direction)
+        {
+            switch (direction)
+            {
+                case 0:
+                    return RotateFlip.Rotate180FlipNone;
+                case 1:
+                    return RotateFlip.Rotate270FlipNone;
+                case 2:
+                    return RotateFlip.RotateNoneFlipNone;
+                case 3:
+                    return RotateFlip.Rotate90FlipNone;
+            }
+            return RotateFlip.RotateNoneFlipNone;
         }
 
         public Dictionary<TextureInfo, TImage> Cache { get; } = new Dictionary<TextureInfo, TImage>();
