@@ -442,7 +442,7 @@ namespace Maploader.World
                                             dictParams.Add(subtag.Name, subtag.StringValue); 
                                         }
                                     }
-                                    if(subtag.Name == "dripstone_thickness")
+                                    if(subtag.Name == "dripstone_thickness" || subtag.Name == "pillar_axis")
                                     {
                                         dictParams.Add(subtag.Name, subtag.StringValue); 
                                     }

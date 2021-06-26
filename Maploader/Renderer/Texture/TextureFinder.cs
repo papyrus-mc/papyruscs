@@ -163,6 +163,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:crimson_door", true},
             {"minecraft:warped_wall_sign", true},
             {"minecraft:crimson_wall_sign", true},
+            {"minecraft:chain", true},
 
             // Caves & Cliffs Update: Part 1
             {"minecraft:glow_item_frame", true},
@@ -977,6 +978,8 @@ namespace Maploader.Renderer.Texture
                     return RenderWallSign(data, name.Replace("wall_", ""));
                 case "crimson_wall_sign":
                     return RenderWallSign(data, name.Replace("wall_", ""));
+                case "chain":
+                    return RenderChain(data);
 
 
                 // Caves & Cliffs Update: Part 1 (1.17)
@@ -1114,6 +1117,28 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
+        private TextureStack RenderChain(Dictionary<string, Object> data)
+        {
+            var t = GetTexture("chain1", 0).Translate(new Rect(0, 0, 3, 16), new Rect(6, 0, 4, 16));
+            
+             try
+            {
+                string dir = (string)data["pillar_axis"];
+                switch (dir)
+                {
+                    case "x":
+                        return t.Rotate(RotateFlip.Rotate90FlipNone);
+                    case "y":
+                        return GetTexture("chain2", data).Translate(new Rect(0, 6, 4, 3), new Rect(7, 7, 4, 3));
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid parameters for chain1");
+            }
+
+            return t;
+        }
 
         private TextureStack RenderRail(int data, string texture)
         {
