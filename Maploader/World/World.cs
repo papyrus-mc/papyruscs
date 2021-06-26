@@ -430,7 +430,7 @@ namespace Maploader.World
                                 IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
                                 foreach(var subtag in enumTag)
                                 {
-                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit"))
+                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits"))
                                     {
                                         int subtagvalue = GetTagValue(subtag);
                                         dictParams.Add(subtag.Name, subtagvalue); 
@@ -441,6 +441,15 @@ namespace Maploader.World
                                         {
                                             dictParams.Add(subtag.Name, subtag.StringValue); 
                                         }
+                                    }
+                                    if(subtag.Name == "dripstone_thickness")
+                                    {
+                                        dictParams.Add(subtag.Name, subtag.StringValue); 
+                                    }
+                                    if(subtag.Name == "hanging")
+                                    {
+                                        int subtagvalue = GetTagValue(subtag);
+                                        dictParams.Add(subtag.Name, subtagvalue); 
                                     }
                                 }
                             break;

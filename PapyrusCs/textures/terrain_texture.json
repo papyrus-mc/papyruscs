@@ -12,6 +12,12 @@
       "acacia_trapdoor" : {
          "textures" : "textures/blocks/acacia_trapdoor"
       },
+      "amethyst_block" : {
+         "textures" : "textures/blocks/amethyst_block"
+      },
+      "amethyst_cluster" : {
+         "textures" : "textures/blocks/amethyst_cluster"
+      },
       "ancient_debris_side" : {
          "textures" : "textures/blocks/ancient_debris_side"
       },
@@ -36,6 +42,27 @@
             "textures/blocks/anvil_top_damaged_2",
             "textures/blocks/anvil_base"
          ]
+      },
+      "azalea_leaves" : {
+         "textures" : [
+            "textures/blocks/azalea_leaves",
+            "textures/blocks/azalea_leaves_opaque"
+         ]
+      },
+      "azalea_leaves_flowered" : {
+         "textures" : [
+            "textures/blocks/azalea_leaves_flowers",
+            "textures/blocks/azalea_leaves_flowers_opaque"
+         ]
+      },
+      "azalea_plant" : {
+         "textures" : "textures/blocks/azalea_plant"
+      },
+      "azalea_side" : {
+         "textures" : "textures/blocks/azalea_side"
+      },
+      "azalea_top" : {
+         "textures" : "textures/blocks/azalea_top"
       },
       "bamboo_carried" : {
          "textures" : "textures/items/bamboo"
@@ -141,6 +168,18 @@
       "bell_top" : {
          "textures" : "textures/blocks/bell_top"
       },
+      "big_dripleaf_side1" : {
+         "textures" : "textures/blocks/big_dripleaf_side1"
+      },
+      "big_dripleaf_side2" : {
+         "textures" : "textures/blocks/big_dripleaf_side2"
+      },
+      "big_dripleaf_stem" : {
+         "textures" : "textures/blocks/big_dripleaf_stem"
+      },
+      "big_dripleaf_top" : {
+         "textures" : "textures/blocks/big_dripleaf_top"
+      },
       "birch_planks" : {
          "textures" : "textures/blocks/planks_birch"
       },
@@ -191,20 +230,11 @@
             "textures/blocks/blast_furnace_top"
          ]
       },
-      "soul_fire_0" : {
-         "textures" : "textures/blocks/soul_fire_0"
-      },
-      "soul_fire_1" : {
-         "textures" : "textures/blocks/soul_fire_1"
-      },
       "blue_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_blue"
       },
       "blue_ice" : {
          "textures" : "textures/blocks/blue_ice"
-      },
-      "warped_wart_block" : {
-         "textures" : [ "textures/blocks/warped_wart_block" ]
       },
       "bone_block_side" : {
          "textures" : "textures/blocks/bone_block_side"
@@ -267,6 +297,9 @@
             "textures/blocks/bubble_column_up_top_d"
          ]
       },
+      "budding_amethyst" : {
+         "textures" : "textures/blocks/budding_amethyst"
+      },
       "build_allow" : {
          "textures" : "textures/blocks/build_allow"
       },
@@ -293,6 +326,9 @@
       },
       "cake_west" : {
          "textures" : [ "textures/blocks/cake_side", "textures/blocks/cake_inner" ]
+      },
+      "calcite" : {
+         "textures" : "textures/blocks/calcite"
       },
       "camera_back" : {
          "textures" : "textures/blocks/camera_back"
@@ -353,6 +389,18 @@
       "cauldron_water" : {
          "textures" : "textures/blocks/cauldron_water"
       },
+      "cave_vines_body" : {
+         "textures" : [
+            "textures/blocks/cave_vines_body",
+            "textures/blocks/cave_vines_body_berries"
+         ]
+      },
+      "cave_vines_head" : {
+         "textures" : [
+            "textures/blocks/cave_vines_head",
+            "textures/blocks/cave_vines_head_berries"
+         ]
+      },
       "chain1" : {
          "textures" : "textures/blocks/chain1"
       },
@@ -375,6 +423,9 @@
       "chest_inventory_top" : {
          "textures" : [ "textures/blocks/chest_top" ]
       },
+      "chiseled_deepslate" : {
+         "textures" : "textures/blocks/deepslate/chiseled_deepslate"
+      },
       "chiseled_nether_bricks" : {
          "textures" : "textures/blocks/chiseled_nether_bricks"
       },
@@ -395,6 +446,9 @@
       },
       "coal_ore" : {
          "textures" : "textures/blocks/coal_ore"
+      },
+      "cobbled_deepslate" : {
+         "textures" : "textures/blocks/deepslate/cobbled_deepslate"
       },
       "cobblestone" : {
          "textures" : "textures/blocks/cobblestone"
@@ -534,6 +588,12 @@
       "conduit" : {
          "textures" : "textures/blocks/conduit_base"
       },
+      "copper_block" : {
+         "textures" : "textures/blocks/copper_block"
+      },
+      "copper_ore" : {
+         "textures" : "textures/blocks/copper_ore"
+      },
       "coral" : {
          "textures" : [
             "textures/blocks/coral_plant_blue",
@@ -604,6 +664,12 @@
             "textures/blocks/coral_fan_yellow_dead"
          ]
       },
+      "cracked_deepslate_bricks" : {
+         "textures" : "textures/blocks/deepslate/cracked_deepslate_bricks"
+      },
+      "cracked_deepslate_tiles" : {
+         "textures" : "textures/blocks/deepslate/cracked_deepslate_tiles"
+      },
       "cracked_nether_bricks" : {
          "textures" : "textures/blocks/cracked_nether_bricks"
       },
@@ -658,6 +724,9 @@
       "crying_obsidian" : {
          "textures" : "textures/blocks/crying_obsidian"
       },
+      "cut_copper" : {
+         "textures" : "textures/blocks/cut_copper"
+      },
       "cyan_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_cyan"
       },
@@ -687,6 +756,42 @@
       },
       "deadbush" : {
          "textures" : "textures/blocks/deadbush"
+      },
+      "deepslate" : {
+         "textures" : "textures/blocks/deepslate/deepslate"
+      },
+      "deepslate_bricks" : {
+         "textures" : "textures/blocks/deepslate/deepslate_bricks"
+      },
+      "deepslate_coal_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_coal_ore"
+      },
+      "deepslate_copper_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_copper_ore"
+      },
+      "deepslate_diamond_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_diamond_ore"
+      },
+      "deepslate_emerald_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_emerald_ore"
+      },
+      "deepslate_gold_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_gold_ore"
+      },
+      "deepslate_iron_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_iron_ore"
+      },
+      "deepslate_lapis_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_lapis_ore"
+      },
+      "deepslate_redstone_ore" : {
+         "textures" : "textures/blocks/deepslate/deepslate_redstone_ore"
+      },
+      "deepslate_tiles" : {
+         "textures" : "textures/blocks/deepslate/deepslate_tiles"
+      },
+      "deepslate_top" : {
+         "textures" : "textures/blocks/deepslate/deepslate_top"
       },
       "destroy" : {
          "textures" : [
@@ -722,6 +827,9 @@
       },
       "dirt_podzol_top" : {
          "textures" : "textures/blocks/dirt_podzol_top"
+      },
+      "dirt_with_roots" : {
+         "textures" : "textures/blocks/dirt_with_roots"
       },
       "dispenser_front_horizontal" : {
          "textures" : "textures/blocks/dispenser_front_horizontal"
@@ -799,6 +907,9 @@
       "dried_kelp_block_top" : {
          "textures" : "textures/blocks/dried_kelp_top"
       },
+      "dripstone_block" : {
+         "textures" : "textures/blocks/dripstone_block"
+      },
       "dropper_front_horizontal" : {
          "textures" : "textures/blocks/dropper_front_horizontal"
       },
@@ -862,6 +973,12 @@
       "endframe_top" : {
          "textures" : "textures/blocks/endframe_top"
       },
+      "exposed_copper" : {
+         "textures" : "textures/blocks/exposed_copper"
+      },
+      "exposed_cut_copper" : {
+         "textures" : "textures/blocks/exposed_cut_copper"
+      },
       "farmland" : {
          "textures" : [ "textures/blocks/farmland_wet", "textures/blocks/farmland_dry" ]
       },
@@ -885,6 +1002,12 @@
       },
       "flower_pot" : {
          "textures" : "textures/blocks/flower_pot"
+      },
+      "flowering_azalea_side" : {
+         "textures" : "textures/blocks/flowering_azalea_side"
+      },
+      "flowering_azalea_top" : {
+         "textures" : "textures/blocks/flowering_azalea_top"
       },
       "flowing_lava" : {
          "quad" : 1,
@@ -940,6 +1063,12 @@
       },
       "glass_pane_top" : {
          "textures" : "textures/blocks/glass_pane_top"
+      },
+      "glow_item_frame" : {
+         "textures" : "textures/blocks/glow_item_frame"
+      },
+      "glow_lichen" : {
+         "textures" : "textures/blocks/glow_lichen"
       },
       "glowing_obsidian" : {
          "textures" : "textures/blocks/glowing_obsidian"
@@ -1106,6 +1235,9 @@
       "grindstone_side" : {
          "textures" : "textures/blocks/grindstone_side"
       },
+      "hanging_roots" : {
+         "textures" : "textures/blocks/hanging_roots"
+      },
       "hardened_clay" : {
          "textures" : "textures/blocks/hardened_clay"
       },
@@ -1220,6 +1352,9 @@
       "lapis_ore" : {
          "textures" : "textures/blocks/lapis_ore"
       },
+      "large_amethyst_bud" : {
+         "textures" : "textures/blocks/large_amethyst_bud"
+      },
       "leaves" : {
          "textures" : [
             "textures/blocks/leaves_oak",
@@ -1304,6 +1439,9 @@
       "light_blue_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_light_blue"
       },
+      "lightning_rod" : {
+         "textures" : "textures/blocks/lightning_rod"
+      },
       "lime_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_lime"
       },
@@ -1361,6 +1499,9 @@
       "magma" : {
          "textures" : "textures/blocks/magma"
       },
+      "medium_amethyst_bud" : {
+         "textures" : "textures/blocks/medium_amethyst_bud"
+      },
       "melon_side" : {
          "textures" : "textures/blocks/melon_side"
       },
@@ -1391,6 +1532,9 @@
             "textures/blocks/stonebrick_carved",
             "textures/blocks/stone"
          ]
+      },
+      "moss_block" : {
+         "textures" : "textures/blocks/moss_block"
       },
       "mossy_stone_brick" : {
          "textures" : "textures/blocks/stonebrick_mossy"
@@ -1717,6 +1861,12 @@
       "orange_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_orange"
       },
+      "oxidized_copper" : {
+         "textures" : "textures/blocks/oxidized_copper"
+      },
+      "oxidized_cut_copper" : {
+         "textures" : "textures/blocks/oxidized_cut_copper"
+      },
       "pink_glazed_terracotta" : {
          "textures" : "textures/blocks/glazed_terracotta_pink"
       },
@@ -1745,6 +1895,36 @@
             "textures/blocks/planks_big_oak"
          ]
       },
+      "pointed_dripstone_base" : {
+         "textures" : [
+            "textures/blocks/pointed_dripstone_down_base",
+            "textures/blocks/pointed_dripstone_up_base"
+         ]
+      },
+      "pointed_dripstone_frustum" : {
+         "textures" : [
+            "textures/blocks/pointed_dripstone_down_frustum",
+            "textures/blocks/pointed_dripstone_up_frustum"
+         ]
+      },
+      "pointed_dripstone_merge" : {
+         "textures" : [
+            "textures/blocks/pointed_dripstone_down_merge",
+            "textures/blocks/pointed_dripstone_up_merge"
+         ]
+      },
+      "pointed_dripstone_middle" : {
+         "textures" : [
+            "textures/blocks/pointed_dripstone_down_middle",
+            "textures/blocks/pointed_dripstone_up_middle"
+         ]
+      },
+      "pointed_dripstone_tip" : {
+         "textures" : [
+            "textures/blocks/pointed_dripstone_down_tip",
+            "textures/blocks/pointed_dripstone_up_tip"
+         ]
+      },
       "polished_andesite" : {
          "textures" : "textures/blocks/stone_andesite_smooth"
       },
@@ -1759,6 +1939,9 @@
       },
       "polished_blackstone_bricks" : {
          "textures" : "textures/blocks/polished_blackstone_bricks"
+      },
+      "polished_deepslate" : {
+         "textures" : "textures/blocks/deepslate/polished_deepslate"
       },
       "polished_diorite" : {
          "textures" : "textures/blocks/stone_diorite_smooth"
@@ -1776,6 +1959,9 @@
             "textures/blocks/potatoes_stage_2",
             "textures/blocks/potatoes_stage_3"
          ]
+      },
+      "powder_snow" : {
+         "textures" : "textures/blocks/powder_snow"
       },
       "prismarine" : {
          "textures" : [
@@ -1891,6 +2077,15 @@
       },
       "rail_normal_turned" : {
          "textures" : "textures/blocks/rail_normal_turned"
+      },
+      "raw_copper_block" : {
+         "textures" : "textures/blocks/raw_copper_block"
+      },
+      "raw_gold_block" : {
+         "textures" : "textures/blocks/raw_gold_block"
+      },
+      "raw_iron_block" : {
+         "textures" : "textures/blocks/raw_iron_block"
       },
       "reactor_core" : {
          "textures" : [
@@ -2122,6 +2317,21 @@
       "slime_block" : {
          "textures" : "textures/blocks/slime"
       },
+      "small_amethyst_bud" : {
+         "textures" : "textures/blocks/small_amethyst_bud"
+      },
+      "small_dripleaf_side" : {
+         "textures" : "textures/blocks/small_dripleaf_side"
+      },
+      "small_dripleaf_stem_bottom" : {
+         "textures" : "textures/blocks/small_dripleaf_stem_bottom"
+      },
+      "small_dripleaf_stem_top" : {
+         "textures" : "textures/blocks/small_dripleaf_stem_top"
+      },
+      "small_dripleaf_top" : {
+         "textures" : "textures/blocks/small_dripleaf_top"
+      },
       "smithing_table_bottom" : {
          "textures" : "textures/blocks/smithing_table_bottom"
       },
@@ -2157,6 +2367,9 @@
       "smoker_top" : {
          "textures" : [ "textures/blocks/smoker_top", "textures/blocks/smoker_top" ]
       },
+      "smooth_basalt" : {
+         "textures" : "textures/blocks/smooth_basalt"
+      },
       "smooth_red_sandstone" : {
          "textures" : "textures/blocks/red_sandstone_top"
       },
@@ -2175,6 +2388,12 @@
       "soul_campfire_log_lit" : {
          "textures" : "textures/blocks/soul_campfire_log_lit"
       },
+      "soul_fire_0" : {
+         "textures" : "textures/blocks/soul_fire_0"
+      },
+      "soul_fire_1" : {
+         "textures" : "textures/blocks/soul_fire_1"
+      },
       "soul_lantern" : {
          "textures" : "textures/blocks/soul_lantern"
       },
@@ -2192,6 +2411,12 @@
       },
       "sponge" : {
          "textures" : [ "textures/blocks/sponge", "textures/blocks/sponge_wet" ]
+      },
+      "spore_blossom" : {
+         "textures" : "textures/blocks/spore_blossom"
+      },
+      "spore_blossom_base" : {
+         "textures" : "textures/blocks/spore_blossom_base"
       },
       "spruce_planks" : {
          "textures" : "textures/blocks/planks_spruce"
@@ -2571,6 +2796,9 @@
       "target_top" : {
          "textures" : "textures/blocks/target_top"
       },
+      "tinted_glass" : {
+         "textures" : "textures/blocks/tinted_glass"
+      },
       "tnt_bottom" : {
          "textures" : "textures/blocks/tnt_bottom"
       },
@@ -2597,6 +2825,9 @@
       },
       "trip_wire_source" : {
          "textures" : "textures/blocks/trip_wire_source"
+      },
+      "tuff" : {
+         "textures" : "textures/blocks/tuff"
       },
       "turtle_egg" : {
          "textures" : [
@@ -2656,6 +2887,9 @@
       "warped_trapdoor" : {
          "textures" : "textures/blocks/huge_fungus/warped_trapdoor"
       },
+      "warped_wart_block" : {
+         "textures" : [ "textures/blocks/warped_wart_block" ]
+      },
       "waterlily" : {
          "textures" : [
             {
@@ -2666,6 +2900,12 @@
       },
       "waterlily_carried" : {
          "textures" : "textures/blocks/carried_waterlily"
+      },
+      "weathered_copper" : {
+         "textures" : "textures/blocks/weathered_copper"
+      },
+      "weathered_cut_copper" : {
+         "textures" : "textures/blocks/weathered_cut_copper"
       },
       "web" : {
          "textures" : "textures/blocks/web"
