@@ -994,9 +994,9 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("soul_fire_0", data);
 
                 case "basalt":
-                    return GetTexture("basalt_top", data);
+                    return RenderPillar("basalt_top", "basalt_side", data);
                 case "polished_basalt":
-                    return GetTexture("polished_basalt_top", data);
+                    return RenderPillar("polished_basalt_top", "polished_basalt_side", data);
 
                 case "blackstone":
                     return GetTexture("blackstone_top", data);
