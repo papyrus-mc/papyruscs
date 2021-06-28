@@ -285,33 +285,13 @@ namespace Maploader.Renderer.Texture
                 }
                 case "bed":
                 {
-                    // TODO: fix bed textures and head/foot
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch (legacyData & 0xF7)
-                    {
-                        case 0:
-                            return CreateTexture((legacyData & 8) == 8
+                    // TODO: fix bed colours
+                    int headBit = (int)data.GetValueOrDefault("head_piece_bit", 0);
+                    RotateFlip rot = RotateFromDirection((int)data["direction"] - 1);
+                    return CreateTexture(headBit != 0
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlip.Rotate90FlipNone);
-                        case 1:
-                            return CreateTexture((legacyData & 8) == 8
-                                    ? "textures/blocks/bed_head_top"
-                                    : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlip.Rotate180FlipNone);
-                        case 2:
-                            return CreateTexture((legacyData & 8) == 8
-                                    ? "textures/blocks/bed_head_top"
-                                    : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlip.Rotate270FlipNone);
-                        case 3:
-                            return CreateTexture((legacyData & 8) == 8
-                                    ? "textures/blocks/bed_head_top"
-                                    : "textures/blocks/bed_feet_top")
-                                .Rotate(RotateFlip.RotateNoneFlipNone);
-                    }
-
-                    return null;
+                        .Rotate(rot);
                 }
 
                 case "planks":
@@ -424,10 +404,7 @@ namespace Maploader.Renderer.Texture
                     return RenderRail("rail_detector", "rail_detector_powered", data);
 
                 case "monster_egg":
-                {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    return GetTexture("monster_egg", Math.Max(0, legacyData - 1));
-                }
+                    return GetTexture("monster_egg", MonsterEggIndexes[(string)data["monster_egg_stone_type"]]);
 
                 case "red_mushroom_block":
                     return GetTexture("mushroom_red_top", data);
@@ -519,15 +496,14 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("smoker_top");
                 case "barrel":
                 {
-                    int legacyData = LegacyGetOldDataValue(data);
-                    switch ((BlockFace)legacyData)
+                    switch ((BlockFace)data["facing_direction"])
                     {
                         case BlockFace.Up:
                             return GetTexture("barrel_top");
                         case BlockFace.Down:
                             return GetTexture("barrel_bottom");
                         default:
-                            return GetTexture("barrel_side", legacyData);
+                            return GetTexture("barrel_side", data);
                     }
                 }
                 case "bell":
@@ -663,13 +639,13 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("stained_clay", data);
 
                 case "end_portal_frame":
-                    RotateFlip rot = RotateFlip.RotateNoneFlipNone;
-                    switch (LegacyGetOldDataValue(data)) {
-                        case 1: rot = RotateFlip.Rotate90FlipNone; break;
-                        case 2: rot = RotateFlip.Rotate180FlipNone; break;
-                        case 3: rot = RotateFlip.Rotate270FlipNone; break;
+                {
+                    RotateFlip rot = RotateFromDirection(data);
+                    TextureStack t = GetTexture("endframe_top", 0, null, rot);
+                    if ((int)data.GetValueOrDefault("end_portal_eye_bit", 0) != 0)
+                        t += GetTexture("endframe_eye", 0).Translate(4, 4, 8, 8).Rotate(rot);
+                    return t;
                     }
-                    return GetTexture("endframe_top", 0, null, rot);
 
                 case "wooden_door":
                     return GetTexture("door_upper");
@@ -894,12 +870,59 @@ namespace Maploader.Renderer.Texture
                 case "enchanting_table":
                     return GetTexture("enchanting_table_top", data);
 
+                case "coral_block":
+                {
+                    int dead = (int)data.GetValueOrDefault("dead_bit", 0);
+                    int coralIndex = CoralIndexes[(string)data["coral_color"]];
+                    return GetTexture("coral_block", coralIndex + dead * 5);
+                }
+                case "coral":
+                {
+                    int dead = (int)data.GetValueOrDefault("dead_bit", 0);
+                    int coralIndex = CoralIndexes[(string)data["coral_color"]];
+                    return GetTexture("coral", coralIndex + dead * 5);
+                }
+                case "coral_fan":
+                {
+                    int coralIndex = CoralIndexes[(string)data["coral_color"]];
+                    Rect srcRect = new Rect(0, 6, 16, 8);
+                    Rect destRect = new Rect(0, 0, 16, 8);
+                    return GetTexture("coral_fan", coralIndex).Translate(srcRect, destRect)
+                        + GetTexture("coral_fan", coralIndex).Translate(srcRect, destRect).Rotate(RotateFlip.Rotate90FlipNone)
+                        + GetTexture("coral_fan", coralIndex).Translate(srcRect, destRect).Rotate(RotateFlip.Rotate180FlipNone)
+                        + GetTexture("coral_fan", coralIndex).Translate(srcRect, destRect).Rotate(RotateFlip.Rotate270FlipNone);
+                }
+                case "coral_fan_dead":
+                {
+                    int coralIndex = CoralIndexes[(string)data["coral_color"]];
+                    Rect srcRect = new Rect(0, 6, 16, 8);
+                    Rect destRect = new Rect(0, 0, 16, 8);
+                    return GetTexture("coral_fan_dead", coralIndex).Translate(srcRect, destRect)
+                        + GetTexture("coral_fan_dead", coralIndex).Translate(srcRect, destRect).Rotate(RotateFlip.Rotate90FlipNone)
+                        + GetTexture("coral_fan_dead", coralIndex).Translate(srcRect, destRect).Rotate(RotateFlip.Rotate180FlipNone)
+                        + GetTexture("coral_fan_dead", coralIndex).Translate(srcRect, destRect).Rotate(RotateFlip.Rotate270FlipNone);
+                }
                 case "coral_fan_hang":
-                    return GetTexture("coral_fan_hang_a", data);
+                {
+                    int dead = (int)data.GetValueOrDefault("dead_bit", 0);
+                    int coralType = (int)data.GetValueOrDefault("coral_hang_type_bit", 0);
+                    RotateFlip rot = CoralRotations[(int)data.GetValueOrDefault("coral_direction", 0)];
+                    return GetTexture("coral_fan_hang_a", coralType + dead * 2, null, rot);
+                }
                 case "coral_fan_hang2":
-                    return GetTexture("coral_fan_hang_b", data);
+                {
+                    int dead = (int)data.GetValueOrDefault("dead_bit", 0);
+                    int coralType = (int)data.GetValueOrDefault("coral_hang_type_bit", 0);
+                    RotateFlip rot = CoralRotations[(int)data.GetValueOrDefault("coral_direction", 0)];
+                    return GetTexture("coral_fan_hang_b", coralType + dead * 2, null, rot);
+                }
                 case "coral_fan_hang3":
-                    return GetTexture("coral_fan_hang_c", data);
+                {
+                    int dead = (int)data.GetValueOrDefault("dead_bit", 0);
+                    int coralType = (int)data.GetValueOrDefault("coral_hang_type_bit", 0);
+                    RotateFlip rot = CoralRotations[(int)data.GetValueOrDefault("coral_direction", 0)];
+                    return GetTexture("coral_fan_hang_c", coralType + dead * 2, null, rot);
+                }
 
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
@@ -1174,7 +1197,7 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("deepslate_bricks", data);
                 case "deepslate":
                 case "infested_deepslate":
-                    return GetTexture("deepslate_top", data);
+                    return RenderPillar("deepslate_top", "deepslate", data);
 
                 case "lit_deepslate_redstone_ore":
                     return GetTexture("deepslate_redstone_ore", data);
@@ -1223,27 +1246,10 @@ namespace Maploader.Renderer.Texture
         }
         private TextureStack RenderWallSign (string texture, Dictionary<string, Object> data)
         {
-            var t = GetTexture(texture, 0).Translate(
+            return GetTexture(texture, data).Translate(
                 new Rect(0, 7, 14, 2),
                 new Rect(1, 0, 14, 2)
             );
-            switch (LegacyGetOldDataValue(data))
-            {
-                case 0:
-                    return t.Rotate(RotateFlip.Rotate270FlipNone);
-                case 1:
-                    return t.Rotate(RotateFlip.Rotate90FlipNone);
-                case 2:
-                    return t.Rotate(RotateFlip.Rotate180FlipNone);
-                case 3:
-                    return t.Rotate(RotateFlip.RotateNoneFlipNone);
-                case 4:
-                    return t.Rotate(RotateFlip.Rotate90FlipNone);
-                case 5:
-                    return t.Rotate(RotateFlip.Rotate270FlipNone);
-            }
-
-            return null;
         }
 
         private TextureStack RenderRail (string texture_off, string texture_on, Dictionary<string, Object> data)
@@ -1945,6 +1951,16 @@ namespace Maploader.Renderer.Texture
             {"andesite_smooth", 6},
         };
 
+        static private readonly Dictionary<string, int> MonsterEggIndexes = new Dictionary<string, int>()
+        {
+            {"cobblestone",          0},
+            {"stone_brick",          1},
+            {"mossy_stone_brick",    2},
+            {"cracked_stone_brick",  3},
+            {"chiseled_stone_brick", 4},
+            {"stone",                5},
+        };
+
         static private readonly Dictionary<int, int> GrowthEightToFour = new Dictionary<int, int>()
         {
             {0, 0},
@@ -1980,6 +1996,23 @@ namespace Maploader.Renderer.Texture
             {"fern",      3},
             {"rose",      4},
             {"paeonia",   5},
+        };
+
+        static private readonly Dictionary<string, int> CoralIndexes = new Dictionary<string, int>()
+        {
+            {"blue",    0},
+            {"pink",    1},
+            {"purple",  2},
+            {"red",     3},
+            {"yellow",  4},
+        };
+
+        static private readonly Dictionary<int, RotateFlip> CoralRotations = new Dictionary<int, RotateFlip>()
+        {
+            {0, RotateFlip.Rotate270FlipNone},
+            {1, RotateFlip.Rotate90FlipNone},
+            {2, RotateFlip.RotateNoneFlipNone},
+            {3, RotateFlip.Rotate180FlipNone},
         };
 
         private TextureStack GetTexture(string name, int data = 0, TextureTranslation translation = null, RotateFlip rot = RotateFlip.RotateNoneFlipNone)
