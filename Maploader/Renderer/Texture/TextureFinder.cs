@@ -1039,9 +1039,6 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("blast_furnace_top");
                 case "bookshelf":
                     return GetTexture("planks");
-                case "chain":
-                    // TODO: rotation, centring
-                    return GetTexture("chain1");
                 case "calcite":
                     return GetTexture("calcite");
                 case "chorus_flower":
@@ -1128,6 +1125,9 @@ namespace Maploader.Renderer.Texture
                 case "vine":
                     return GetTexture("vine_carried");
                 // TODO: fix string textures
+
+                case "chain":
+                    return RenderChain(data);
 
                 // Caves & Cliffs Update: Part 1 (1.17)
                 case "waxed_oxidized_cut_copper_stairs":
@@ -1250,6 +1250,29 @@ namespace Maploader.Renderer.Texture
                 new Rect(0, 7, 14, 2),
                 new Rect(1, 0, 14, 2)
             );
+        }
+
+        private TextureStack RenderChain(Dictionary<string, Object> data)
+        {
+            var t = GetTexture("chain1", 0).Translate(new Rect(0, 0, 3, 16), new Rect(6, 0, 4, 16));
+            
+             try
+            {
+                string dir = (string)data["pillar_axis"];
+                switch (dir)
+                {
+                    case "x":
+                        return t.Rotate(RotateFlip.Rotate90FlipNone);
+                    case "y":
+                        return GetTexture("chain2", data).Translate(new Rect(0, 6, 4, 3), new Rect(7, 7, 4, 3));
+                }
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid parameters for chain1");
+            }
+
+            return t;
         }
 
         private TextureStack RenderRail (string texture_off, string texture_on, Dictionary<string, Object> data)
