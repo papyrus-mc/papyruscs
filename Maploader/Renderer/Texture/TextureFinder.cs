@@ -1055,7 +1055,7 @@ namespace Maploader.Renderer.Texture
                 case "calcite":
                     return GetTexture("calcite");
                 case "chorus_flower":
-                    return GetTexture("chorus_flower");
+                    return GetTexture("chorus_flower", (int)data["age"] > 4 ? 1 : 0);
                 case "crimson_button":
                     return RenderButton(data, "crimson_planks");
                 case "crimson_double_slab":
