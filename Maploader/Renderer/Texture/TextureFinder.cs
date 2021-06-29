@@ -287,7 +287,7 @@ namespace Maploader.Renderer.Texture
                 {
                     // TODO: fix bed colours
                     int headBit = (int)data.GetValueOrDefault("head_piece_bit", 0);
-                    RotateFlip rot = RotateFromDirection((int)data["direction"] - 1);
+                    RotateFlip rot = RotateFromDirection(((int)data["direction"] + 3) % 4);
                     return CreateTexture(headBit != 0
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
@@ -1788,7 +1788,7 @@ namespace Maploader.Renderer.Texture
         }
         private RotateFlip RotateFromDirection (int direction)
         {
-            switch (direction)
+            switch (Math.Abs(direction % 4))
             {
                 case 0:
                     return RotateFlip.Rotate180FlipNone;
