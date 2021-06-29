@@ -353,7 +353,7 @@ namespace Maploader.Renderer.Texture
                 case "end_brick_stairs":
                     return GetTexture("end_bricks", data);   
                 case "smooth_quartz_stairs":
-                    return GetTexture("stair_quartz_block_top", data);   
+                    return GetTexture("stair_smooth_quartz_block", data);
 
                 case "cauldron":
                     return GetTexture("cauldron_inner", data)
@@ -703,7 +703,18 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("melon_top", data);
 
                 case "quartz_block":
-                    return GetTexture("quartz_block_top", data);
+                {
+                    switch ((string)data.GetValueOrDefault("chisel_type", "default"))
+                    {
+                        case "chiseled":
+                            data["val"] = 1; break;
+                        case "lines":
+                            data["val"] = 2; break;
+                        case "smooth":
+                            data["val"] = 3; break;
+                    }
+                    return RenderPillar("quartz_block_top", "quartz_block_side", data);
+                }
 
                 case "seaLantern":
                     return GetTexture("sea_lantern", data);
