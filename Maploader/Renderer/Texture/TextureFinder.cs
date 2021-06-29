@@ -314,21 +314,21 @@ namespace Maploader.Renderer.Texture
                 case "prismarine_stairs":
                     return GetTexture("prismarine"); // data = direction
                 case "spruce_stairs":
-                    return GetTexture("spruce_planks", data);
+                    return GetTexture("spruce_planks");
                 case "birch_stairs":
-                    return GetTexture("birch_planks", data);
+                    return GetTexture("birch_planks");
                 case "acacia_stairs":
-                    return GetTexture("acacia_planks", data);
+                    return GetTexture("acacia_planks");
                 case "dark_oak_stairs":
-                    return GetTexture("dark_oak_planks", data);
+                    return GetTexture("dark_oak_planks");
                 case "nether_brick_stairs":
-                    return GetTexture("nether_brick", data);
+                    return GetTexture("nether_brick");
                 case "sandstone_stairs":
-                    return GetTexture("sandstone_top", data);
+                    return GetTexture("sandstone_top");
                 case "normal_stone_stairs":
-                    return GetTexture("stone", data);
+                    return GetTexture("stone", 0);
                 case "jungle_stairs":
-                    return GetTexture("planks", data);
+                    return GetTexture("jungle_planks");
                 case "stone_brick_stairs":
                     return GetTexture("stonebrick");
                 case "stone_stairs":
@@ -403,6 +403,8 @@ namespace Maploader.Renderer.Texture
                 case "detector_rail":
                     return RenderRail("rail_detector", "rail_detector_powered", data);
 
+                case "stonebrick":
+                    return GetTexture("stonebrick", StoneBrickIndexes[(string)data["stone_brick_type"]]);
                 case "monster_egg":
                     return GetTexture("monster_egg", MonsterEggIndexes[(string)data["monster_egg_stone_type"]]);
 
@@ -1982,6 +1984,14 @@ namespace Maploader.Renderer.Texture
             {"cracked_stone_brick",  3},
             {"chiseled_stone_brick", 4},
             {"stone",                5},
+        };
+
+        static private readonly Dictionary<string, int> StoneBrickIndexes = new Dictionary<string, int>()
+        {
+            {"default",  0},
+            {"mossy",    1},
+            {"cracked",  2},
+            {"chiseled", 3},
         };
 
         static private readonly Dictionary<int, int> GrowthEightToFour = new Dictionary<int, int>()
