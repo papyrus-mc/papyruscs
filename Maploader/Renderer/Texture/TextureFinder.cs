@@ -1658,29 +1658,37 @@ namespace Maploader.Renderer.Texture
             try
             {
                 int dir = (int)data["facing_direction"];
+                TextureStack head = GetTexture(filename, 0);
 
                 switch(dir)
                 {
                     case 0:
                         // intentional fall-through
                     case 1:
-                        return GetTexture(filename, data).Translate(new Rect(0,0,4,4), new Rect(6,6,4,4));
+                        return head.Translate(new Rect(0,0,4,4), new Rect(6,6,4,4)).Rotate(RotateFlip.Rotate180FlipNone);
+                }
+
+                head = head.Translate(new Rect(0,0,4,4), new Rect(6,12,4,4));
+                TextureStack body = GetTexture(filename, 0).Translate(new Rect(0,4,2,12), new Rect(7,4,2,12));
+                switch(dir)
+                {
                     case 2:
-                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.RotateNoneFlipNone);
+                        // head rotation is opposite to body
+                        return body.Rotate(RotateFlip.RotateNoneFlipNone) + head.Rotate(RotateFlip.Rotate180FlipNone);
                     case 3:
-                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.Rotate180FlipNone);
+                        return body.Rotate(RotateFlip.Rotate180FlipNone) + head.Rotate(RotateFlip.RotateNoneFlipNone);
                     case 4:
-                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.Rotate270FlipNone);
+                        return body.Rotate(RotateFlip.Rotate270FlipNone) + head.Rotate(RotateFlip.Rotate90FlipNone);
                     case 5:
-                        return GetTexture(filename, 0).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15)).Rotate(RotateFlip.Rotate90FlipNone);
+                        return body.Rotate(RotateFlip.Rotate90FlipNone) + head.Rotate(RotateFlip.Rotate270FlipNone);
                 }
             }
             catch 
             {
-                Console.WriteLine("Invalid " + filename +" direction");
+                Console.WriteLine("Invalid " + filename + " direction");
             }
 
-            return GetTexture(filename, data).Translate(new Rect(0,0,4,16), new Rect(6,1,4,15));
+            return GetTexture(filename, data).Translate(new Rect(0,0,4,4), new Rect(6,6,4,4));
         }
 
         private TextureStack RenderItemFrame (Dictionary<string, Object> data, string texture)
