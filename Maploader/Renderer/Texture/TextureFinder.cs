@@ -1141,6 +1141,8 @@ namespace Maploader.Renderer.Texture
 
                 case "chain":
                     return RenderChain(data);
+                case "end_rod":
+                    return RenderEndRod(data);
 
                 // Caves & Cliffs Update: Part 1 (1.17)
                 case "waxed_oxidized_cut_copper_stairs":
@@ -1689,6 +1691,48 @@ namespace Maploader.Renderer.Texture
             }
 
             return GetTexture(filename, data).Translate(new Rect(0,0,4,4), new Rect(6,6,4,4));
+        }
+
+        private TextureStack RenderEndRod (Dictionary<string, Object> data)
+        {
+            string filename = "end_rod";
+            try
+            {
+                int dir = (int)data["facing_direction"];
+
+                switch(dir)
+                {
+                    case 0:
+                        // down -> base
+                        return GetTexture(filename).Translate(new Rect(2,2,4,4), new Rect(6,6,4,4));
+                    case 1:
+                        // up -> base + tip
+                        return GetTexture(filename).Translate(new Rect(2,2,4,4), new Rect(6,6,4,4))
+                            + GetTexture(filename).Translate(new Rect(2,0,2,2), new Rect(7,7,2,2));
+                }
+
+                TextureStack head = GetTexture(filename).Translate(new Rect(2,6,4,1), new Rect(6,0,4,1));
+                TextureStack body = GetTexture(filename).Translate(new Rect(0,0,2,15), new Rect(7,1,2,15));
+                RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+                switch(dir)
+                {
+                    case 2:
+                        rot = RotateFlip.RotateNoneFlipNone; break;
+                    case 3:
+                        rot = RotateFlip.Rotate180FlipNone; break;
+                    case 4:
+                        rot = RotateFlip.Rotate270FlipNone; break;
+                    case 5:
+                        rot = RotateFlip.Rotate90FlipNone; break;
+                }
+                return body.Rotate(rot) + head.Rotate(rot);
+            }
+            catch 
+            {
+                Console.WriteLine("Invalid " + filename + " direction");
+            }
+
+            return GetTexture(filename).Translate(new Rect(2,2,4,4), new Rect(6,6,4,4));
         }
 
         private TextureStack RenderItemFrame (Dictionary<string, Object> data, string texture)
