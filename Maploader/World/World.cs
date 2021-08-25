@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -460,16 +461,10 @@ namespace Maploader.World
 
         private static byte[] CreateKey(int x, int z)
         {
-            // Todo: make it faster
             var key = new byte[10];
-            using (var ms = new MemoryStream(key))
-            using (var bs = new BinaryWriter(ms))
-            {
-                bs.Write(x);
-                bs.Write(z);
-                bs.Write((byte) 47);
-            }
-
+            BinaryPrimitives.WriteInt32LittleEndian(key.AsSpan(), x);
+            BinaryPrimitives.WriteInt32LittleEndian(key.AsSpan(4), z);
+            key[8] = 47;
             return key;
         }
 
@@ -574,10 +569,9 @@ namespace Maploader.World
                 Z = z,
             };
 
-
+            var key = CreateKey(x, z);
             foreach (var kvp in Enumerable.Range(0,15))
             {
-                var key = CreateKey(x, z);
                 key[9] = (byte)kvp;
 
                 UIntPtr length;
