@@ -84,7 +84,7 @@ namespace Maploader.World
 
         public UInt32 CreateKey(int x, int y, int z)
         {
-            return (UInt32) (((x & 0xFF) << 24) + ((z & 0xFF) << 16) + ((y & 0xFF) << 8));
+            return (UInt32) (((x & 0xFF) << 24) + ((z & 0xFF) << 16) + ((y & 0xFFFF) << 0));
         }
     }
 }

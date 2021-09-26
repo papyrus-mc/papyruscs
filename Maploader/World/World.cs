@@ -114,7 +114,7 @@ namespace Maploader.World
 
             foreach (var subChunkRaw in data.SubChunks)
             {
-                CopySubChunkToChunk(c, subChunkRaw.Index, subChunkRaw.Data);
+                CopySubChunkToChunk(c, (sbyte)subChunkRaw.Index, subChunkRaw.Data);
             }
 
             return c;
@@ -282,8 +282,13 @@ namespace Maploader.World
 
         private void CopySubChunkToChunk(Chunk chunk, byte yIndex, byte[] data)
         {
-            byte subChunkId = yIndex;
-            int yOffset = subChunkId * 16;
+            // Cast byte to signed byte (255 -> -1)
+            CopySubChunkToChunk(chunk, (sbyte)yIndex, data);
+        }
+
+        private void CopySubChunkToChunk(Chunk chunk, sbyte yIndex, byte[] data)
+        {
+            int yOffset = yIndex * 16;
 
             using (MemoryStream ms = new MemoryStream(data))
             using (var bs = new BinaryReader(ms, Encoding.Default))
