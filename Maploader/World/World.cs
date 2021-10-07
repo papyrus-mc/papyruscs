@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -325,6 +325,10 @@ namespace Maploader.World
                     case 8:
                         storages = bs.ReadByte();
                         goto case 1;
+                    case 9:
+                        storages = bs.ReadByte();
+                        bs.ReadByte();
+                        goto case 1;
                     case 1:
                         for (int storage = 0; storage < storages; storage++)
                         {
@@ -399,6 +403,9 @@ namespace Maploader.World
 
                             ms.Position = afterPaletteIndex;
                         }
+                        break;
+                    default:
+                        Console.WriteLine($"Invalid version: {version}");
                         break;
                 }
             }
