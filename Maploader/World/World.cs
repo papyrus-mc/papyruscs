@@ -288,7 +288,6 @@ namespace Maploader.World
             using (MemoryStream ms = new MemoryStream(data))
             using (var bs = new BinaryReader(ms, Encoding.Default))
             {
-
                 int version = bs.ReadByte();
                 int storages = 1;
                 switch (version)
@@ -335,73 +334,85 @@ namespace Maploader.World
                             byte paletteAndFlag = bs.ReadByte();
                             bool isRuntime = (paletteAndFlag & 1) != 0;
                             int bitsPerBlock = paletteAndFlag >> 1;
-                            int blocksPerWord = (int)Math.Floor(32.0 / bitsPerBlock);
-                            int wordCount = (int)Math.Ceiling(4096.0 / blocksPerWord);
-                            long blockIndex = ms.Position;
-
-
-                            ms.Seek(wordCount * 4, SeekOrigin.Current); //4 bytes per word.
-                            //Palette localPallete; //To get 'real' data
-                            PersistancePalette localPalette = null;
-                            if (isRuntime)
+                            if (bitsPerBlock == 0)
                             {
-                                /*localPallete = new RuntimePallete(VarNumberSerializer.readSVarInt(bytes));
-                                for (int palletId = 0; palletId < localPallete.size(); palletId++)
-                                {
-                                    localPallete.put(palletId, VarNumberSerializer.readSVarInt(bytes));
-                                }*/
-                            }
-                            else
-                            {
-                                localPalette = new PersistancePalette(bs.ReadInt32());
+                                PersistancePalette localPalette = new PersistancePalette(1);
                                 for (int palletId = 0; palletId < localPalette.Size; palletId++)
                                 {
+                                    // Console.WriteLine($"    Pallet {palletId}/{localPalette.Size} {paletteAndFlag}");
                                     var (name, val) = GetNbtVal(ms);
                                     localPalette.Put(palletId, name, val);
                                 }
                             }
-
-                            long afterPaletteIndex = ms.Position;
-
-                            ms.Position = blockIndex;
-
-                            int position = 0;
-                            for (int wordi = 0; wordi < wordCount; wordi++)
+                            else
                             {
-                                int word = bs.ReadInt32();
-                                for (int block = 0; block < blocksPerWord; block++)
+                                int blocksPerWord = (int)Math.Floor(32.0 / bitsPerBlock);
+                                int wordCount = (int)Math.Ceiling(4096.0 / blocksPerWord);
+                                long blockIndex = ms.Position;
+
+                                ms.Seek(wordCount * 4, SeekOrigin.Current); //4 bytes per word.
+                                //Palette localPallete; //To get 'real' data
+                                PersistancePalette localPalette = null;
+                                if (isRuntime)
                                 {
-                                    // Todo ist diese Zeile hier richtig?
-
-                                    int state = (word >> ((position % blocksPerWord) * bitsPerBlock)) & ((1 << bitsPerBlock) - 1);
-                                    int x = (position >> 8) & 0xF;
-                                    int y = position & 0xF;
-                                    int z = (position >> 4) & 0xF;
-
-                                    try
+                                    /*localPallete = new RuntimePallete(VarNumberSerializer.readSVarInt(bytes));
+                                    for (int palletId = 0; palletId < localPallete.size(); palletId++)
                                     {
-                                        var b = localPalette.Keys[state];
-                                        // Todo: doppelte keys treten immer noch auf!?
-                                        chunk.SetBlockId(x, yOffset + y, z, ref b, true);
-                                    }
-                                    catch (Exception ex)
+                                        localPallete.put(palletId, VarNumberSerializer.readSVarInt(bytes));
+                                    }*/
+                                }
+                                else
+                                {
+                                    localPalette = new PersistancePalette(bs.ReadInt32());
+                                    for (int palletId = 0; palletId < localPalette.Size; palletId++)
                                     {
-                                        Console.WriteLine(ex.Message);
+                                        var (name, val) = GetNbtVal(ms);
+                                        localPalette.Put(palletId, name, val);
                                     }
-                                    //section.setBlockId(x, y, z, localPallete.getBlockId(state));
-                                    //section.setBlockData(x, y, z, localPallete.getBlockData(state));
-                                    position++;
+                                }
 
+                                long afterPaletteIndex = ms.Position;
+
+                                ms.Position = blockIndex;
+
+                                int position = 0;
+                                for (int wordi = 0; wordi < wordCount; wordi++)
+                                {
+                                    int word = bs.ReadInt32();
+                                    for (int block = 0; block < blocksPerWord; block++)
+                                    {
+                                        // Todo ist diese Zeile hier richtig?
+
+                                        int state = (word >> ((position % blocksPerWord) * bitsPerBlock)) & ((1 << bitsPerBlock) - 1);
+                                        int x = (position >> 8) & 0xF;
+                                        int y = position & 0xF;
+                                        int z = (position >> 4) & 0xF;
+
+                                        try
+                                        {
+                                            var b = localPalette.Keys[state];
+                                            // Todo: doppelte keys treten immer noch auf!?
+                                            chunk.SetBlockId(x, yOffset + y, z, ref b, true);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Console.WriteLine(ex.Message);
+                                        }
+                                        //section.setBlockId(x, y, z, localPallete.getBlockId(state));
+                                        //section.setBlockData(x, y, z, localPallete.getBlockData(state));
+                                        position++;
+
+                                        // Todo: irgendwas läuft hier noch nicht ganz rund, wir brechen mal ab
+                                        if (position >= 4096)
+                                            break;
+                                    }
                                     // Todo: irgendwas läuft hier noch nicht ganz rund, wir brechen mal ab
                                     if (position >= 4096)
                                         break;
                                 }
-                                // Todo: irgendwas läuft hier noch nicht ganz rund, wir brechen mal ab
-                                if (position >= 4096)
-                                    break;
-                            }
 
-                            ms.Position = afterPaletteIndex;
+                                ms.Position = afterPaletteIndex;
+                            }
                         }
                         break;
                     default:
