@@ -117,6 +117,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:cactus", true},
             {"minecraft:beetroot", true},
             {"minecraft:bell", true},
+            {"minecraft:wall_banner", true},
             {"minecraft:standing_banner", true},
 
             {"minecraft:wooden_button", true},
@@ -174,6 +175,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:weeping_vines", true},
             {"minecraft:warped_trapdoor", true},
             {"minecraft:crimson_trapdoor", true},
+            {"minecraft:twisting_vines", true},
 
             // Fixes
             {"minecraft:chorus_plant", true},
@@ -215,6 +217,26 @@ namespace Maploader.Renderer.Texture
             {"minecraft:cave_vines", true},
             {"minecraft:cave_vines_head_with_berries", true},
             {"minecraft:cave_vines_body_with_berries", true},
+
+            // Caves & Cliffs Update: Part 2
+            {"minecraft:candle", true},
+            {"minecraft:white_candle", true},
+            {"minecraft:orange_candle", true},
+            {"minecraft:magenta_candle", true},
+            {"minecraft:light_blue_candle", true},
+            {"minecraft:yellow_candle", true},
+            {"minecraft:lime_candle", true},
+            {"minecraft:pink_candle", true},
+            {"minecraft:gray_candle", true},
+            {"minecraft:light_gray_candle", true},
+            {"minecraft:cyan_candle", true},
+            {"minecraft:purple_candle", true},
+            {"minecraft:blue_candle", true},
+            {"minecraft:brown_candle", true},
+            {"minecraft:green_candle", true},
+            {"minecraft:red_candle", true},
+            {"minecraft:black_candle", true},
+            {"minecraft:spore_blossom", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -419,17 +441,14 @@ namespace Maploader.Renderer.Texture
                 case "mossy_cobblestone":
                     return GetTexture("cobblestone_mossy", data);
                 case "hard_glass":
-                    // Intentional fall-through
                 case "hard_stained_glass":
                     return GetTexture("stained_glass", data);
                 case "glass_pane":
-                    // Intentional fall-through
                 case "hard_glass_pane":
-                    return GetTexture("glass_pane_top", data);
+                    return RenderPane("glass_pane_top", data);
                 case "stained_glass_pane":
-                    // Intentional fall-through
                 case "hard_stained_glass_pane":
-                    return GetTexture("stained_glass_pane_top", data);
+                    return RenderPane("stained_glass_pane_top", data);
                 case "redstone_torch":
                     return GetTexture("redstone_torch_on", data);
                 case "unlit_redstone_torch":
@@ -588,6 +607,10 @@ namespace Maploader.Renderer.Texture
                     return RenderFence("planks", data);
                 case "podzol":
                     return GetTexture("dirt_podzol_top", data);
+                case "dirt":
+                    return GetTexture("dirt", (string)data.GetValueOrDefault("dirt_type", "normal") == "coarse" ? 1 : 0);
+                case "farmland":
+                    return GetTexture("farmland", (int)data.GetValueOrDefault("moisturized_amount‌", 0) >= 1 ? 0 : 1);
                 case "grass":
                     return GetTexture("grass_carried_top", data);
                 case "seagrass":
@@ -940,7 +963,7 @@ namespace Maploader.Renderer.Texture
                 case "scaffolding":
                     return GetTexture("scaffolding_top", data);
                 case "grindstone":
-                    return GetTexture("grindstone_pivot", data);
+                    return RenderGrindstone(data);
 
                 case "beetroot":
                 {
@@ -1250,6 +1273,25 @@ namespace Maploader.Renderer.Texture
                 case "cave_vines_head_with_berries":
                 case "cave_vines_body_with_berries":
                     return GetTexture("cave_vines_head", 1);
+
+                case "candle":
+                case "white_candle":
+                case "orange_candle":
+                case "magenta_candle":
+                case "light_blue_candle":
+                case "yellow_candle":
+                case "lime_candle":
+                case "pink_candle":
+                case "gray_candle":
+                case "light_gray_candle":
+                case "cyan_candle":
+                case "purple_candle":
+                case "blue_candle":
+                case "brown_candle":
+                case "green_candle":
+                case "red_candle":
+                case "black_candle":
+                    return RenderCandle(name, data);
             }
 
             return null;
@@ -1843,6 +1885,28 @@ namespace Maploader.Renderer.Texture
             RotateFlip rotation =
                 axis == "x" ? RotateFlip.Rotate90FlipNone : RotateFlip.RotateNoneFlipNone;
             return GetTexture(axis == "y" ? texture_top : texture_side, data, null, rotation);
+        }
+
+        private TextureStack RenderPane(string texture, Dictionary<string, Object> data)
+        {
+            TextureStack full = GetTexture(texture, data).Translate(7, 0, 2, 16);
+            full += GetTexture(texture, data).Translate(7, 0, 2, 16).Rotate(RotateFlip.Rotate90FlipNone);
+            return full;
+        }
+
+        private TextureStack RenderCandle(string texture, Dictionary<string, Object> data)
+        {
+            // Console.WriteLine($"{texture}: " + string.Join(", ", data.Select(pair => $"{pair.Key}:{pair.Value}")));
+            return GetTexture(texture, (int)data.GetValueOrDefault("lit", 0)).Translate(new Rect(0, 8, 2, 6), new Rect(7, 6, 2, 6));
+        }
+
+        private TextureStack RenderGrindstone(Dictionary<string, Object> data)
+        {
+            Console.WriteLine($"GRINDSTONE: " + string.Join(", ", data.Select(pair => $"{pair.Key}:{pair.Value}")));
+            TextureStack full = GetTexture("grindstone_pivot").Translate(new Rect(6, 0, 2, 6), new Rect(2, 5, 2, 6));
+            full += GetTexture("grindstone_round").Translate(new Rect(0, 0, 8, 12), new Rect(4, 2, 8, 12));
+            full += GetTexture("grindstone_pivot").Translate(new Rect(8, 0, 2, 6), new Rect(12, 5, 2, 6));
+            return full;
         }
 
         private RotateFlip RotateFromDirection (Dictionary<string, Object> data)

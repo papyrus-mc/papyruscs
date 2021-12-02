@@ -76,10 +76,10 @@ namespace Maploader.World
             var ret = new ChunkData();
             var key = CreateKey(x, z);
 
-            for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
+            for (byte subChunkIdx = 0; subChunkIdx < 16; subChunkIdx++)
             {
                 key[9] = subChunkIdx;
-                UIntPtr length;     
+                UIntPtr length;
                 var data = db.Get(key, out length);
                 if (data != null)
                 {
@@ -427,12 +427,133 @@ namespace Maploader.World
             }
         }
 
+        private static bool IsNbtTagValInt(fNbt.Tags.NbtTag tag)
+        {
+            return (
+                (tag.Name == "direction")  // [0..3]
+                || (tag.Name == "facing_direction")
+                || (tag.Name == "open_bit")  // door,trapdoor: [0,1]
+                || (tag.Name == "door_hinge_bit")  // door: [0,1]
+                || (tag.Name == "multi_face_direction_bits")
+                || (tag.Name == "stripped_bit")
+                || (tag.Name == "wall_post_bit")
+                || (tag.Name == "button_pressed_bit")
+                || (tag.Name == "rail_direction")
+                || (tag.Name == "rail_data_bit")
+                || (tag.Name == "bite_counter")
+                || (tag.Name == "respawn_anchor_charge")
+                || (tag.Name == "growth")
+                || (tag.Name == "powered_bit")
+                || (tag.Name == "upper_block_bit")
+                || (tag.Name == "hanging")
+                || (tag.Name == "coral_direction")  // coral fan (wall): [0..3]
+                || (tag.Name == "coral_hang_type_bit")  // coral fan (wall): [0,1]
+                || (tag.Name == "dead_bit")  // coral fan (wall),sea pickle: [0,1]
+                || (tag.Name == "end_portal_eye_bit")
+                || (tag.Name == "head_piece_bit")
+                || (tag.Name == "age")
+                || (tag.Name == "fill_level")  // cauldron: [0..6]
+                || (tag.Name == "extinguished")  // campfire: [0,1]
+                || (tag.Name == "composter_fill_level")  // composter: [0..8]
+                || (tag.Name == "attached_bit")  // tripwire: [0,1]
+                || (tag.Name == "moisturized_amount‌")  // farmland: [0..7]
+                || (tag.Name == "facing_bit")  // bed: [0..3]
+                || (tag.Name == "head_bit")  // bed: [false,true]
+                || (tag.Name == "redstone_signal")  // redstone dust: [0..15]
+                || (tag.Name == "output_lit_bit")  // comparator: [0,1]
+                || (tag.Name == "output_subtract_bit")  // comparator: [0,1]
+                || (tag.Name == "repeater_delay")  // repeater: [0..3]
+                || (tag.Name == "candles")  // candle: [0..3] where 0 means 1 candle and 3 means 4 candles
+                || (tag.Name == "cluster_count")  // sea pickle: [0..3] where 0 means 1 pickle and 3 means 4 pickles
+                || (tag.Name == "lit")  // candle: [0,1]
+                || (tag.Name == "vine_direction_bits")  // vines: [0..15]
+                || (tag.Name == "ground_sign_direction")  // sign (floor): [0..15]
+                || (tag.Name == "item_frame_map_bit")  // item frame: [false,true]
+                || (tag.Name == "item_frame_photo_bit")  // item frame?: [false,true]
+                || (tag.Name == "coral_fan_direction")  // coral fan (floor): [0,1]
+                || (tag.Name == "huge_mushroom_bits")  // mushroom block: [0..15]
+            );
+        }
+
+        private static bool IsNbtTagValString(fNbt.Tags.NbtTag tag)
+        {
+            return (
+                (tag.Name == "color")
+                || (tag.Name == "lever_direction")
+                || (tag.Name == "wall_block_type")
+                || (tag.Name == "pillar_axis")  // many (e.g. logs) x,y,z
+                || (tag.Name == "wood_type")  // planks: oak,spruce,birch,jungle,acacia,dark_oak
+                || (tag.Name == "old_log_type")  // logs: oak,spruce,birch,jungle
+                || (tag.Name == "new_log_type")  // logs: acacia,dark_oak
+                || (tag.Name == "old_leaf_type")  // leaves: oak,spruce,birch,jungle
+                || (tag.Name == "new_leaf_type")  // leaves: acacia,dark_oak
+                || (tag.Name == "sapling_type")  // saplings,bamboo sapling (unused): oak,spruce,birch,jungle,acacia,dark_oak
+                || tag.Name.StartsWith("wall_connection_type_")
+                || (tag.Name == "chisel_type")
+                || tag.Name.StartsWith("stone_slab_type")
+                || (tag.Name == "sponge_type")
+                || (tag.Name == "double_plant_type")
+                || (tag.Name == "flower_type")
+                || (tag.Name == "sand_type")
+                || (tag.Name == "stone_type")
+                || (tag.Name == "damage")
+                || (tag.Name == "dripstone_thickness")
+                || (tag.Name == "coral_color")  // coral: blue,pink,purple,red,yellow
+                || (tag.Name == "monster_egg_stone_type")
+                || (tag.Name == "stone_brick_type")
+                || (tag.Name == "dirt_type")  // dirt: normal,coarse
+                || (tag.Name == "cauldron_liquid")  // cauldron: lava,water,powder_snow
+                || (tag.Name == "torch_facing_direction")  // torch: north,east,south,west,top,unknown
+                || (tag.Name == "attachment")  // grindstone,bell: standing,side,hanging,multiple
+                || (tag.Name == "sand_stone_type")  // sandstone: default,heiroglyphs,cut,smooth
+                || (tag.Name == "tall_grass_type")  // tall grass: default,tall,fern,snow
+                || (tag.Name == "sea_grass_type")  // seagrass: default,double_bot,double_top
+                || (tag.Name == "bamboo_leaf_size")  // bamboo: no_leaves,small_leaves,large_leaves
+                || (tag.Name == "bamboo_stalk_thickness")  // bamboo: thin,thick
+                || (tag.Name == "cracked_state")  // turtle eggs: no_cracks,cracked,max_cracked
+                || (tag.Name == "turtle_egg_count")  // turtle eggs: one_egg,two_egg,three_egg,four_egg
+            );
+        }
+
+        private static bool IsNbtTagValIgnored(fNbt.Tags.NbtTag tag)
+        {
+            return (
+                (tag.Name == "infiniburn_bit")  // bedrock: [false,true]
+                || (tag.Name == "persistent_bit")  // leaves: [false,true]
+                || (tag.Name == "update_bit")  // leaves: [false,true]
+                || (tag.Name == "upside_down_bit")  // stairs: [false,true]
+                || (tag.Name == "weirdo_direction")  // stairs: [0..3]
+                || (tag.Name == "age_bit")  // saplings,bamboo: [false,true]
+                || (tag.Name == "liquid_depth")  // water/lava: [0]-source [1..7]-distance [8..15]-falling
+                || (tag.Name == "no_drop_bit")  // head: [0,1]
+                || (tag.Name.StartsWith("brewing_stand_slot_") && tag.Name.EndsWith("_bit"))  // brewing stand: [0,1]
+                || (tag.Name == "disarmed_bit")  // tripwire: [0,1]
+                || (tag.Name == "suspended_bit")  // tripwire: [0,1]
+                || (tag.Name == "honey_level")  // bee nest/hive: [0..5]
+                || (tag.Name == "height")  // snow: [0..7]
+                || (tag.Name == "covered_bit")  // snow: [0,1]
+                || (tag.Name == "occupied_bit")  // bed: [false,true]
+                || (tag.Name == "stability")  // scaffolding: [0..7]
+                || (tag.Name == "stability_check")  // scaffolding: [false,true]
+                || (tag.Name == "toggle_bit")  // hopper,bell: [0,1]
+                || (tag.Name == "triggered_bit")  // dispenser,dropper: [false,true]
+                || (tag.Name == "allow_underwater_bit")  // tnt: [false,true]
+                || (tag.Name == "explode_bit")  // tnt: [false,true]
+                || (tag.Name == "deprecated")  // hay bale: [0..3], not used
+                || (tag.Name == "in_wall_bit")  // fence gate: [0,1]
+                || (tag.Name == "twisting_vines_age")  // twisting vines: [0..25]
+                || (tag.Name == "weeping_vines_age")  // weeping vines: [0..25]
+                || (tag.Name == "top_slot_bit")  // slab: [false,true]
+                || (tag.Name == "kelp_age")  // kelp
+            );
+        }
+
         private static (string, Dictionary<string, Object>) GetNbtVal(MemoryStream ms)
         {
             string name = "";
             var nbt = new NbtReader(ms, false);
             var dictParams = new Dictionary<string, Object>();
-            
+
             nbt.ReadToFollowing();
             if (!nbt.IsCompound)
                 throw new Exception("Could not read nbt");
@@ -442,31 +563,39 @@ namespace Maploader.World
                 name = nbt.ReadValueAs<string>();
 
                 nbt.ReadToNextSibling();
-                while(nbt.TagType != NbtTagType.End)
+                while (nbt.TagType != NbtTagType.End)
                 {
                     fNbt.Tags.NbtTag tag = nbt.ReadAsTag();
-                    switch(tag.Name)
+                    switch (tag.Name)
                     {
                         case "version":
                             continue;
                         case "states":
-                                IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
-                                foreach(var subtag in enumTag)
+                            IEnumerable<fNbt.Tags.NbtTag> enumTag = (IEnumerable<fNbt.Tags.NbtTag>)tag;
+                            foreach (var subtag in enumTag)
+                            {
+                                if (IsNbtTagValInt(subtag))
                                 {
-                                    if((subtag.Name == "direction") || (subtag.Name == "facing_direction") || (subtag.Name == "open_bit") || (subtag.Name == "multi_face_direction_bits") || (subtag.Name == "stripped_bit") || (subtag.Name == "wall_post_bit") || (subtag.Name == "button_pressed_bit") || (subtag.Name == "rail_direction") || (subtag.Name == "rail_data_bit") || (subtag.Name == "bite_counter") || (subtag.Name == "respawn_anchor_charge") || (subtag.Name == "growth") || (subtag.Name == "powered_bit") || (subtag.Name == "upper_block_bit") || (subtag.Name == "hanging") || (subtag.Name == "coral_direction") || (subtag.Name == "coral_hang_type_bit") || (subtag.Name == "dead_bit") || (subtag.Name == "end_portal_eye_bit") || (subtag.Name == "head_piece_bit") || (subtag.Name == "age"))
-                                    {
-                                        int subtagvalue = GetTagValue(subtag);
-                                        dictParams.Add(subtag.Name, subtagvalue); 
-                                    }
-                                    if((subtag.Name == "color") || (subtag.Name == "lever_direction") || (subtag.Name == "wall_block_type") || (subtag.Name == "pillar_axis") || (subtag.Name == "wood_type") || (subtag.Name == "old_log_type") || (subtag.Name == "new_log_type") || (subtag.Name == "old_leaf_type") || (subtag.Name == "new_leaf_type") || (subtag.Name == "sapling_type") || subtag.Name.StartsWith("wall_connection_type_") || (subtag.Name == "chisel_type") || subtag.Name.StartsWith("stone_slab_type") || (subtag.Name == "sponge_type") || (subtag.Name == "double_plant_type") || (subtag.Name == "flower_type") || (subtag.Name == "sand_type") || (subtag.Name == "stone_type") || (subtag.Name == "damage") || (subtag.Name == "dripstone_thickness") || (subtag.Name == "coral_color") || (subtag.Name == "monster_egg_stone_type") || (subtag.Name == "stone_brick_type"))
-                                    {
-                                        dictParams.Add(subtag.Name, subtag.StringValue);
-                                    }
+                                    int subtagvalue = GetTagValue(subtag);
+                                    dictParams.Add(subtag.Name, subtagvalue);
                                 }
+                                else if (IsNbtTagValString(subtag))
+                                {
+                                    dictParams.Add(subtag.Name, subtag.StringValue);
+                                }
+                                else if (IsNbtTagValIgnored(subtag))
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    // Console.WriteLine($"SUBTAG({subtag.TagType.ToString()} {subtag.Name})");
+                                }
+                            }
                             break;
                         case "val":
                             int value = GetTagValue(tag);
-                            dictParams.Add(tag.Name, value); 
+                            dictParams.Add(tag.Name, value);
                             break;
                     }
                 }
@@ -598,10 +727,10 @@ namespace Maploader.World
             };
 
 
-            foreach (var kvp in Enumerable.Range(0,15))
+            foreach (byte kvp in Enumerable.Range(0, 16))
             {
                 var key = CreateKey(x, z);
-                key[9] = (byte)kvp;
+                key[9] = kvp;
 
                 UIntPtr length;
                 var data = db.Get(key, out length);
@@ -609,7 +738,7 @@ namespace Maploader.World
                 {
                     var subChunkData = new SubChunkData()
                     {
-                        Index = (byte)kvp,
+                        Index = kvp,
                         Data = data,
                         DataLength = (int)length,
                         Key = key,
