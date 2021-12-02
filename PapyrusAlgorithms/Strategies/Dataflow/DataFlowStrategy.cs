@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -212,10 +212,10 @@ namespace PapyrusAlgorithms.Strategies.Dataflow
             var sourceZoomLevel = this.NewInitialZoomLevel;
             var sourceDiameter = this.InitialDiameter;
 
-            var sourceLevelXmin = XMin / ChunksPerDimension;
-            var sourceLevelXmax = XMax / ChunksPerDimension;
-            var sourceLevelZmin = ZMin / ChunksPerDimension;
-            var sourceLevelZmax = ZMax / ChunksPerDimension;
+            var sourceLevelXmin = XMin / ChunksPerDimension + (XMin < 0 ? -1 : 0);
+            var sourceLevelXmax = XMax / ChunksPerDimension + (XMax < 0 ? 0 : +1);
+            var sourceLevelZmin = ZMin / ChunksPerDimension + (ZMin < 0 ? -1 : 0);
+            var sourceLevelZmax = ZMax / ChunksPerDimension + (ZMax < 0 ? 0 : +1);
 
 
             while (sourceZoomLevel > NewLastZoomLevel)
