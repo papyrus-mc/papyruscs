@@ -830,8 +830,9 @@ namespace Maploader.Renderer.Texture
                         new Rect(0, 0, 4, 16)
                     ));
 
+                case "furnace":
                 case "lit_furnace":
-                    return GetTexture("redstone_torch_off", data);
+                    return GetTexture("furnace_top", data);
 
                 case "concrete":
                     return GetTexture("concrete", data);
