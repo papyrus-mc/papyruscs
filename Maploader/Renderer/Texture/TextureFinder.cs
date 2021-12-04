@@ -1530,58 +1530,55 @@ namespace Maploader.Renderer.Texture
             return GetTexture("piston_side", data);
         }
 
-        private TextureStack RenderLever (Dictionary<string, Object> data)
+        private TextureStack RenderLever(Dictionary<string, Object> data)
         {
+            Console.WriteLine($"LEVER: " + string.Join(", ", data.Select(pair => $"{pair.Key}: {pair.Value}")));
+            string dir = (string)data.GetValueOrDefault("lever_direction", "up_north_south");
+            TextureTranslation trans = dir.StartsWith("up_") || dir.StartsWith("down_")
+                ? new TextureTranslation(dest: new Rect(7, 0, 2, 8), source: new Rect(7, 6, 2, 8))
+                : new TextureTranslation(dest: new Rect(7, 8, 2, 5), source: new Rect(7, 6, 2, 5));
             RotateFlip rot = RotateFlip.RotateNoneFlipNone;
-            TextureTranslation trans = null;
-            try
-            {
-                string dir = (string)data["lever_direction"];
-                switch (dir)
-                {
-                    case "up_north_south":
-                        // Intentional fall-through
-                        trans = new TextureTranslation(new Rect(7, 3, 2, 9), new Rect(7, 6, 2, 9));
-                        rot = RotateFlip.Rotate180FlipNone;
-                        try
-                        {
-                            if((int)data["open_bit"] == 1)
-                            {
-                                rot = RotateFlip.RotateNoneFlipNone;
-                            }
-                        }
-                        catch {}
-                        break;
-                    case "north":
-                        rot = RotateFlip.RotateNoneFlipNone;
-                        break;
-                    case "east":
-                        rot = RotateFlip.Rotate90FlipNone;
-                        break;
-                    case "south":
-                        rot = RotateFlip.Rotate180FlipNone;
-                        break;
-                    case "up_east_west":
-                        // Intentional fall-through
-                        trans = new TextureTranslation(new Rect(7, 3, 2, 9), new Rect(7, 6, 2, 9));
-                        rot = RotateFlip.Rotate90FlipNone;
-                        try
-                        {
-                            if((int)data["open_bit"] == 1)
-                            {
-                                rot = RotateFlip.Rotate270FlipNone;
-                            }
-                        }
-                        catch {}
-                        break;
-                    case "west":
-                        rot = RotateFlip.Rotate270FlipNone;
-                        break;
-                }
-            }
-            catch {}
 
-            return GetTexture("lever", data, trans, rot);
+            TextureTranslation cobbletrans = null;
+            bool cobbleontop = !dir.StartsWith("up_");
+
+            switch (dir)
+            {
+                case "up_north_south":
+                case "down_north_south":
+                    rot = (int)data.GetValueOrDefault("open_bit", 0) == 1
+                        ? RotateFlip.RotateNoneFlipNone
+                        : RotateFlip.Rotate180FlipNone;
+                    cobbletrans = new TextureTranslation(new Rect(5, 4, 6, 8));
+                    break;
+                case "up_east_west":
+                case "down_east_west":
+                    rot = (int)data.GetValueOrDefault("open_bit", 0) == 1
+                        ? RotateFlip.Rotate270FlipNone
+                        : RotateFlip.Rotate90FlipNone;
+                    cobbletrans = new TextureTranslation(new Rect(4, 5, 8, 6));
+                    break;
+                case "north":
+                    rot = RotateFlip.RotateNoneFlipNone;
+                    cobbletrans = new TextureTranslation(new Rect(5, 13, 6, 3));
+                    break;
+                case "east":
+                    rot = RotateFlip.Rotate90FlipNone;
+                    cobbletrans = new TextureTranslation(new Rect(0, 5, 3, 6));
+                    break;
+                case "south":
+                    rot = RotateFlip.Rotate180FlipNone;
+                    cobbletrans = new TextureTranslation(new Rect(5, 0, 6, 3));
+                    break;
+                case "west":
+                    rot = RotateFlip.Rotate270FlipNone;
+                    cobbletrans = new TextureTranslation(new Rect(13, 5, 3, 6));
+                    break;
+            }
+
+            TextureStack lever = GetTexture("lever", data, trans, rot);
+            TextureStack cobble = GetTexture("cobblestone", 0, cobbletrans);
+            return cobbleontop ? lever + cobble : cobble + lever;
         }
 
         private TextureStack RenderWall (Dictionary<string, Object> data, string texture)
