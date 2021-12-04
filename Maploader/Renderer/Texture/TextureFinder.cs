@@ -703,8 +703,9 @@ namespace Maploader.Renderer.Texture
                 case "jungle_button":
                     return RenderButton(data, "jungle_planks");
                 case "wall_banner":
+                    return RenderWallBanner("sign", data);
                 case "standing_banner":
-                    return RenderSign(data, "sign");
+                    return RenderBanner("sign", data);
                 case "tripWire":
                     return GetTexture("trip_wire", data);
                 case "tripwire_hook":
@@ -1299,15 +1300,23 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderWallSign (Dictionary<string, Object> data, string texture)
+        private TextureStack RenderWallSign(Dictionary<string, Object> data, string texture)
         {
             return RenderWallSign(texture, data);
         }
-        private TextureStack RenderWallSign (string texture, Dictionary<string, Object> data)
+        private TextureStack RenderWallSign(string texture, Dictionary<string, Object> data)
         {
             return GetTexture(texture, data).Translate(
                 new Rect(0, 7, 14, 2),
                 new Rect(1, 0, 14, 2)
+            );
+        }
+
+        private TextureStack RenderWallBanner(string texture, Dictionary<string, Object> data)
+        {
+            return GetTexture(texture, data).Translate(
+                new Rect(3, 7, 10, 2),
+                new Rect(3, 0, 10, 2)
             );
         }
 
@@ -1360,17 +1369,59 @@ namespace Maploader.Renderer.Texture
             return null;
         }
 
-        private TextureStack RenderSign (Dictionary<string, Object> data, string texture)
+        private TextureStack RenderSign(Dictionary<string, Object> data, string texture)
         {
             return RenderSign(texture, data);
         }
         private TextureStack RenderSign(string texture, Dictionary<string, Object> data)
         {
-            // TODO: rotation
+            RotateFlip rot = GroundSignDirection(data);
             return GetTexture(texture, 0).Translate(
                 new Rect(0, 7, 14, 2),
                 new Rect(1, 7, 14, 2)
-            );
+            ).Rotate(rot);
+        }
+
+        private TextureStack RenderBanner(string texture, Dictionary<string, Object> data)
+        {
+            RotateFlip rot = GroundSignDirection(data);
+            return GetTexture(texture, 0).Translate(
+                new Rect(3, 7, 10, 2),
+                new Rect(3, 7, 10, 2)
+            ).Rotate(rot);
+        }
+
+        private RotateFlip GroundSignDirection(Dictionary<string, object> data)
+        {
+            return GroundSignDirection((int)data.GetValueOrDefault("ground_sign_direction", 0));
+        }
+        private RotateFlip GroundSignDirection(int rotation)
+        {
+            // Approximates rotation to nearest 90 degrees
+            switch (rotation)
+            {
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                    return RotateFlip.Rotate90FlipNone;
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                    return RotateFlip.Rotate180FlipNone;
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                    return RotateFlip.Rotate270FlipNone;
+                case 14:
+                case 15:
+                case 0:
+                case 1:
+                default:
+                    return RotateFlip.RotateNoneFlipNone;
+            }
         }
 
         private TextureStack RenderButton (Dictionary<string, Object> data, string texture)
