@@ -1897,8 +1897,25 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderCandle(string texture, Dictionary<string, Object> data)
         {
-            // Console.WriteLine($"{texture}: " + string.Join(", ", data.Select(pair => $"{pair.Key}:{pair.Value}")));
-            return GetTexture(texture, (int)data.GetValueOrDefault("lit", 0)).Translate(new Rect(0, 8, 2, 6), new Rect(7, 6, 2, 6));
+            int val = (int)data.GetValueOrDefault("lit", 0);
+            switch ((int)data.GetValueOrDefault("candles", 0))
+            {
+                case 1:  // 2 candles
+                    return GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(6, 7, 2, 6))
+                        + GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(9, 5, 2, 6));
+                case 2:  // 3 candles
+                    return GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(9, 5, 2, 6))
+                        + GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(6, 6, 2, 6))
+                        + GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(8, 8, 2, 6));
+                case 3:  // 4 candles
+                    return GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(6, 6, 2, 6))
+                        + GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(9, 7, 2, 6))
+                        + GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(5, 8, 2, 6))
+                        + GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(8, 9, 2, 6));
+                case 0:  // 1 candle
+                default:
+                    return GetTexture(texture, val).Translate(new Rect(0, 8, 2, 6), new Rect(7, 6, 2, 6));
+            }
         }
 
         private TextureStack RenderGrindstone(Dictionary<string, Object> data)
