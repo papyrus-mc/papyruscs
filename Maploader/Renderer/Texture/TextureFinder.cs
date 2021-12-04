@@ -193,6 +193,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:coral_fan_hang3", true},
             {"minecraft:sea_pickle", true},
             {"minecraft:wither_rose", true},
+            {"minecraft:grindstone", true},
 
             // Caves & Cliffs Update: Part 1
             {"minecraft:lightning_rod", true},
@@ -1920,10 +1921,28 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderGrindstone(Dictionary<string, Object> data)
         {
-            Console.WriteLine($"GRINDSTONE: " + string.Join(", ", data.Select(pair => $"{pair.Key}:{pair.Value}")));
-            TextureStack full = GetTexture("grindstone_pivot").Translate(new Rect(6, 0, 2, 6), new Rect(2, 5, 2, 6));
-            full += GetTexture("grindstone_round").Translate(new Rect(0, 0, 8, 12), new Rect(4, 2, 8, 12));
-            full += GetTexture("grindstone_pivot").Translate(new Rect(8, 0, 2, 6), new Rect(12, 5, 2, 6));
+            TextureStack full;
+            RotateFlip rot = RotateFromDirection(data);
+            string attachment = (string)data.GetValueOrDefault("attachment", "standing");
+            if (attachment == "side")
+            {
+                full = GetTexture("grindstone_round").Translate(new Rect(0, 0, 8, 12), new Rect(4, 0, 8, 12)).Rotate(rot);
+                full += GetTexture("grindstone_pivot").Translate(new Rect(6, 0, 2, 6), new Rect(2, 3, 2, 6)).Rotate(rot);
+                full += GetTexture("grindstone_pivot").Translate(new Rect(8, 0, 2, 6), new Rect(12, 3, 2, 6)).Rotate(rot);
+                full += GetTexture("grindstone_leg").Translate(new Rect(0, 0, 2, 7), new Rect(2, 9, 2, 7)).Rotate(rot);
+                full += GetTexture("grindstone_leg").Translate(new Rect(0, 0, 2, 7), new Rect(12, 9, 2, 7)).Rotate(rot);
+            }
+            else
+            {
+                full = GetTexture("grindstone_round").Translate(new Rect(0, 0, 8, 12), new Rect(4, 2, 8, 12)).Rotate(rot);
+                full += GetTexture("grindstone_pivot").Translate(new Rect(6, 0, 2, 6), new Rect(2, 5, 2, 6)).Rotate(rot);
+                full += GetTexture("grindstone_pivot").Translate(new Rect(8, 0, 2, 6), new Rect(12, 5, 2, 6)).Rotate(rot);
+                if (attachment == "hanging")
+                {
+                    full += GetTexture("grindstone_leg").Translate(new Rect(0, 0, 2, 4), new Rect(2, 6, 2, 4)).Rotate(rot);
+                    full += GetTexture("grindstone_leg").Translate(new Rect(0, 0, 2, 4), new Rect(12, 6, 2, 4)).Rotate(rot);
+                }
+            }
             return full;
         }
 
