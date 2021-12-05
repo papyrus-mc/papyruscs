@@ -771,7 +771,7 @@ namespace Maploader.Renderer.Texture
                 case "stonecutter_block":
                     return GetTexture("stonecutter2_top", data);
                 case "loom":
-                    return GetTexture("loom_top", data);
+                    return GetTexture("loom_top", 0, null, RotateFromDirection(data, offset: 2));
                 case "smithing_table":
                     return GetTexture("smithing_table_top", data);
                 case "cartography_table":
