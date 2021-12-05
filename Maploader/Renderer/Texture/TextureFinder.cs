@@ -459,15 +459,9 @@ namespace Maploader.Renderer.Texture
                 case "lit_redstone_ore":
                     return GetTexture("redstone_ore", data);
                 case "unpowered_repeater":
-                {
-                    int dir = ((int)data.GetValueOrDefault("direction") + 2) % 4;
-                    return GetTexture("repeater_up", 0, null, RotateFromDirection(dir));
-                }
+                    return RenderRepeater(false, data);
                 case "powered_repeater":
-                {
-                    int dir = ((int)data.GetValueOrDefault("direction") + 2) % 4;
-                    return GetTexture("repeater_up", 1, null, RotateFromDirection(dir));
-                }
+                    return RenderRepeater(true, data);
                 case "daylight_detector":
                     return GetTexture("daylight_detector_top", 0);
                 case "daylight_detector_inverted":
@@ -759,11 +753,10 @@ namespace Maploader.Renderer.Texture
                             new Rect(0, 0, 4, 4),
                             new Rect(6, 6, 4, 4));
 
-
                 case "powered_comparator":
-                    return GetTexture("comparator_up", data);
+                    return RenderComparator(true, data);
                 case "unpowered_comparator":
-                    return GetTexture("comparator_up", data);
+                    return RenderComparator(false, data);
 
                 case "pistonArmCollision":
                 return GetTexture("piston_top_normal", data);
@@ -1583,7 +1576,6 @@ namespace Maploader.Renderer.Texture
 
         private TextureStack RenderLever(Dictionary<string, Object> data)
         {
-            Console.WriteLine($"LEVER: " + string.Join(", ", data.Select(pair => $"{pair.Key}: {pair.Value}")));
             string dir = (string)data.GetValueOrDefault("lever_direction", "up_north_south");
             TextureTranslation trans = dir.StartsWith("up_") || dir.StartsWith("down_")
                 ? new TextureTranslation(dest: new Rect(7, 0, 2, 8), source: new Rect(7, 6, 2, 8))
@@ -1994,13 +1986,45 @@ namespace Maploader.Renderer.Texture
             return full;
         }
 
-        private RotateFlip RotateFromDirection (Dictionary<string, Object> data)
+        private TextureStack RenderComparator(bool powered, Dictionary<string, Object> data)
+        {
+            Rect torchsource = new Rect(7, 6, 2, 2);
+            RotateFlip rot = RotateFromDirection(data, offset: 2);
+            // int output_lit = (int)data.GetValueOrDefault("output_lit_bit");
+            int output_lit = powered ? 1 : 0;
+            int subtract_lit = (int)data.GetValueOrDefault("output_subtract_bit");
+
+            TextureStack image = GetTexture("comparator_up", output_lit, null, rot);
+            image += GetTexture("comparator_torch", subtract_lit, new TextureTranslation(dest: new Rect(7, 2, 2, 2), source: torchsource), rot);  // end torch
+            image += GetTexture("comparator_torch", output_lit, new TextureTranslation(dest: new Rect(4, 11, 2, 2), source: torchsource), rot);  // left torch
+            image += GetTexture("comparator_torch", output_lit, new TextureTranslation(dest: new Rect(10, 11, 2, 2), source: torchsource), rot);  // right torch
+            return image;
+        }
+
+        private TextureStack RenderRepeater(bool powered, Dictionary<string, Object> data)
+        {
+            Rect torchsource = new Rect(7, 6, 2, 2);
+            RotateFlip rot = RotateFromDirection(data, offset: 2);
+            int output_lit = powered ? 1 : 0;
+            int delay = (int)data.GetValueOrDefault("repeater_delay", 0);
+
+            TextureStack image = GetTexture("repeater_up", output_lit, null, rot);
+            image += GetTexture("repeater_torch", output_lit, new TextureTranslation(dest: new Rect(7, 2, 2, 2), source: torchsource), rot);  // end torch
+            image += GetTexture("repeater_torch", output_lit, new TextureTranslation(dest: new Rect(7, 2 * delay + 6, 2, 2), source: torchsource), rot);  // movable torch
+            return image;
+        }
+
+        private RotateFlip RotateFromDirection(Dictionary<string, Object> data, int offset)
+        {
+            return RotateFromDirection((int)data["direction"] + offset);
+        }
+        private RotateFlip RotateFromDirection(Dictionary<string, Object> data)
         {
             return RotateFromDirection((int)data["direction"]);
         }
-        private RotateFlip RotateFromDirection (int direction)
+        private RotateFlip RotateFromDirection(int direction)
         {
-            switch (Math.Abs(direction % 4))
+            switch ((direction % 4) + (direction < 0 ? 4 : 0))
             {
                 case 0:
                     return RotateFlip.Rotate180FlipNone;
