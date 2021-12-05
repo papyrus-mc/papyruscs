@@ -300,7 +300,7 @@ namespace Maploader.Renderer.Texture
                 case "packed_ice":
                     return GetTexture("ice_packed", data);
                 case "lectern":
-                    return "textures/blocks/lectern_top";
+                    return GetTexture("lectern_top", 0, null, RotateFromDirection(data, offset: 2));
                 case "cake":
                 {
                     int bites = (int)data.GetValueOrDefault("bite_counter", 0);
