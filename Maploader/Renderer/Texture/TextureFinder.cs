@@ -701,7 +701,7 @@ namespace Maploader.Renderer.Texture
                 case "standing_banner":
                     return RenderBanner("sign", data);
                 case "tripWire":
-                    return GetTexture("trip_wire", data);
+                    return GetTexture("trip_wire", data, new TextureTranslation(dest: new Rect(0, 7, 16, 2), source: new Rect(0, 0, 16, 2)));
                 case "tripwire_hook":
                     return RenderTripwireHook(data, "trip_wire_source");
 
