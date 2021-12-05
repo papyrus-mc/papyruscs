@@ -523,9 +523,7 @@ namespace Maploader.Renderer.Texture
                     }
                 }
                 case "bell":
-                    return GetTexture("bell_top", 0).Translate(
-                        new Rect(0, 0, 8, 8),
-                        new Rect(4, 4, 8, 8));
+                    return RenderBell(data);
                 case "composter":
                     return GetTexture("composter_bottom");
                 case "campfire":
@@ -2012,6 +2010,31 @@ namespace Maploader.Renderer.Texture
             image += GetTexture("repeater_torch", output_lit, new TextureTranslation(dest: new Rect(7, 2, 2, 2), source: torchsource), rot);  // end torch
             image += GetTexture("repeater_torch", output_lit, new TextureTranslation(dest: new Rect(7, 2 * delay + 6, 2, 2), source: torchsource), rot);  // movable torch
             return image;
+        }
+
+        private TextureStack RenderBell(Dictionary<string, Object> data)
+        {
+            string attachment = (string)data.GetValueOrDefault("attachment");
+            RotateFlip rot = RotateFromDirection(data, offset: 2);
+
+            TextureStack bell = GetTexture("bell_top", 0,
+                new TextureTranslation(dest: new Rect(4, 4, 8, 8), source: new Rect(0, 0, 8, 8)), rot);
+
+            switch (attachment)
+            {
+                case "hanging":
+                    return bell + GetTexture("dark_oak_planks", 0, new TextureTranslation(new Rect(7, 7, 2, 2)));
+                case "side":
+                    return bell + GetTexture("dark_oak_planks", 0, new TextureTranslation(new Rect(3, 7, 13, 2)), RotateFromDirection(data, offset: 1));
+                case "multiple":
+                    return bell + GetTexture("dark_oak_planks", 0, new TextureTranslation(new Rect(0, 7, 16, 2)), RotateFromDirection(data, offset: 1));
+                case "standing":
+                default:
+                    return bell
+                        + GetTexture("dark_oak_planks", 0, new TextureTranslation(new Rect(2, 7, 12, 2)), rot)
+                        + GetTexture("bell_stone", 0, new TextureTranslation(new Rect(0, 6, 2, 4)), rot)
+                        + GetTexture("bell_stone", 0, new TextureTranslation(new Rect(14, 6, 2, 4)), rot);
+            }
         }
 
         private RotateFlip RotateFromDirection(Dictionary<string, Object> data, int offset)
