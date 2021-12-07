@@ -1154,7 +1154,6 @@ namespace Maploader.Renderer.Texture
                 }
                 case "vine":
                     return GetTexture("vine_carried");
-                // TODO: fix string textures
 
                 case "chain":
                     return RenderChain(data);
@@ -1268,6 +1267,7 @@ namespace Maploader.Renderer.Texture
                 case "cave_vines_body_with_berries":
                     return GetTexture("cave_vines_head", 1);
 
+                // Caves & Cliffs Update: Part 2 (1.18)
                 case "candle":
                 case "white_candle":
                 case "orange_candle":
