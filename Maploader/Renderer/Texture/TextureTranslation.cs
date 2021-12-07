@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using Maploader.Renderer.Imaging;
 
@@ -43,6 +43,12 @@ namespace Maploader.Renderer.Texture
         public TextureTranslation(Rect dest, Rect source)
         {
             Dest = dest;
+            Source = source;
+        }
+
+        public TextureTranslation(Rect source)
+        {
+            Dest = source;
             Source = source;
         }
         #endregion

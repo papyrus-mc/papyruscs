@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using Maploader.World;
@@ -11,9 +11,9 @@ namespace PapyrusCs.Database
 
         public bool Equals(LevelDbWorldKey2 other)
         {
-            return (SubChunkId == 0xFF || other.SubChunkId == 0xFF) //  I will go to the nether for this
+            return /* (SubChunkId == 0xFF || other.SubChunkId == 0xFF) //  I will go to the nether for this
                 ? KeyType == other.KeyType && X == other.X && Z == other.Z //  I will go to the nether for this
-                : KeyType == other.KeyType && X == other.X && Z == other.Z && SubChunkId == other.SubChunkId;
+                : */ KeyType == other.KeyType && X == other.X && Z == other.Z && SubChunkId == other.SubChunkId;
         }
 
         public override bool Equals(object obj)
@@ -28,7 +28,7 @@ namespace PapyrusCs.Database
                 var hashCode = KeyType.GetHashCode();
                 hashCode = (hashCode * 397) ^ (int) X;
                 hashCode = (hashCode * 397) ^ (int) Z;
-                //hashCode = (hashCode * 397) ^ SubChunkId.GetHashCode(); //  I will go to the nether for this
+                hashCode = (hashCode * 397) ^ SubChunkId.GetHashCode(); //  I will go to the nether for this
                 return hashCode;
             }
         }
