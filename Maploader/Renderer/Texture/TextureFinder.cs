@@ -818,10 +818,7 @@ namespace Maploader.Renderer.Texture
                 case "slime":
                     return GetTexture("slime_block", data);
                 case "bamboo":
-                    return GetTexture("bamboo_stem", data, new TextureTranslation(
-                        new Rect(6, 0, 4, 16),
-                        new Rect(0, 0, 4, 16)
-                    ));
+                    return RenderBamboo(data);
 
                 case "furnace":
                 case "lit_furnace":
@@ -2045,6 +2042,25 @@ namespace Maploader.Renderer.Texture
                         + GetTexture("dark_oak_planks", 0, new TextureTranslation(new Rect(2, 7, 12, 2)), rot)
                         + GetTexture("bell_stone", 0, new TextureTranslation(new Rect(0, 6, 2, 4)), rot)
                         + GetTexture("bell_stone", 0, new TextureTranslation(new Rect(14, 6, 2, 4)), rot);
+            }
+        }
+
+        private TextureStack RenderBamboo(Dictionary<string, Object> data)
+        {
+            int thickness = (string)data.GetValueOrDefault("bamboo_stalk_thickness", "thin") == "thick" ? 3 : 2;
+            TextureStack stem = GetTexture("bamboo_stem", data, new TextureTranslation(
+                dest: new Rect(7, 0, thickness, 16),
+                source: new Rect(0, 0, thickness, 16)
+            ));
+            switch ((string)data.GetValueOrDefault("bamboo_leaf_size", "no_leaves"))
+            {
+                case "large_leaves":
+                    return GetTexture("bamboo_leaf") + stem;
+                case "small_leaves":
+                    return GetTexture("bamboo_small_leaf") + stem;
+                case "no_leaves":
+                default:
+                    return stem;
             }
         }
 
