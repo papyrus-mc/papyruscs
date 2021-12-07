@@ -1159,6 +1159,17 @@ namespace Maploader.Renderer.Texture
                     return RenderChain(data);
                 case "end_rod":
                     return RenderEndRod(data);
+                case "cocoa":
+                    switch ((int)data.GetValueOrDefault("age", 0))
+                    {
+                        case 0:
+                            return GetTexture("cocoa", 0, new TextureTranslation(dest: new Rect(6, 0, 4, 4), source: new Rect(0, 0, 4, 4)), RotateFromDirection(data));
+                        case 1:
+                            return GetTexture("cocoa", 1, new TextureTranslation(dest: new Rect(5, 0, 6, 6), source: new Rect(0, 0, 6, 6)), RotateFromDirection(data));
+                        case 2:
+                        default:
+                            return GetTexture("cocoa", 2, new TextureTranslation(dest: new Rect(4, 0, 7, 7), source: new Rect(0, 0, 7, 7)), RotateFromDirection(data));
+                    }
 
                 // Caves & Cliffs Update: Part 1 (1.17)
                 case "waxed_oxidized_cut_copper_stairs":
