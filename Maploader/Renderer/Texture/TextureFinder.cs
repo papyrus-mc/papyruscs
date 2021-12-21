@@ -2224,7 +2224,7 @@ namespace Maploader.Renderer.Texture
             {1, new Dictionary<string, int>() {
                 {"smooth_stone", 0},
                 {"sandstone", 1},
-                // {"planks"?, 2},
+                {"wood", 2},
                 {"cobblestone", 3},
                 {"brick", 4},
                 {"stone_brick", 5},
