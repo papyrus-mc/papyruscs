@@ -259,7 +259,8 @@ namespace Maploader.Renderer
                         textureFinder.FindTexturePath(block.Block.Id, block.Block.Data, block.X, block.Z, block.Y);
                     if (textures == null)
                     {
-                        Console.WriteLine($"Missing Texture(2): {block.ToString().PadRight(30)}");
+                        Console.WriteLine($"\r\nMissing Texture(2): {block.ToString().PadRight(30)}");
+                        Console.WriteLine("\tin " + c);
                         MissingTextures.Add($"ID: {block.Block.Id}");
                         continue;
                     }
