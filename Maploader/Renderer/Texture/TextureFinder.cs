@@ -255,15 +255,24 @@ namespace Maploader.Renderer.Texture
         {
             name = name.Replace("minecraft:", "");
 
-            var newTexture = GetSubstitution(name, data, x, z, y);
-
-            if (newTexture != null)
+            try
             {
-                return newTexture;
+                var newTexture = GetSubstitution(name, data, x, z, y);
+                if (newTexture != null)
+                {
+                    return newTexture;
+                }
+                if (texturesJson.ContainsKey(name))
+                {
+                    return GetTexture(name, data);
+                }
             }
-            if (texturesJson.ContainsKey(name))
+            catch (Exception ex)
             {
-                return GetTexture(name, data);
+                Console.WriteLine("Error getting texture for:");
+                String datastring = string.Join(", ", data.Select(kvp => kvp.Key + ": " + kvp.Value.ToString()));
+                Console.WriteLine($"{x} {z} {y}: {name}, {datastring}");
+                Console.WriteLine("Error: " + ex);
             }
             return null;
 
