@@ -238,6 +238,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:red_candle", true},
             {"minecraft:black_candle", true},
             {"minecraft:spore_blossom", true},
+            
+            // Special cases
+            {"minecraft:invisibleBedrock", true},
+            {"minecraft:movingBlock", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -1303,6 +1307,15 @@ namespace Maploader.Renderer.Texture
                 case "red_candle":
                 case "black_candle":
                     return RenderCandle(name, data);
+                
+                // Special cases
+                // These blocks either don't strictly "exist" and are not visible,
+                // but they can be in the world either via commands or old Bedrock worlds
+                // I am using a structure_void block because it is in he default tile set
+                // and seems to indicate "look, something is here"
+                case "invisibleBedrock":
+                case "movingBlock":
+                    return "textures/blocks/structure_void";
             }
 
             return null;
