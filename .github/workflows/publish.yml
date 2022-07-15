@@ -1,0 +1,73 @@
+name: Publish
+
+on: [push, pull_request]
+
+env:
+  DOTNET_VERSION: "3.1.x" # The .NET SDK version to use
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      ARTIFACT_BENCHMARK: "artifact/benchmark"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      # - name: Build
+      #   run: |
+      #     dotnet build PapyrusCs -c Release --no-restore
+
+      - name: Test
+        run: |
+          dotnet test --no-restore --verbosity normal
+
+      - name: Prepare artifacts
+        run: |
+          mkdir -p "${{ env.ARTIFACT_BENCHMARK }}"
+          cp "MapLoader.NUnitTests/bin/Debug/netcoreapp3.1/benchmark.png" "${{ env.ARTIFACT_BENCHMARK }}/benchmark.png"
+          cp "MapLoader.NUnitTests/bin/Debug/netcoreapp3.1/benchmark/Benchmark.png" "${{ env.ARTIFACT_BENCHMARK }}/benchmark-original.png"
+
+      - name: Upload benchmark
+        uses: actions/upload-artifact@v2
+        with:
+          name: "benchmark"
+          path: "${{ env.ARTIFACT_BENCHMARK }}/**/*"
+
+  publish:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runtime: [linux-x64, win-x64]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      # - name: Build
+      #   run: |
+      #     dotnet build PapyrusCs -c Release --no-restore
+
+      - name: Build ${{ matrix.runtime }}
+        run: |
+          dotnet publish PapyrusCs -c Release -o build/${{ matrix.runtime }} -r ${{ matrix.runtime }} --self-contained true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: "papyruscs-${{ matrix.runtime }}"
+          path: "build/${{ matrix.runtime }}/**/*"
