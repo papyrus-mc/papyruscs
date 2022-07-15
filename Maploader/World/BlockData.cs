@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Maploader.World
 {
@@ -45,7 +46,8 @@ namespace Maploader.World
 
         public override string ToString()
         {
-            return string.Format($"{Id}:{Data} ({Version})");
+            string data = "[" + string.Join(",", Data.Select(pair => $"\"{pair.Key}\":{pair.Value}")) + "]";
+            return string.Format($"{Id}:{data} ({Version})");
         }
 
         public void Reset()
