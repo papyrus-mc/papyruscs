@@ -23,7 +23,9 @@ namespace Maploader.Renderer.Texture
             {"minecraft:lantern", true},
             {"minecraft:lever", true},
             {"minecraft:redstone_torch", true},
+            {"minecraft:unlit_redstone_torch", true},
             {"minecraft:tripWire", true},
+            {"minecraft:trip_wire", true},
             {"minecraft:tripwire_hook", true},
             {"minecraft:sapling", true},
             {"minecraft:bamboo_sapling", true},
@@ -194,6 +196,7 @@ namespace Maploader.Renderer.Texture
             {"minecraft:sea_pickle", true},
             {"minecraft:wither_rose", true},
             {"minecraft:grindstone", true},
+            {"minecraft:polished_blackstone_pressure_plate", true},
 
             // Caves & Cliffs Update: Part 1
             {"minecraft:lightning_rod", true},
@@ -242,6 +245,28 @@ namespace Maploader.Renderer.Texture
             // Special cases
             {"minecraft:invisibleBedrock", true},
             {"minecraft:movingBlock", true},
+
+            // 1.19
+            {"minecraft:mangrove_propagule", true},
+            {"minecraft:mangrove_leaves", true},
+            {"minecraft:mangrove_standing_sign", true},
+            {"minecraft:mangrove_wall_sign", true},
+            {"minecraft:mangrove_fence", true},
+            {"minecraft:mangrove_fence_gate", true},
+            {"minecraft:mangrove_button", true},
+            {"minecraft:mangrove_pressure_plate", true},
+            {"minecraft:mangrove_door", true},
+            {"minecraft:mangrove_trapdoor", true},
+            {"minecraft:mangrove_roots", true},
+            {"minecraft:sculk_vein", true},
+            {"minecraft:mud_brick_wall", true},
+
+            {"minecraft:border_block", true},
+            {"minecraft:structure_void", true},
+            {"minecraft:barrier", true},
+            {"minecraft:light_block", true},
+            {"minecraft:piston_arm_collision", true},
+            {"minecraft:sticky_piston_arm_collision", true},
         };
 
         private readonly Dictionary<string, Texture> texturesJson;
@@ -720,6 +745,7 @@ namespace Maploader.Renderer.Texture
                 case "standing_banner":
                     return RenderBanner("sign", data);
                 case "tripWire":
+                case "trip_wire":
                     return GetTexture("trip_wire", data, new TextureTranslation(dest: new Rect(0, 7, 16, 2), source: new Rect(0, 0, 16, 2)));
                 case "tripwire_hook":
                     return RenderTripwireHook(data, "trip_wire_source");
@@ -816,6 +842,7 @@ namespace Maploader.Renderer.Texture
 
                 case "stone_slab":
                 case "double_stone_slab":
+<<<<<<< HEAD
                     return GetTexture("stone_slab_top", data.ContainsKey("stone_slab_type") ? StoneSlabIndexes[1][(string)data["stone_slab_type"]] : 0);
                 case "stone_slab2":
                 case "double_stone_slab2":
@@ -826,6 +853,26 @@ namespace Maploader.Renderer.Texture
                 case "stone_slab4":
                 case "double_stone_slab4":
                     return GetTexture("stone_slab_top_4", data.ContainsKey("stone_slab_type_4") ? StoneSlabIndexes[4][(string)data["stone_slab_type_4"]] : 0);
+=======
+                case "stone_block_slab":
+                case "double_stone_block_slab":
+                    return GetTexture("stone_slab_top", StoneSlabIndexes[1][(string)data["stone_slab_type"]]);
+                case "stone_slab2":
+                case "double_stone_slab2":
+                case "stone_block_slab2":
+                case "double_stone_block_slab2":
+                    return GetTexture("stone_slab_top_2", StoneSlabIndexes[2][(string)data["stone_slab_type_2"]]);
+                case "stone_slab3":
+                case "double_stone_slab3":
+                case "stone_block_slab3":
+                case "double_stone_block_slab3":
+                    return GetTexture("stone_slab_top_3", StoneSlabIndexes[3][(string)data["stone_slab_type_3"]]);
+                case "stone_slab4":
+                case "double_stone_slab4":
+                case "stone_block_slab4":
+                case "double_stone_block_slab4":
+                    return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
+>>>>>>> upstream/master
 
                 case "bone_block":
                     return RenderPillar("bone_block_top", "bone_block_side", data);
@@ -847,6 +894,8 @@ namespace Maploader.Renderer.Texture
 
                 case "concrete":
                     return GetTexture("concrete", data);
+                case "concrete_powder":
+                    return GetTexture("concretePowder", data);
 
                 case "trapped_chest":
                     return GetTexture("chest_inventory_top", data);
@@ -1013,10 +1062,6 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("glowing_obsidian", data);
                 case "netherreactor":
                     return GetTexture("reactor_core", data);
-                case "chain_command_block":
-                    return GetTexture("command_block_chain_front", data);
-                case "repeating_command_block":
-                    return GetTexture("command_block_repeating_front", data);
 
                 // Nether update (1.16)
                 case "crimson_nylium":
@@ -1260,8 +1305,7 @@ namespace Maploader.Renderer.Texture
 
                 case "lit_deepslate_redstone_ore":
                     return GetTexture("deepslate_redstone_ore", data);
-                
-                
+
                 case "glow_frame":
                     return RenderItemFrame(data, "glow_item_frame");
                 case "small_dripleaf_block":
@@ -1269,7 +1313,7 @@ namespace Maploader.Renderer.Texture
                 case "moss_carpet":
                     return GetTexture("moss_block", data);
                 case "big_dripleaf":
-                    return GetTexture("big_dripleaf_top", data);
+                    return GetTexture("big_dripleaf_top", 0, null, RotateFromDirection(data));
                 case "pointed_dripstone":
                     return RenderDripstone(data);
                 case "azalea":
@@ -1281,7 +1325,7 @@ namespace Maploader.Renderer.Texture
                     return RenderLightningRod(data);
 
                 case "glow_lichen":
-                    return RenderGlowLichen(data);
+                    return RenderMultiFace("glow_lichen", data);
 
                 case "amethyst_cluster":
                 case "large_amethyst_bud":
@@ -1314,6 +1358,7 @@ namespace Maploader.Renderer.Texture
                 case "red_candle":
                 case "black_candle":
                     return RenderCandle(name, data);
+<<<<<<< HEAD
                 
                 // Special cases
                 // These blocks either don't strictly "exist" and are not visible,
@@ -1323,6 +1368,153 @@ namespace Maploader.Renderer.Texture
                 case "invisibleBedrock":
                 case "movingBlock":
                     return "textures/blocks/structure_void";
+=======
+
+                // 1.19
+                case "mangrove_wood":
+                    return RenderPillar("mangrove_log_top", data);
+                case "mangrove_log":
+                    return RenderPillar("mangrove_log_top", "mangrove_log_side", data);
+                case "stripped_mangrove_wood":
+                    return RenderPillar("stripped_mangrove_log_top", data);
+                case "stripped_mangrove_log":
+                    return RenderPillar("stripped_mangrove_log_top", "stripped_mangrove_log_side", data);
+                case "mangrove_roots":
+                    return GetTexture("mangrove_roots_top");
+                case "muddy_mangrove_roots":
+                    return GetTexture("muddy_mangrove_roots_top");
+                case "mangrove_slab":
+                case "mangrove_double_slab":
+                case "mangrove_stairs":
+                    return GetTexture("mangrove_planks");
+                case "mangrove_pressure_plate":
+                    return RenderPressurePlate("mangrove_planks", data);
+                case "mangrove_door":
+                    return GetTexture("mangrove_door_top");
+                case "mangrove_standing_sign":
+                    return RenderSign("mangrove_planks", data);
+                case "mangrove_wall_sign":
+                    return RenderWallSign("mangrove_planks", data);
+                case "mangrove_fence":
+                    return RenderFence("mangrove_planks", data);
+                case "mangrove_fence_gate":
+                    return RenderFenceGate(data, "mangrove_planks");
+                case "mangrove_button":
+                    return RenderButton(data, "mangrove_planks");
+                case "mangrove_leaves":
+                    return GetTexture("mangrove_leaves_carried");
+
+                case "sculk_vein":
+                    return RenderMultiFace("sculk_vein", data);
+                case "sculk_catalyst":
+                    return GetTexture("sculk_catalyst_top");
+                case "sculk_shrieker":
+                    return GetTexture("sculk_shrieker_inner_top", 1) + GetTexture("sculk_shrieker_top");
+                case "sculk_sensor":
+                    return GetTexture("sculk_sensor_top");
+                case "reinforced_deepslate":
+                    return GetTexture("reinforced_deepslate_top");
+
+                case "pearlescent_froglight":
+                case "verdant_froglight":
+                case "ochre_froglight":
+                    return RenderPillar(name + "_top", name + "_side", data);
+
+                case "mud_bricks":
+                case "mud_brick_slab":
+                case "mud_brick_stairs":
+                    return GetTexture("mud_bricks");
+                case "mud_brick_wall":
+                    return RenderWall("mud_bricks", data);
+
+                // Creative-only blocks
+                case "allow":
+                    return GetTexture("build_allow", data);
+                case "deny":
+                    return GetTexture("build_deny", data);
+                case "border_block":
+                    return RenderWall("border_block", data);
+
+                case "jigsaw":
+                    {
+                        BlockFace direction = (BlockFace)(int)data["facing_direction"];
+                        int rotation = (int)data.GetValueOrDefault("rotation", 0);
+                        RotateFlip rot = RotateFromDirection((int)data.GetValueOrDefault("rotation", 2));
+                        switch (direction)
+                        {
+                            case BlockFace.Up:
+                                return GetTexture("jigsaw_front", 0, null, rot);
+                            case BlockFace.Down:
+                                return GetTexture("jigsaw_back", 0, null, rot);
+                            case BlockFace.North:
+                                rot = RotateFlip.RotateNoneFlipNone; break;
+                            case BlockFace.East:
+                                rot = RotateFlip.Rotate90FlipNone; break;
+                            case BlockFace.South:
+                                rot = RotateFlip.Rotate180FlipNone; break;
+                            case BlockFace.West:
+                                rot = RotateFlip.Rotate270FlipNone; break;
+                        }
+                        return GetTexture(rotation == 0 ? "jigsaw_lock" : "jigsaw_side", 0, null, rot);
+                    }
+                case "command_block":
+                case "chain_command_block":
+                case "repeating_command_block":
+                    {
+                        string prefix = "command_block";
+                        switch (name)
+                        {
+                            case "chain_command_block":
+                                prefix += "_chain"; break;
+                            case "repeating_command_block":
+                                prefix += "_repeating"; break;
+                        }
+
+                        BlockFace direction = (BlockFace)(int)data["facing_direction"];
+
+                        string suffix;
+                        RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+
+                        switch (direction)
+                        {
+                            case BlockFace.North:
+                                suffix = "side";
+                                rot = RotateFlip.RotateNoneFlipNone;
+                                break;
+                            case BlockFace.East:
+                                suffix = "side";
+                                rot = RotateFlip.Rotate90FlipNone;
+                                break;
+                            case BlockFace.South:
+                                suffix = "side";
+                                rot = RotateFlip.Rotate180FlipNone;
+                                break;
+                            case BlockFace.West:
+                                suffix = "side";
+                                rot = RotateFlip.Rotate270FlipNone;
+                                break;
+                            case BlockFace.Down:
+                                suffix = "back"; break;
+                            case BlockFace.Up:
+                            default:
+                                suffix = "front"; break;
+                        }
+
+                        return GetTexture(prefix + "_" + suffix, 0, null, rot);
+                    }
+                case "barrier":
+                    return new TextureStack();  // transparent
+                // case "barrier":
+                //     return GetTexture("barrier");
+                case "structure_void":
+                    return new TextureStack();  // transparent
+                // case "structure_void":
+                //     return GetTexture("structure_void");
+                case "light_block":
+                    return new TextureStack();  // transparent
+                case "structure_block":
+                    return GetTexture("structure_block", data);
+>>>>>>> upstream/master
             }
 
             return null;
@@ -1725,52 +1917,51 @@ namespace Maploader.Renderer.Texture
             return GetTexture("pointed_dripstone_tip", usingPointingDownTex);
         }
 
-        private TextureStack RenderGlowLichen (Dictionary<string, Object> data)
+        private TextureStack RenderMultiFace(string texture, Dictionary<string, Object> data)
         {
-            // TODO fix render depending on orientation data.
-            // For now not displaying when side facing and I'm fine with that.
-            // Will still display when top/bottom facing.
-            string filename = "glow_lichen";
             try
             {
                 int dir = (int)data["multi_face_direction_bits"];
-                TextureStack tex = GetTexture(filename, 0);
-                TextureTranslation trans = null;
-                RotateFlip rot = RotateFlip.RotateNoneFlipNone;
+
+                TextureStack tex = new TextureStack();
 
                 // value of 1 is top-facing
                 // value of 2 is bottom-facing
-                if((dir != 1) && (dir != 2))
+                if ((dir & (1 | 2)) != 0)
                 {
-                    tex.Translate(new Rect(11, 0, 16, 1), new Rect(0, 0, 0, 0));
+                    tex += GetTexture(texture, 0);
+                }
 
-                    // Orientation data is not necessarily true
-                    // But case values are the right orientation bits for side-facing item
-                    switch(dir)
-                    {
-                        case 4:
-                            rot = RotateFlip.Rotate90FlipNone;
-                        break;
-                        case 8:
-                            rot = RotateFlip.Rotate270FlipNone;
-                        break;
-                        case 16:
-                            rot = RotateFlip.Rotate180FlipNone;
-                        break;
-                        case 32:
+                TextureStack GetSide(RotateFlip rot)
+                    => GetTexture(texture, 0)
+                    .Translate(new Rect(0, 0, 16, 1), new Rect(0, 0, 16, 1))
+                    .Rotate(rot);
 
-                        break;
-                    }
+                if ((dir & 4) != 0)
+                {
+                    tex += GetSide(RotateFlip.Rotate180FlipNone);
+                }
+                if ((dir & 8) != 0)
+                {
+                    tex += GetSide(RotateFlip.Rotate270FlipNone);
+                }
+                if ((dir & 16) != 0)
+                {
+                    tex += GetSide(RotateFlip.RotateNoneFlipNone);
+                }
+                if ((dir & 32) != 0)
+                {
+                    tex += GetSide(RotateFlip.Rotate90FlipNone);
                 }
 
                 return tex;
             }
-            catch 
+            catch
             {
-                Console.WriteLine("Invalid " + filename + " direction");
+                Console.WriteLine("Invalid " + texture + " direction");
             }
 
-            return GetTexture(filename, 0);
+            return GetTexture(texture, 0);
         }
 
         private TextureStack RenderLightningRod (Dictionary<string, Object> data)
@@ -1854,36 +2045,36 @@ namespace Maploader.Renderer.Texture
             return GetTexture(filename).Translate(new Rect(2,2,4,4), new Rect(6,6,4,4));
         }
 
-        private TextureStack RenderItemFrame (Dictionary<string, Object> data, string texture)
+        private TextureStack RenderItemFrame(Dictionary<string, Object> data, string texture)
         {
             return RenderItemFrame(texture, data);
         }
-        private TextureStack RenderItemFrame (string texture, Dictionary<string, Object> data)
+        private TextureStack RenderItemFrame(string texture, Dictionary<string, Object> data)
         {
             try
             {
                 int dir = (int)data["facing_direction"];
 
-                if((dir != 0) && (dir != 1))
+                if ((dir != 0) && (dir != 1))
                 {
                     var t = GetTexture(texture, 0).Translate(
-                        new Rect(0, 7, 14, 2),
-                        new Rect(1, 0, 14, 2)
+                        new Rect(1, 7, 14, 1),
+                        new Rect(1, 0, 14, 1)
                     );
-                    switch(dir)
+                    switch (dir)
                     {
-                    case 2:
-                        return t.Rotate(RotateFlip.Rotate180FlipNone);
-                    case 3:
-                        return t.Rotate(RotateFlip.RotateNoneFlipNone);
-                    case 4:
-                        return t.Rotate(RotateFlip.Rotate90FlipNone);
-                    case 5:
-                        return t.Rotate(RotateFlip.Rotate270FlipNone);
+                        case 2:
+                            return t.Rotate(RotateFlip.Rotate180FlipNone);
+                        case 3:
+                            return t.Rotate(RotateFlip.RotateNoneFlipNone);
+                        case 4:
+                            return t.Rotate(RotateFlip.Rotate90FlipNone);
+                        case 5:
+                            return t.Rotate(RotateFlip.Rotate270FlipNone);
                     }
                 }
             }
-            catch 
+            catch
             {
                 Console.WriteLine("Invalid " + texture + " direction");
             }
