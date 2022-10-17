@@ -2,7 +2,6 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "commandLineArgs": "-w \"C:\\papyruscs\\world_bedrock_04082019\" -o \"C:\\papyrus\\mergetest3\" chunksperdimension 2 -f png --dim 0 --htmlfile index.html  --threads 1 --maxqueue 1",
       "workingDirectory": "c:\\temp"
     }
   }
