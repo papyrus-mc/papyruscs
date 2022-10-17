@@ -842,7 +842,6 @@ namespace Maploader.Renderer.Texture
 
                 case "stone_slab":
                 case "double_stone_slab":
-<<<<<<< HEAD
                     return GetTexture("stone_slab_top", data.ContainsKey("stone_slab_type") ? StoneSlabIndexes[1][(string)data["stone_slab_type"]] : 0);
                 case "stone_slab2":
                 case "double_stone_slab2":
@@ -853,7 +852,6 @@ namespace Maploader.Renderer.Texture
                 case "stone_slab4":
                 case "double_stone_slab4":
                     return GetTexture("stone_slab_top_4", data.ContainsKey("stone_slab_type_4") ? StoneSlabIndexes[4][(string)data["stone_slab_type_4"]] : 0);
-=======
                 case "stone_block_slab":
                 case "double_stone_block_slab":
                     return GetTexture("stone_slab_top", StoneSlabIndexes[1][(string)data["stone_slab_type"]]);
@@ -872,7 +870,6 @@ namespace Maploader.Renderer.Texture
                 case "stone_block_slab4":
                 case "double_stone_block_slab4":
                     return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
->>>>>>> upstream/master
 
                 case "bone_block":
                     return RenderPillar("bone_block_top", "bone_block_side", data);
@@ -1358,7 +1355,6 @@ namespace Maploader.Renderer.Texture
                 case "red_candle":
                 case "black_candle":
                     return RenderCandle(name, data);
-<<<<<<< HEAD
                 
                 // Special cases
                 // These blocks either don't strictly "exist" and are not visible,
@@ -1368,7 +1364,6 @@ namespace Maploader.Renderer.Texture
                 case "invisibleBedrock":
                 case "movingBlock":
                     return "textures/blocks/structure_void";
-=======
 
                 // 1.19
                 case "mangrove_wood":
@@ -1514,7 +1509,6 @@ namespace Maploader.Renderer.Texture
                     return new TextureStack();  // transparent
                 case "structure_block":
                     return GetTexture("structure_block", data);
->>>>>>> upstream/master
             }
 
             return null;
