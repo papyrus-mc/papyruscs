@@ -855,18 +855,12 @@ namespace Maploader.Renderer.Texture
                 case "stone_block_slab":
                 case "double_stone_block_slab":
                     return GetTexture("stone_slab_top", StoneSlabIndexes[1][(string)data["stone_slab_type"]]);
-                case "stone_slab2":
-                case "double_stone_slab2":
                 case "stone_block_slab2":
                 case "double_stone_block_slab2":
                     return GetTexture("stone_slab_top_2", StoneSlabIndexes[2][(string)data["stone_slab_type_2"]]);
-                case "stone_slab3":
-                case "double_stone_slab3":
                 case "stone_block_slab3":
                 case "double_stone_block_slab3":
                     return GetTexture("stone_slab_top_3", StoneSlabIndexes[3][(string)data["stone_slab_type_3"]]);
-                case "stone_slab4":
-                case "double_stone_slab4":
                 case "stone_block_slab4":
                 case "double_stone_block_slab4":
                     return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
