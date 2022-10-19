@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -8,6 +8,7 @@ using Maploader.Renderer;
 using Maploader.Renderer.Heightmap;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
+using Maploader.World;
 using Microsoft.Extensions.ObjectPool;
 using NUnit.Framework;
 using PapyrusCs.Database;
@@ -165,16 +166,24 @@ namespace MapLoader.NUnitTests
             {
                 var dut = new Maploader.World.World();
                 dut.Open(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "benchmark", "world", "db"));
-                int chunkRadius = 1;
-                int centerOffsetX = 1; //65;
-                int centerOffsetZ = 1; //65;
+                int XMin = -1, XMax = 3;
+                int ZMin = -1, ZMax = 4;
                 string filename = "benchmark.png";
 
-                RenderMap(chunkRadius, dut, centerOffsetX, centerOffsetZ, filename);
+                RenderMap(dut, filename, XMin, XMax, ZMin, ZMax);
             }
 
             private static void RenderMap(int chunkRadius, Maploader.World.World dut, int centerOffsetX,
                 int centerOffsetZ, string filename)
+            {
+                int XMin = centerOffsetX - chunkRadius, XMax = centerOffsetX + chunkRadius;
+                int ZMin = centerOffsetZ - chunkRadius, ZMax = centerOffsetZ + chunkRadius;
+
+                RenderMap(dut, filename, XMin, XMax, ZMin, ZMax);
+            }
+
+            private static void RenderMap(Maploader.World.World dut, string filename,
+            int XMin, int XMax, int ZMin, int ZMax)
             {
                 var json = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"textures",
                     "terrain_texture.json"));
@@ -185,20 +194,25 @@ namespace MapLoader.NUnitTests
                     Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "textures"), g);
                 finder.Debug = false;
 
-                var b = g.CreateEmptyImage(16 * 16 * (2 * chunkRadius + 1), 16 * 16 * (2 * chunkRadius + 1));
+                var b = g.CreateEmptyImage(16 * 16 * (XMax - XMin + 1), 16 * 16 * (ZMax - ZMin + 1));
 
-                var render = new ChunkRenderer<Bitmap>(finder, g, new RenderSettings() {YMax = 40});
+                var render = new ChunkRenderer<Bitmap>(finder, g, new RenderSettings() { YMax = 40 });
 
-                //Parallel.For(-chunkRadius, chunkRadius + 1,new ParallelOptions(){MaxDegreeOfParallelism = 8} , dx =>
-                for (int dz = -chunkRadius; dz <= chunkRadius; dz++)
+                var keysByXZ = dut.GetDimension(0)
+                    .Select(x => new LevelDbWorldKey2(x))
+                    .Where(c => c.X <= XMax && c.X >= XMin && c.Z <= ZMax && c.Z >= ZMin)
+                    .GroupBy(x => x.XZ);
+                var chunkKeys = keysByXZ.Select(chunkGroup => new GroupedChunkSubKeys(chunkGroup));
+                var chunkDatas = chunkKeys.Select(dut.GetChunkData);
+
+                foreach (var chunkData in chunkDatas)
                 {
-                    for (int dx = -chunkRadius; dx <= chunkRadius; dx++)
+                    var c = dut.GetChunk(chunkData.X, chunkData.Z, chunkData);
+                    if (c != null)
                     {
-                        var c = dut.GetChunk(dx + centerOffsetX, dz + centerOffsetZ);
-                        if (c != null)
-                        {
-                            render.RenderChunk(b, c, (chunkRadius + dx) * 256, (chunkRadius + dz) * 256);
-                        }
+                        int dx = chunkData.X - XMin;
+                        int dz = chunkData.Z - ZMin;
+                        render.RenderChunk(b, c, dx * 256, dz * 256);
                     }
                 }
 

@@ -120,6 +120,7 @@ namespace Maploader.World
             return c;
         }
 
+        [Obsolete("Use GetChunk(int x, int z, ChunkData data) instead")]
         public Chunk GetChunk(int x, int z)
         {
             bool haveData = false;
@@ -130,14 +131,14 @@ namespace Maploader.World
 
             var key = CreateKey(x, z);
 
-            for (byte subChunkIdx = 0; subChunkIdx < 15; subChunkIdx++)
+            for (sbyte subChunkIdx = -4; subChunkIdx < 20; subChunkIdx++)
             {
-                key[9] = subChunkIdx;
+                key[9] = (byte)subChunkIdx;
                 UIntPtr length;
                 var data = db.Get(key, out length);
                 if (data != null)
                 {
-                    subChunks[subChunkIdx] = data;
+                    subChunks[(byte)subChunkIdx] = data;
                     haveData = true;
                 }
             }

@@ -1,6 +1,5 @@
 Chat: [![Discord](https://img.shields.io/discord/569841820092203011.svg?logo=discord&logoColor=white)](https://discord.gg/J2sBaXa) <br>
-Windows: [![Build status](https://ci.appveyor.com/api/projects/status/tfspbbi72bx73qg8?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs) <br>
-Linux: [![Build status](https://ci.appveyor.com/api/projects/status/xo9ew31l49hayjcm?svg=true)](https://ci.appveyor.com/project/mjungnickel18/papyruscs-ytqjm) <br>
+Build: [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/papyrus-mc/papyruscs/publish?logo=github)](https://github.com/papyrus-mc/papyruscs/actions/workflows/publish.yml?query=branch%3Amaster) <br>
 
 # Papyrus
 
