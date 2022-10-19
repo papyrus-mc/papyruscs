@@ -204,7 +204,7 @@
       } else {
         document.getElementById("map").style.background = "#202020";
       }
-                
+
       const view = new ol.View({
         projection: projection,
         center: [0, 0],
@@ -264,15 +264,16 @@
                 } else {
                   document.getElementById("map").style.background = "#202020";
                 }
-        
+
                 if (currentSelectedLayer != layerKey) {
                   const runtimeLayers = map.getLayers();
                   runtimeLayers.forEach(function(runtimeLayer) {
                     runtimeLayer.setVisible(
-                      runtimeLayer.metaLayerKey == layerKey
-                    );
+                      runtimeLayer.metaLayerKey == layerKey ||
+                      runtimeLayer.metaLayerKey == "players_" + layerKey.substr(0, 4)
+                    ); // show image layer, and player layer based on dimension
                   });
-                  
+
                   const oldFocusGroup = currentSelectedLayer.substr(0, 4);
                   const newFocusGroup = layerKey.substr(0, 4);
 
@@ -363,22 +364,14 @@
       });
 
       if (typeof(playersData) !== "undefined") {
-        var playerFeatures = [];
+        var playerFeatures = [[], [], []];
+        // array for each dimension
 
-        for (var playerIndex in playersData.players)
-        {
+        for (var playerIndex in playersData.players) {
             var player = playersData.players[playerIndex];
 
-            if (!player.visible) {
-                continue;
-            }
-
-            if (player.dimensionId !== 0) {
-                // TODO: Currently I'm only adding player markers who are in the Overworld
-                // We'll want to show players depending on which dimension is being viewed
-                // Maybe add a separate layer for players in each dimension
-                continue;
-            }
+            if (!player.visible) { continue; }
+            // hide players not visible
 
             var style = new ol.style.Style({
                 text: new ol.style.Text({
@@ -399,18 +392,28 @@
 
             playerFeature.setStyle(style);
 
-            playerFeatures.push(playerFeature);
+            playerFeatures[player.dimensionId].push(playerFeature);
+            // add to the correct array/layer for the dimension
         }
 
-        var vectorSource = new ol.source.Vector({
-            features: playerFeatures
-        });
+        for (var dimensionId = 0; dimensionId < 3; dimensionId++) {
+          var vectorSource = new ol.source.Vector({
+              features: playerFeatures[dimensionId]
+          });
 
-        var vectorLayer = new ol.layer.Vector({
-            source: vectorSource
-        });
+          var vectorLayer = new ol.layer.Vector({
+              source: vectorSource
+          });
 
-        map.addLayer(vectorLayer);
+          vectorLayer.metaLayerKey = "players_dim" + dimensionId;
+
+          if (dimensionId != 0) {
+            // initially display only overworld players
+            vectorLayer.values_.visible = false;
+          }
+
+          map.addLayer(vectorLayer);
+        }
       }
     </script>
   </body>
