@@ -241,6 +241,10 @@ namespace Maploader.Renderer.Texture
             {"minecraft:red_candle", true},
             {"minecraft:black_candle", true},
             {"minecraft:spore_blossom", true},
+            
+            // Special cases
+            {"minecraft:invisibleBedrock", true},
+            {"minecraft:movingBlock", true},
 
             // 1.19
             {"minecraft:mangrove_propagule", true},
@@ -280,15 +284,24 @@ namespace Maploader.Renderer.Texture
         {
             name = name.Replace("minecraft:", "");
 
-            var newTexture = GetSubstitution(name, data, x, z, y);
-
-            if (newTexture != null)
+            try
             {
-                return newTexture;
+                var newTexture = GetSubstitution(name, data, x, z, y);
+                if (newTexture != null)
+                {
+                    return newTexture;
+                }
+                if (texturesJson.ContainsKey(name))
+                {
+                    return GetTexture(name, data);
+                }
             }
-            if (texturesJson.ContainsKey(name))
+            catch (Exception ex)
             {
-                return GetTexture(name, data);
+                Console.WriteLine("Error getting texture for:");
+                String datastring = string.Join(", ", data.Select(kvp => kvp.Key + ": " + kvp.Value.ToString()));
+                Console.WriteLine($"{x} {z} {y}: {name}, {datastring}");
+                Console.WriteLine("Error: " + ex);
             }
             return null;
 
@@ -335,7 +348,7 @@ namespace Maploader.Renderer.Texture
                 {
                     // TODO: fix bed colours
                     int headBit = (int)data.GetValueOrDefault("head_piece_bit", 0);
-                    RotateFlip rot = RotateFromDirection(((int)data["direction"] + 3) % 4);
+                    RotateFlip rot = data.ContainsKey("direction") ? RotateFromDirection(((int)data["direction"] + 3) % 4) : 0;
                     return CreateTexture(headBit != 0
                                     ? "textures/blocks/bed_head_top"
                                     : "textures/blocks/bed_feet_top")
@@ -346,7 +359,7 @@ namespace Maploader.Renderer.Texture
                 case "wooden_slab":
                 case "double_wooden_slab":
                 {
-                    int plankIndex = WoodIndexes[(string)data.GetValueOrDefault("wood_type")];
+                    int plankIndex = data.ContainsKey("wood_type") ? WoodIndexes[(string)data.GetValueOrDefault("wood_type")] : 0;
                     return GetTexture("planks", plankIndex);
                 }
 
@@ -452,9 +465,9 @@ namespace Maploader.Renderer.Texture
                     return RenderRail("rail_detector", "rail_detector_powered", data);
 
                 case "stonebrick":
-                    return GetTexture("stonebrick", StoneBrickIndexes[(string)data["stone_brick_type"]]);
+                    return GetTexture("stonebrick", data.ContainsKey("stone_brick_type") ? StoneBrickIndexes[(string)data["stone_brick_type"]] : 0);
                 case "monster_egg":
-                    return GetTexture("monster_egg", MonsterEggIndexes[(string)data["monster_egg_stone_type"]]);
+                    return GetTexture("monster_egg", data.ContainsKey("monster_egg_stone_type") ? MonsterEggIndexes[(string)data["monster_egg_stone_type"]] : 0);
 
                 case "red_mushroom_block":
                     return GetTexture("mushroom_red_top", data);
@@ -493,7 +506,8 @@ namespace Maploader.Renderer.Texture
                     return GetTexture("daylight_detector_top", 1);
                 case "dispenser":
                 {
-                    switch ((BlockFace) data["facing_direction"])
+                    var facingDirection = data.ContainsKey("facing_direction") ? data["facing_direction"] : BlockFace.Down;
+                    switch ((BlockFace) facingDirection)
                     {
                         case BlockFace.Up:
                             return GetTexture("dispenser_front_vertical");
@@ -504,7 +518,8 @@ namespace Maploader.Renderer.Texture
                 case "observer":
                 {
                     int powered = (int)data.GetValueOrDefault("powered_bit", 0);
-                    switch ((BlockFace) data["facing_direction"])
+                    var facingDirection = data.ContainsKey("facing_direction") ? data["facing_direction"] : BlockFace.South;
+                    switch ((BlockFace) facingDirection)
                     {
                         case BlockFace.Down:
                             return GetTexture("observer_south", powered);
@@ -523,7 +538,8 @@ namespace Maploader.Renderer.Texture
                 }
                 case "dropper":
                 {
-                    switch ((BlockFace) data["facing_direction"])
+                    var facingDirection = data.ContainsKey("facing_direction") ? data["facing_direction"] : BlockFace.Down;
+                    switch ((BlockFace) facingDirection)
                     {
                         case BlockFace.Up:
                             return GetTexture("dropper_front_vertical");
@@ -558,12 +574,17 @@ namespace Maploader.Renderer.Texture
                 case "anvil":
                 {
                     int damage = 0;
-                    switch ((string)data["damage"])
+                    if (data.ContainsKey("damage"))
                     {
-                        case "slightly_damaged":
-                            damage = 1; break;
-                        case "very_damaged":
-                            damage = 2; break;
+                        switch ((string)data["damage"])
+                        {
+                            case "slightly_damaged":
+                                damage = 1;
+                                break;
+                            case "very_damaged":
+                                damage = 2;
+                                break;
+                        }
                     }
                     return GetTexture("anvil_top_damaged_x", damage, null, RotateFromDirection(data));
                 }
@@ -621,7 +642,7 @@ namespace Maploader.Renderer.Texture
                 case "nether_brick_fence":
                     return RenderFence("nether_brick", data);
                 case "fence":
-                    data["val"] = WoodIndexes[(string)data.GetValueOrDefault("wood_type")];
+                    data["val"] = data.ContainsKey("wood_type") ? WoodIndexes[(string)data.GetValueOrDefault("wood_type")] : 0;
                     return RenderFence("planks", data);
                 case "podzol":
                     return GetTexture("dirt_podzol_top", data);
@@ -821,21 +842,25 @@ namespace Maploader.Renderer.Texture
 
                 case "stone_slab":
                 case "double_stone_slab":
+                    return GetTexture("stone_slab_top", data.ContainsKey("stone_slab_type") ? StoneSlabIndexes[1][(string)data["stone_slab_type"]] : 0);
+                case "stone_slab2":
+                case "double_stone_slab2":
+                    return GetTexture("stone_slab_top_2", data.ContainsKey("stone_slab_type_2") ? StoneSlabIndexes[2][(string)data["stone_slab_type_2"]] : 0);
+                case "stone_slab3":
+                case "double_stone_slab3":
+                    return GetTexture("stone_slab_top_3", data.ContainsKey("stone_slab_type_3") ? StoneSlabIndexes[3][(string)data["stone_slab_type_3"]] : 0);
+                case "stone_slab4":
+                case "double_stone_slab4":
+                    return GetTexture("stone_slab_top_4", data.ContainsKey("stone_slab_type_4") ? StoneSlabIndexes[4][(string)data["stone_slab_type_4"]] : 0);
                 case "stone_block_slab":
                 case "double_stone_block_slab":
                     return GetTexture("stone_slab_top", StoneSlabIndexes[1][(string)data["stone_slab_type"]]);
-                case "stone_slab2":
-                case "double_stone_slab2":
                 case "stone_block_slab2":
                 case "double_stone_block_slab2":
                     return GetTexture("stone_slab_top_2", StoneSlabIndexes[2][(string)data["stone_slab_type_2"]]);
-                case "stone_slab3":
-                case "double_stone_slab3":
                 case "stone_block_slab3":
                 case "double_stone_block_slab3":
                     return GetTexture("stone_slab_top_3", StoneSlabIndexes[3][(string)data["stone_slab_type_3"]]);
-                case "stone_slab4":
-                case "double_stone_slab4":
                 case "stone_block_slab4":
                 case "double_stone_block_slab4":
                     return GetTexture("stone_slab_top_4", StoneSlabIndexes[4][(string)data["stone_slab_type_4"]]);
@@ -926,8 +951,7 @@ namespace Maploader.Renderer.Texture
               
                 case "sapling":
                 {
-                    int val = WoodIndexes[(string)data.GetValueOrDefault("sapling_type")];
-                    return GetTexture("sapling", val);
+                    return GetTexture("sapling", data.ContainsKey("sapling_type") ? WoodIndexes[(string)data.GetValueOrDefault("sapling_type")] : 0);
                 }
 
                 case "enchanting_table":
@@ -1170,7 +1194,7 @@ namespace Maploader.Renderer.Texture
                         new Rect(0, 0, 4, 11), // 11 might not be the right number
                         new Rect(6, 5, 4, 11));
                 case "sponge":
-                    return GetTexture("sponge", (string)data["sponge_type"] == "wet" ? 1 : 0);
+                    return GetTexture("sponge", data.ContainsKey("sponge_type") && (string)data["sponge_type"] == "wet" ? 1 : 0);
                 case "stone":
                 {
                     int index = StoneIndexes[(string)data.GetValueOrDefault("stone_type", "stone")];
@@ -1325,6 +1349,15 @@ namespace Maploader.Renderer.Texture
                 case "red_candle":
                 case "black_candle":
                     return RenderCandle(name, data);
+                
+                // Special cases
+                // These blocks either don't strictly "exist" and are not visible,
+                // but they can be in the world either via commands or old Bedrock worlds
+                // I am using a structure_void block because it is in he default tile set
+                // and seems to indicate "look, something is here"
+                case "invisibleBedrock":
+                case "movingBlock":
+                    return "textures/blocks/structure_void";
 
                 // 1.19
                 case "mangrove_wood":
@@ -1605,7 +1638,7 @@ namespace Maploader.Renderer.Texture
         }
         private TextureStack RenderButton(string texture, Dictionary<string, Object> data)
         {
-            int direction = (int)data["facing_direction"];
+            int direction = data.ContainsKey("facing_direction") ? (int)data["facing_direction"] : 0;
             var t = GetTexture(texture, 0);
             int thickness = (int)data.GetValueOrDefault("button_pressed_bit", 0) == 0 ? 2 : 1;
             switch (direction)
@@ -1643,8 +1676,8 @@ namespace Maploader.Renderer.Texture
         }
         private TextureStack RenderFenceGate (string texture, Dictionary<string, Object> data)
         {
-            int direction = (int)data["direction"];
-            int open_bit = (int)data["open_bit"];
+            int direction = data.ContainsKey("direction") ? (int)data["direction"] : 0;
+            int open_bit = data.ContainsKey("open_bit") ? (int)data["open_bit"] : 0;
 
             if (open_bit != 0)
             {
@@ -2241,11 +2274,11 @@ namespace Maploader.Renderer.Texture
 
         private RotateFlip RotateFromDirection(Dictionary<string, Object> data, int offset)
         {
-            return RotateFromDirection((int)data["direction"] + offset);
+            return RotateFromDirection(data.ContainsKey("direction") ? (int)data["direction"] + offset : offset);
         }
         private RotateFlip RotateFromDirection(Dictionary<string, Object> data)
         {
-            return RotateFromDirection((int)data["direction"]);
+            return RotateFromDirection(data.ContainsKey("direction") ? (int)data["direction"] : 0);
         }
         private RotateFlip RotateFromDirection(int direction)
         {
@@ -2390,7 +2423,7 @@ namespace Maploader.Renderer.Texture
             {1, new Dictionary<string, int>() {
                 {"smooth_stone", 0},
                 {"sandstone", 1},
-                // {"planks"?, 2},
+                {"wood", 2},
                 {"cobblestone", 3},
                 {"brick", 4},
                 {"stone_brick", 5},
@@ -2564,7 +2597,7 @@ namespace Maploader.Renderer.Texture
                     }
                     if(blockProperties.Key == "facing_direction")
                     {
-                        int direction = (int)data["facing_direction"];
+                        int direction = data.ContainsKey("facing_direction") ? (int)data["facing_direction"] : 0;
                         switch (direction)
                         {
                             case 2:

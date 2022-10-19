@@ -169,7 +169,7 @@ Copyright (C) 2020 Markus Jungnickel
 
 ## Building
 Papyrus runs on .NET Core 3.0+.
-First, make sure you have [.NET Core 3.0](https://dotnet.microsoft.com/download/dotnet-core/3.0) on your development machine.
+First, make sure you have [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet-core/3.1) on your development machine.
 
 To compile for Windows, either use a recent Visual Studio or run:
 ```dotnet publish PapyrusCs -c Release --self-contained --runtime win-x64```

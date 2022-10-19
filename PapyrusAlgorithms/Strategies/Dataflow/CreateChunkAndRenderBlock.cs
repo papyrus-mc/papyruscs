@@ -58,7 +58,14 @@ namespace PapyrusAlgorithms.Strategies.Dataflow
                         var z = chunk.Z % chunksPerDimension;
                         if (x < 0) x += chunksPerDimension;
                         if (z < 0) z += chunksPerDimension;
-                        chunkRenderer.ChunkRenderer.RenderChunk(b, chunk, x * chunkSize, z * chunkSize);
+                        try
+                        {
+                            chunkRenderer.ChunkRenderer.RenderChunk(b, chunk, x * chunkSize, z * chunkSize);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("RenderChunk Error at " + chunkData.X + " " + chunkData.Z + " : " + ex.Message);
+                        }
 
                         world.ChunkPool?.Return(chunk);
                         count++;
