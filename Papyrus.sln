@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.202
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Maploader", "Maploader\Maploader.csproj", "{5A307016-F416-402D-B5DF-023E8F1A3120}"
 EndProject
@@ -26,13 +26,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapLoader.NUnitTests", "MapLoader.NUnitTests\MapLoader.NUnitTests.csproj", "{8A87A116-D0B8-4B0A-A543-0086BA77B74B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MapLoader.Tests", "MapLoader.NUnitTests\MapLoader.Tests.csproj", "{8A87A116-D0B8-4B0A-A543-0086BA77B74B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusCs.Tests.Core", "PapyrusCs.Tests.Core\PapyrusCs.Tests.Core.csproj", "{7857B9C7-64DF-459B-A558-0BF1AA2E6DFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusCs.Tests", "PapyrusCs.Tests.Core\PapyrusCs.Tests.csproj", "{7857B9C7-64DF-459B-A558-0BF1AA2E6DFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Imazen.WebP-std", "Imazen.WebP-std\Imazen.WebP-std.csproj", "{82CCF552-5A68-4C6A-B3F3-A40550D47990}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PapyrusAlgorithms", "PapyrusAlgorithms\PapyrusAlgorithms.csproj", "{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PapyrusAlgorithms", "PapyrusAlgorithms\PapyrusAlgorithms.csproj", "{5CF3BA5F-F44B-458A-9BC7-67BD5B734B29}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
