@@ -9,61 +9,62 @@ using Maploader.Renderer.Heightmap;
 using Maploader.Renderer.Imaging;
 using Maploader.Renderer.Texture;
 using Microsoft.Extensions.ObjectPool;
-using NUnit.Framework;
+using Xunit;
 using PapyrusCs.Database;
+using FluentAssertions;
 
-namespace MapLoader.NUnitTests
+namespace MapLoader.Tests
 {
-    [TestFixture]
     public class OtherTests
     {
-        [TestCase(0, 0, 1)]
-        [TestCase(1, 1, 1)]
-        [TestCase(2, 2, 1)]
-        [TestCase(3, 3, 1)]
+        [Theory]
+        [InlineData(0, 0, 1)]
+        [InlineData(1, 1, 1)]
+        [InlineData(2, 2, 1)]
+        [InlineData(3, 3, 1)]
 
-        [TestCase(0, 0, 2)]
-        [TestCase(0, 1, 2)]
-        [TestCase(1, 2, 2)]
-        [TestCase(1, 3, 2)]
-        [TestCase(2, 4, 2)]
-        [TestCase(2, 5, 2)]
+        [InlineData(0, 0, 2)]
+        [InlineData(0, 1, 2)]
+        [InlineData(1, 2, 2)]
+        [InlineData(1, 3, 2)]
+        [InlineData(2, 4, 2)]
+        [InlineData(2, 5, 2)]
 
-        [TestCase(0, 0, 3)]
-        [TestCase(0, 1, 3)]
-        [TestCase(0, 2, 3)]
-        [TestCase(1, 3, 3)]
-        [TestCase(1, 4, 3)]
-        [TestCase(1, 5, 3)]
-        [TestCase(2, 6, 3)]
-        [TestCase(2, 7, 3)]
-        [TestCase(2, 8, 3)]
+        [InlineData(0, 0, 3)]
+        [InlineData(0, 1, 3)]
+        [InlineData(0, 2, 3)]
+        [InlineData(1, 3, 3)]
+        [InlineData(1, 4, 3)]
+        [InlineData(1, 5, 3)]
+        [InlineData(2, 6, 3)]
+        [InlineData(2, 7, 3)]
+        [InlineData(2, 8, 3)]
 
-        [TestCase(-1, -1, 1)]
-        [TestCase(-2, -2, 1)]
-        [TestCase(-3, -3, 1)]
-        [TestCase(-4, -4, 1)]
+        [InlineData(-1, -1, 1)]
+        [InlineData(-2, -2, 1)]
+        [InlineData(-3, -3, 1)]
+        [InlineData(-4, -4, 1)]
 
-        [TestCase(-1, -1, 2)]
-        [TestCase(-1, -2, 2)]
-        [TestCase(-2, -3, 2)]
-        [TestCase(-2, -4, 2)]
-        [TestCase(-3, -5, 2)]
-        [TestCase(-3, -6, 2)]
+        [InlineData(-1, -1, 2)]
+        [InlineData(-1, -2, 2)]
+        [InlineData(-2, -3, 2)]
+        [InlineData(-2, -4, 2)]
+        [InlineData(-3, -5, 2)]
+        [InlineData(-3, -6, 2)]
 
-        [TestCase(-1, -1, 3)]
-        [TestCase(-1, -2, 3)]
-        [TestCase(-1, -3, 3)]
-        [TestCase(-2, -4, 3)]
-        [TestCase(-2, -5, 3)]
-        [TestCase(-2, -6, 3)]
-        [TestCase(-3, -7, 3)]
-        [TestCase(-3, -8, 3)]
-        [TestCase(-3, -9, 3)]
+        [InlineData(-1, -1, 3)]
+        [InlineData(-1, -2, 3)]
+        [InlineData(-1, -3, 3)]
+        [InlineData(-2, -4, 3)]
+        [InlineData(-2, -5, 3)]
+        [InlineData(-2, -6, 3)]
+        [InlineData(-3, -7, 3)]
+        [InlineData(-3, -8, 3)]
+        [InlineData(-3, -9, 3)]
         public void CombineChunks(int result, int x, int chunkPerDimension)
         {
             var group = GetGroup(x, chunkPerDimension);
-            Assert.That(group, Is.EqualTo(result));
+            group.Should().Be(result);
         }
 
         private int GetGroup(int coord, int chunkPerDimension)
@@ -73,15 +74,15 @@ namespace MapLoader.NUnitTests
             return ((coord + 1) / chunkPerDimension) - 1;
         }
 
-        [Test]
+        [Fact]
         public void ChunkKeyTest()
         {
             var key = new LevelDbWorldKey2(new byte[] {2, 0, 0, 0, 2, 0, 0, 0, 47, 0});
-            Assert.That(key.X, Is.EqualTo(2));
-            Assert.That(key.Z, Is.EqualTo(2));
+            key.X.Should().Be(2);
+            key.Z.Should().Be(2);
 
             var group = key.GetXZGroup(2);
-            Assert.That(group, Is.EqualTo(((UInt64) 1 << 32) + 1));
+            group.Should().Be(((UInt64) 1 << 32) + 1);
         }
 
         class TClass
@@ -96,7 +97,7 @@ namespace MapLoader.NUnitTests
             public int Number { get; set; }
         }
 
-        [Test]
+        [Fact]
         public void PoolTest()
         {
 
@@ -113,11 +114,9 @@ namespace MapLoader.NUnitTests
         }
 
 
-        [TestFixture]
-        class BenchmarkTests
+        public class BenchmarkTests
         {
-            [Test]
-            [Ignore("debugging")]
+            [Fact]
             public void Open()
             {
                 Console.WriteLine("hello world");
@@ -132,11 +131,9 @@ namespace MapLoader.NUnitTests
                 }
 
                 //dut.Close();
-
-                Assert.Pass();
             }
 
-            [Test]
+            [Fact]
             public void HashCodeByteArray()
             {
                 var a = new byte[] {1, 2, 3, 4};
@@ -146,8 +143,7 @@ namespace MapLoader.NUnitTests
                 Console.WriteLine(b.GetHashCode());
             }
 
-            [Test]
-            [Ignore("debugging")]
+            [Fact]
             public void TestRender()
             {
                 var dut = new Maploader.World.World();
@@ -160,7 +156,7 @@ namespace MapLoader.NUnitTests
                 RenderMap(chunkRadius, dut, centerOffsetX, centerOffsetZ, filename);
             }
 
-            [Test]
+            [Fact]
             public void BenchmarkRender()
             {
                 var dut = new Maploader.World.World();
@@ -208,7 +204,7 @@ namespace MapLoader.NUnitTests
                 dut.Close();
             }
 
-            [Test]
+            [Fact]
             public void Uint64Test()
             {
                 int x = 1;
@@ -221,18 +217,18 @@ namespace MapLoader.NUnitTests
                     );
 
                     Console.WriteLine("{0:x8}", k);
-                    Assert.AreEqual(k, 0x100000001);
+                    k.Should().Be(0x100000001);
                 }
 
             }
 
-            [Test]
+            [Fact]
             public void BrillouinFkt()
             {
                 var dut = new Brillouin(10000);
             }
 
-            [Test]
+            [Fact]
             public void LoaderTest()
             {
             }

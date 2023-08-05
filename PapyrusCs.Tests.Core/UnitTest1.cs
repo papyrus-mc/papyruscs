@@ -4,9 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
+using Xunit;
 using PapyrusAlgorithms.Database;
 using PapyrusCs.Database;
+using FluentAssertions;
 
 namespace Tests
 {
@@ -59,7 +60,7 @@ namespace Tests
 
 
 
-        [Test]
+        [Fact]
         public void TestBulkInsert()
         {
             DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
@@ -78,7 +79,7 @@ namespace Tests
 
 
 
-        [Test]
+        [Fact]
         public void TestBulkInsertAndUpdate()
         {
             DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
@@ -95,8 +96,7 @@ namespace Tests
             Console.WriteLine(sp.Elapsed);
 
             var newduts = context.MyMinis;
-            Assert.That(newduts.Count(), Is.EqualTo(100000));
-           
+            newduts.Count().Should().Be(100000);
             foreach (var myMiniC in newduts)
             {
                 myMiniC.Crc42 += 10000;
@@ -107,9 +107,10 @@ namespace Tests
             Console.WriteLine(sp.Elapsed);
         }
 
-        [TestCase(3, 5, 15, 5, 0)]
-        [TestCase(2,1500,998,499,3)]
-        [TestCase(7, 50000, 994, 142, 16)]
+        [Theory]
+        [InlineData(3, 5, 15, 5, 0)]
+        [InlineData(2,1500,998,499,3)]
+        [InlineData(7, 50000, 994, 142, 16)]
         public void ParameterTest(int columns, int rows, int expectedParameterCount, int expectedBatchSize, int expectedRemainderBatchsize)
         {
             DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
@@ -119,36 +120,36 @@ namespace Tests
 
             var (dbParameters, batchSize, remainder) = DbContextExtensions.GetInsertParametersAndBatchSize(context, columns, rows);
 
-            Assert.That(dbParameters.Length, Is.EqualTo(expectedParameterCount));
-            Assert.That(batchSize, Is.EqualTo(expectedBatchSize));
-            Assert.That(remainder, Is.EqualTo(expectedRemainderBatchsize));
-            Assert.That(dbParameters[0].ParameterName, Is.EqualTo("p0"));
-            Assert.That(dbParameters[dbParameters.Length-1].ParameterName, Is.EqualTo("p"+(dbParameters.Length-1)));
+            dbParameters.Length.Should().Be(expectedParameterCount);
+            batchSize.Should().Be(expectedBatchSize);
+            remainder.Should().Be(expectedRemainderBatchsize);
+            dbParameters[0].ParameterName.Should().Be("p0");
+            dbParameters[dbParameters.Length-1].ParameterName.Should().Be("p" +(dbParameters.Length-1));
         }
 
-        [Test]
+        [Fact]
         public void TestInsertSql()
         {
             var dut = DbContextExtensions.GetSqlInsertString("lala", new string[] {"a", "b", "c"}, 5);
-            Assert.That(dut.Contains("@p0"));
-            Assert.That(dut.Contains("@p14"));
-            Assert.That(dut.Count(x => x == '@'), Is.EqualTo(15));
+            dut.Should().Contain("@p0");
+            dut.Should().Contain("@p14");
+            dut.Count(x => x == '@').Should().Be(15);
             Console.WriteLine(dut);
         }
 
-        [Test]
+        [Fact]
         public void TestUpdateSql()
         {
             
             var dut = DbContextExtensions.GetSqlUpdateString("lala", new []{"id"},  new [] { "a", "b", "c" }, 1);
-            Assert.That(dut.Contains("@p0"));
-            Assert.That(dut.Contains("@p2"));
-            Assert.That(dut.Contains("@k0"));
-            Assert.That(dut.Count(x => x == '@'), Is.EqualTo(4));
+            dut.Should().Contain("@p0");
+            dut.Should().Contain("@p2");
+            dut.Should().Contain("@k0");
+            dut.Count(x => x == '@').Should().Be(4);
             Console.WriteLine(dut);
         }
 
-        [Test]
+        [Fact]
         public void RawSqlTest()
         {
             DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
@@ -181,7 +182,7 @@ namespace Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void BulkTest()
         {
             DbContextOptionsBuilder<MyContext> opt = new DbContextOptionsBuilder<MyContext>();
