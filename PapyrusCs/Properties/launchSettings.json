@@ -2,7 +2,8 @@
   "profiles": {
     "PapyrusCs": {
       "commandName": "Project",
-      "workingDirectory": "c:\\temp"
+      "commandLineArgs": "-w C:\\Users\\miken\\OneDrive\\Desktop\\Hard -o c:\\map_out",
+      "workingDirectory": "%TEMP%"
     }
   }
 }
