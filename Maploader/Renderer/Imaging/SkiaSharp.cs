@@ -35,7 +35,7 @@ namespace Maploader.Renderer.Imaging
         {
             SKColorType colorType;
             
-            using (var image = Pfim.Pfim.FromFile(file))
+            using (var image = Pfim.Pfimage.FromFile(file))
             {
                 var newData = image.Data;
                 var newDataLen = image.DataLen;
